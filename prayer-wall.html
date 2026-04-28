@@ -537,7 +537,6 @@
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <a class="nav-logo" href="index.html">To Christ 4 Christ</a>
   <div class="nav-links">
@@ -548,26 +547,23 @@
   </div>
 </nav>
 
-<!-- HERO -->
 <section class="wall-hero">
   <p class="eyebrow">Lift Each Other Up</p>
   <h1>The <em>Prayer</em> Wall</h1>
   <p>"Bear one another's burdens, and so fulfil the law of Christ." — Galatians 6:2</p>
 </section>
 
-<!-- VERSE ACCENT -->
 <div class="verse-accent">
   <blockquote>"Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God."</blockquote>
   <cite>— Philippians 4:6</cite>
 </div>
 
-<!-- MAIN WALL -->
 <div class="wall-main">
 
   <div class="wall-col">
     <div class="wall-header">
       <h2>Community Prayers</h2>
-      <div class="wall-filter">
+      <div class="wall-filter" id="filter-buttons">
         <button class="filter-btn active" data-filter="all">All</button>
         <button class="filter-btn" data-filter="healing">Healing</button>
         <button class="filter-btn" data-filter="guidance">Guidance</button>
@@ -611,14 +607,14 @@
 
       <div class="pr-field">
         <label for="pr-category">Category</label>
-        <select id="pr-category" style="width:100%;background:rgba(255,253,245,0.06);border:1px solid rgba(201,168,76,0.25);border-radius:2px;padding:0.7rem 1rem;font-family:'Crimson Text',serif;font-size:1rem;color:var(--ivory);outline:none;">
-          <option value="general" style="background:var(--green-deep)">General Prayer</option>
-          <option value="healing" style="background:var(--green-deep)">Healing</option>
-          <option value="guidance" style="background:var(--green-deep)">Guidance & Direction</option>
-          <option value="family" style="background:var(--green-deep)">Family & Relationships</option>
-          <option value="provision" style="background:var(--green-deep)">Provision & Work</option>
-          <option value="salvation" style="background:var(--green-deep)">Salvation of a Loved One</option>
-          <option value="gratitude" style="background:var(--green-deep)">Praise & Thanksgiving</option>
+        <select id="pr-category">
+          <option value="general">General Prayer</option>
+          <option value="healing">Healing</option>
+          <option value="guidance">Guidance & Direction</option>
+          <option value="family">Family & Relationships</option>
+          <option value="provision">Provision & Work</option>
+          <option value="salvation">Salvation of a Loved One</option>
+          <option value="gratitude">Praise & Thanksgiving</option>
         </select>
       </div>
 
@@ -660,44 +656,21 @@
 </footer>
 
 <script>
-// ═══════════════════════════════════════════════════════════
-// SECURE PRAYER WALL - XSS Protected, No API Keys Exposed
-// All API calls go through serverless functions
-// ═══════════════════════════════════════════════════════════
+// SECURE PRAYER WALL - No API keys exposed, XSS protected
 
 let allPrayers = [];
 let currentFilter = 'all';
 
-// Helper function to safely escape HTML (XSS prevention)
 function escapeHtml(str) {
   if (!str) return '';
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+  return str.replace(/[&<>]/g, function(m) {
+    if (m === '&') return '&amp;';
+    if (m === '<') return '&lt;';
+    if (m === '>') return '&gt;';
+    return m;
+  });
 }
 
-// Load prayers from serverless function
-async function loadPrayers() {
-  try {
-    const response = await fetch('/.netlify/functions/get-prayers');
-    const data = await response.json();
-    if (data.prayers && data.prayers.length) {
-      allPrayers = data.prayers;
-    } else {
-      allPrayers = getSeedPrayers();
-    }
-    renderPrayers();
-  } catch (err) {
-    console.error('Failed to load prayers:', err);
-    allPrayers = getSeedPrayers();
-    renderPrayers();
-  }
-}
-
-// Fallback seed prayers
 function getSeedPrayers() {
   return [
     {
@@ -729,38 +702,26 @@ function getSeedPrayers() {
       answered: true,
       anonymous: false,
       timestamp: Date.now() - 3600000 * 5,
-    },
+    }
   ];
 }
 
-// Save prayer via serverless function
-async function savePrayerToServer(prayer) {
+function loadPrayersFromStorage() {
   try {
-    const response = await fetch('/.netlify/functions/save-prayer', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(prayer)
-    });
-    return await response.json();
-  } catch (err) {
-    console.error('Failed to save prayer:', err);
-    return { success: false };
+    const saved = localStorage.getItem('tc4c_prayers');
+    if (saved) {
+      allPrayers = JSON.parse(saved);
+    } else {
+      allPrayers = getSeedPrayers();
+    }
+  } catch(e) {
+    allPrayers = getSeedPrayers();
   }
+  renderPrayers();
 }
 
-// Increment pray count via serverless function
-async function incrementPrayCount(prayerId) {
-  try {
-    const response = await fetch('/.netlify/functions/pray-for-prayer', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prayerId })
-    });
-    return await response.json();
-  } catch (err) {
-    console.error('Failed to increment pray count:', err);
-    return { success: false };
-  }
+function savePrayersToStorage() {
+  localStorage.setItem('tc4c_prayers', JSON.stringify(allPrayers));
 }
 
 function timeAgo(ts) {
@@ -768,9 +729,9 @@ function timeAgo(ts) {
   const h = Math.floor(diff / 3600000);
   const d = Math.floor(diff / 86400000);
   if (diff < 3600000) return 'just now';
-  if (h < 24) return `${h}h ago`;
+  if (h < 24) return h + 'h ago';
   if (d === 1) return 'yesterday';
-  return `${d} days ago`;
+  return d + ' days ago';
 }
 
 function categoryLabel(cat) {
@@ -782,7 +743,18 @@ function categoryLabel(cat) {
   return map[cat] || cat;
 }
 
-// SAFE rendering using textContent (NO innerHTML for user content)
+function getPrayedIds() {
+  try { return JSON.parse(localStorage.getItem('prayed_ids') || '[]'); } catch { return []; }
+}
+
+function addPrayedId(id) {
+  const ids = getPrayedIds();
+  if (!ids.includes(id)) {
+    ids.push(id);
+    localStorage.setItem('prayed_ids', JSON.stringify(ids));
+  }
+}
+
 function renderPrayers() {
   const list = document.getElementById('prayer-list');
   let prayers = [...allPrayers].sort((a, b) => b.timestamp - a.timestamp);
@@ -793,27 +765,21 @@ function renderPrayers() {
     prayers = prayers.filter(p => p.category === currentFilter);
   }
 
-  // Update stats
   const total = allPrayers.length;
   const totalPrayed = allPrayers.reduce((s, p) => s + p.prayCount, 0);
   const answered = allPrayers.filter(p => p.answered).length;
   
-  const statTotal = document.getElementById('stat-total');
-  const statPrayed = document.getElementById('stat-prayed');
-  const statAnswered = document.getElementById('stat-answered');
-  if (statTotal) statTotal.textContent = total;
-  if (statPrayed) statPrayed.textContent = totalPrayed;
-  if (statAnswered) statAnswered.textContent = answered;
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-prayed').textContent = totalPrayed;
+  document.getElementById('stat-answered').textContent = answered;
 
   if (!prayers.length) {
-    list.innerHTML = `<div class="empty-wall"><span class="cross">✝</span>No prayers in this category yet.<br>Be the first to share one.</div>`;
+    list.innerHTML = '<div class="empty-wall"><span class="cross">✝</span>No prayers in this category yet.<br>Be the first to share one.</div>';
     return;
   }
 
-  // Clear the list
   list.innerHTML = '';
   
-  // Build each card safely using DOM methods
   prayers.forEach(prayer => {
     const card = document.createElement('div');
     card.className = 'prayer-card';
@@ -832,8 +798,7 @@ function renderPrayers() {
     
     const textP = document.createElement('p');
     textP.className = 'prayer-text';
-    // SAFE: using textContent prevents XSS
-    textP.textContent = `"${prayer.text}"`;
+    textP.textContent = '"' + prayer.text + '"';
     card.appendChild(textP);
     
     const metaDiv = document.createElement('div');
@@ -844,7 +809,6 @@ function renderPrayers() {
     whoP.className = 'prayer-who';
     whoP.appendChild(document.createTextNode('— '));
     const nameSpan = document.createElement('span');
-    // SAFE: using textContent prevents XSS
     nameSpan.textContent = prayer.anonymous ? 'Anonymous' : prayer.name;
     whoP.appendChild(nameSpan);
     whoDiv.appendChild(whoP);
@@ -855,7 +819,146 @@ function renderPrayers() {
     whoDiv.appendChild(ageP);
     
     const prayBtn = document.createElement('button');
-    const prayedIds = getPrayedIds();
-    const hasPrayed = prayedIds.includes(prayer.id);
-    prayBtn.className = `pray-btn ${hasPrayed ? 'prayed' : ''}`;
-    prayBtn.innerHTML = `🙏 ${hasPrayed ? 'Prayed'
+    const hasPrayed = getPrayedIds().includes(prayer.id);
+    prayBtn.className = 'pray-btn' + (hasPrayed ? ' prayed' : '');
+    prayBtn.innerHTML = '🙏 ' + (hasPrayed ? 'Prayed' : 'I\'ll Pray') + ' <span class="pray-count">' + prayer.prayCount + '</span>';
+    prayBtn.onclick = function() { prayFor(prayer.id, prayBtn); };
+    
+    metaDiv.appendChild(whoDiv);
+    metaDiv.appendChild(prayBtn);
+    card.appendChild(metaDiv);
+    
+    list.appendChild(card);
+  });
+}
+
+async function prayFor(id, btn) {
+  if (getPrayedIds().includes(id)) return;
+  addPrayedId(id);
+  
+  const prayer = allPrayers.find(p => p.id === id);
+  if (prayer) {
+    prayer.prayCount++;
+    savePrayersToStorage();
+    renderPrayers();
+  }
+}
+
+function setFilter(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderPrayers();
+}
+
+function updateCharCount(el) {
+  document.getElementById('char-num').textContent = el.value.length;
+}
+
+function showFeedback(type, msg) {
+  const el = document.getElementById('submit-feedback');
+  el.className = 'submit-feedback ' + type;
+  el.textContent = msg;
+  el.style.display = 'block';
+  setTimeout(function() {
+    el.style.display = 'none';
+  }, 5000);
+}
+
+async function submitPrayer() {
+  const name = document.getElementById('pr-name').value.trim();
+  const text = document.getElementById('pr-text').value.trim();
+  const category = document.getElementById('pr-category').value;
+  const anon = document.getElementById('pr-anon').checked;
+  const btn = document.getElementById('submit-btn');
+  const modIndicator = document.getElementById('mod-indicator');
+  const feedback = document.getElementById('submit-feedback');
+
+  feedback.style.display = 'none';
+
+  if (!name) {
+    showFeedback('error', 'Please enter your name (or type "Anonymous").');
+    return;
+  }
+  if (!text || text.length < 15) {
+    showFeedback('error', 'Please share a little more about your prayer request (at least 15 characters).');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Reviewing...';
+  modIndicator.classList.add('show');
+
+  // Simple client-side moderation (for demo purposes)
+  let approved = true;
+  let reason = '';
+  const blockedWords = ['spam', 'scam', 'casino', 'viagra', 'porn', 'xxx', 'hack', 'crack'];
+  const lowerText = text.toLowerCase();
+  
+  for (const word of blockedWords) {
+    if (lowerText.includes(word)) {
+      approved = false;
+      reason = 'Your prayer contains inappropriate content.';
+      break;
+    }
+  }
+
+  modIndicator.classList.remove('show');
+
+  if (!approved) {
+    btn.disabled = false;
+    btn.textContent = '🙏 Submit Prayer Request';
+    showFeedback('error', reason || 'Your prayer request could not be posted. Please revise and try again.');
+    return;
+  }
+
+  const newPrayer = {
+    id: 'p-' + Date.now(),
+    name: anon ? 'Anonymous' : escapeHtml(name),
+    category: category,
+    text: escapeHtml(text),
+    prayCount: 0,
+    answered: false,
+    anonymous: anon,
+    timestamp: Date.now(),
+  };
+
+  allPrayers.unshift(newPrayer);
+  savePrayersToStorage();
+  renderPrayers();
+
+  document.getElementById('pr-name').value = '';
+  document.getElementById('pr-text').value = '';
+  document.getElementById('pr-category').value = 'general';
+  document.getElementById('pr-anon').checked = false;
+  document.getElementById('char-num').textContent = '0';
+  
+  btn.disabled = false;
+  btn.textContent = '🙏 Submit Prayer Request';
+
+  showFeedback('success', '✝ Your prayer has been added to the wall. The community is standing with you.');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  loadPrayersFromStorage();
+  
+  const charInput = document.getElementById('pr-text');
+  if (charInput) {
+    charInput.addEventListener('input', function() { updateCharCount(this); });
+  }
+  
+  const submitBtn = document.getElementById('submit-btn');
+  if (submitBtn) {
+    submitBtn.addEventListener('click', submitPrayer);
+  }
+  
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  filterBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      setFilter(this.dataset.filter, this);
+    });
+  });
+});
+</script>
+</body>
+</html>
