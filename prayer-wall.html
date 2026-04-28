@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prayer Wall — To Christ 4 Christ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-deep: #1B3A2E;
+    --green-mid: #2D5A40;
+    --green-light: #4A8C60;
+    --gold: #C9A84C;
+    --gold-light: #E8C96A;
+    --ivory: #F5EFE0;
+    --ivory-dark: #EDE5CC;
+    --brown: #2C1A0E;
+    --brown-light: #7A5230;
+    --cream: #FFFDF5;
+    --text-body: #3C2A1A;
+    --text-muted: #7A6A50;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Crimson Text', Georgia, serif;
+    background: var(--cream);
+    color: var(--text-body);
+    font-size: 18px;
+    line-height: 1.7;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: var(--green-deep);
+    padding: 0.75rem 1.5rem;
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid rgba(201,168,76,0.3);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    color: var(--gold);
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 1.5rem; }
+  .nav-links a {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ivory);
+    text-decoration: none;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+  }
+  .nav-links a:hover { opacity: 1; color: var(--gold-light); }
+  .nav-links a.active { color: var(--gold); opacity: 1; }
+
+  .wall-hero {
+    background: var(--green-deep);
+    padding: 7rem 1.5rem 4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .wall-hero::after {
+    content: '🕊';
+    position: absolute;
+    font-size: 22rem;
+    opacity: 0.025;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+  .wall-hero .eyebrow {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.2s forwards;
+  }
+  .wall-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    color: var(--ivory);
+    line-height: 1.2;
+    max-width: 600px;
+    margin: 0 auto 1rem;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.4s forwards;
+  }
+  .wall-hero h1 em { color: var(--gold); font-style: italic; }
+  .wall-hero p {
+    font-family: 'Crimson Text', serif;
+    font-style: italic;
+    font-size: 1.15rem;
+    color: rgba(245,239,224,0.65);
+    max-width: 440px;
+    margin: 0 auto;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.6s forwards;
+  }
+
+  .wall-main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  @media(min-width: 680px) {
+    .wall-main { grid-template-columns: 1fr 340px; align-items: start; }
+  }
+
+  .submit-card {
+    background: var(--green-deep);
+    border-radius: 4px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .submit-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 80% 20%, rgba(201,168,76,0.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .submit-card .card-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+  }
+  .submit-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: var(--ivory);
+    margin-bottom: 0.4rem;
+  }
+  .submit-card > p {
+    font-size: 0.95rem;
+    color: rgba(245,239,224,0.6);
+    margin-bottom: 1.5rem;
+  }
+
+  .pr-field { margin-bottom: 1.1rem; }
+  .pr-field label {
+    display: block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.45rem;
+  }
+  .pr-field input,
+  .pr-field textarea {
+    width: 100%;
+    background: rgba(255,253,245,0.06);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 2px;
+    padding: 0.7rem 1rem;
+    font-family: 'Crimson Text', serif;
+    font-size: 1rem;
+    color: var(--ivory);
+    outline: none;
+    resize: vertical;
+    transition: border-color 0.2s;
+  }
+  .pr-field input::placeholder,
+  .pr-field textarea::placeholder { color: rgba(245,239,224,0.3); }
+  .pr-field input:focus,
+  .pr-field textarea:focus { border-color: var(--gold); }
+
+  .char-count {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.6rem;
+    color: rgba(245,239,224,0.35);
+    text-align: right;
+    margin-top: 0.25rem;
+    letter-spacing: 0.05em;
+  }
+
+  .anon-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.25rem;
+  }
+  .anon-row input[type="checkbox"] { accent-color: var(--gold); width: 14px; height: 14px; }
+  .anon-row label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.68rem;
+    color: rgba(245,239,224,0.55);
+    cursor: pointer;
+  }
+
+  .btn-submit-prayer {
+    width: 100%;
+    background: var(--gold);
+    color: var(--brown);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.9rem;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-submit-prayer:hover:not(:disabled) { background: var(--gold-light); transform: translateY(-1px); }
+  .btn-submit-prayer:disabled { opacity: 0.6; cursor: default; }
+
+  .privacy-note {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.04em;
+    color: rgba(245,239,224,0.3);
+    text-align: center;
+    margin-top: 0.75rem;
+    line-height: 1.5;
+  }
+
+  .submit-feedback {
+    display: none;
+    text-align: center;
+    padding: 1rem;
+    margin-top: 1rem;
+    border-radius: 2px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+  .submit-feedback.success {
+    background: rgba(74,140,96,0.15);
+    border: 1px solid rgba(74,140,96,0.3);
+    color: #A8D5B5;
+  }
+  .submit-feedback.error {
+    background: rgba(248,113,113,0.08);
+    border: 1px solid rgba(248,113,113,0.2);
+    color: #F87171;
+  }
+
+  .wall-stats {
+    display: flex;
+    gap: 0;
+    background: var(--ivory);
+    border: 1px solid var(--ivory-dark);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .wall-stat {
+    flex: 1;
+    padding: 1rem;
+    text-align: center;
+    border-right: 1px solid var(--ivory-dark);
+  }
+  .wall-stat:last-child { border-right: none; }
+  .wall-stat .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    color: var(--green-deep);
+    display: block;
+  }
+  .wall-stat .lbl {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .wall-col { display: flex; flex-direction: column; gap: 1.5rem; }
+
+  .wall-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .wall-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: var(--green-deep);
+  }
+  .wall-filter {
+    display: flex;
+    gap: 0.4rem;
+  }
+  .filter-btn {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.35rem 0.8rem;
+    border: 1px solid var(--ivory-dark);
+    background: transparent;
+    color: var(--text-muted);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-btn.active, .filter-btn:hover {
+    background: var(--green-deep);
+    color: var(--gold);
+    border-color: var(--green-deep);
+  }
+
+  .prayer-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .prayer-card {
+    background: var(--ivory);
+    border: 1px solid var(--ivory-dark);
+    border-radius: 3px;
+    padding: 1.25rem;
+    position: relative;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .prayer-card:hover { border-color: rgba(201,168,76,0.4); }
+
+  .prayer-card .prayer-category {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--green-light);
+    margin-bottom: 0.4rem;
+  }
+  .prayer-card .prayer-text {
+    font-family: 'Crimson Text', serif;
+    font-size: 1.05rem;
+    color: var(--text-body);
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+    font-style: italic;
+  }
+  .prayer-card .prayer-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .prayer-card .prayer-who {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+  .prayer-card .prayer-who span { color: var(--brown-light); font-weight: 500; }
+
+  .pray-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: transparent;
+    border: 1px solid var(--ivory-dark);
+    border-radius: 20px;
+    padding: 0.3rem 0.75rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .pray-btn:hover {
+    background: var(--green-deep);
+    color: var(--gold);
+    border-color: var(--green-deep);
+  }
+  .pray-btn.prayed {
+    background: var(--green-deep);
+    color: var(--gold);
+    border-color: var(--green-deep);
+    pointer-events: none;
+  }
+  .pray-count {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.85rem;
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  .prayer-card .prayer-age {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.58rem;
+    color: rgba(122,106,80,0.5);
+    letter-spacing: 0.04em;
+  }
+
+  .answered-badge {
+    position: absolute;
+    top: 0.9rem; right: 0.9rem;
+    background: var(--gold);
+    color: var(--brown);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.55rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    border-radius: 2px;
+  }
+
+  .loading-wall {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-muted);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+  }
+  .loading-cross {
+    font-size: 2rem;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .empty-wall {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-muted);
+  }
+  .empty-wall .cross { font-size: 2.5rem; color: var(--gold); display: block; margin-bottom: 1rem; opacity: 0.4; }
+
+  .moderating-indicator {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 2px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.65rem;
+    color: var(--gold-light);
+    letter-spacing: 0.06em;
+    margin-top: 0.75rem;
+  }
+  .moderating-indicator.show { display: flex; }
+  .mod-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    animation: pulse 1s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+
+  .verse-accent {
+    background: var(--green-deep);
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+  }
+  .verse-accent blockquote {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+    color: var(--ivory);
+    max-width: 540px;
+    margin: 0 auto 0.5rem;
+  }
+  .verse-accent cite {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    font-style: normal;
+  }
+
+  footer {
+    background: var(--brown);
+    color: rgba(245,239,224,0.5);
+    padding: 2.5rem 1.5rem 1.5rem;
+    text-align: center;
+  }
+  footer .footer-logo {
+    font-family: 'Playfair Display', serif;
+    color: var(--gold);
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+  footer p { font-size: 0.85rem; max-width: 380px; margin: 0 auto 1.5rem; }
+  footer .copy {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.05em;
+    color: rgba(245,239,224,0.22);
+    border-top: 1px solid rgba(245,239,224,0.07);
+    padding-top: 1.25rem;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+  }
+
+  @media(max-width: 500px) {
+    .nav-links { display: none; }
+    .wall-stats { flex-wrap: wrap; }
+    .wall-stat { min-width: 50%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html">To Christ 4 Christ</a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="index.html#modules">Lessons</a>
+    <a href="prayer-wall.html" class="active">Prayer Wall</a>
+    <a href="index.html#join">Join</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="wall-hero">
+  <p class="eyebrow">Lift Each Other Up</p>
+  <h1>The <em>Prayer</em> Wall</h1>
+  <p>"Bear one another's burdens, and so fulfil the law of Christ." — Galatians 6:2</p>
+</section>
+
+<!-- VERSE ACCENT -->
+<div class="verse-accent">
+  <blockquote>"Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God."</blockquote>
+  <cite>— Philippians 4:6</cite>
+</div>
+
+<!-- MAIN WALL -->
+<div class="wall-main">
+
+  <div class="wall-col">
+    <div class="wall-header">
+      <h2>Community Prayers</h2>
+      <div class="wall-filter">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="healing">Healing</button>
+        <button class="filter-btn" data-filter="guidance">Guidance</button>
+        <button class="filter-btn" data-filter="answered">Answered ✓</button>
+      </div>
+    </div>
+
+    <div class="wall-stats">
+      <div class="wall-stat">
+        <span class="num" id="stat-total">0</span>
+        <span class="lbl">Prayers</span>
+      </div>
+      <div class="wall-stat">
+        <span class="num" id="stat-prayed">0</span>
+        <span class="lbl">Times Prayed</span>
+      </div>
+      <div class="wall-stat">
+        <span class="num" id="stat-answered">0</span>
+        <span class="lbl">Answered</span>
+      </div>
+    </div>
+
+    <div class="prayer-list" id="prayer-list">
+      <div class="loading-wall">
+        <span class="loading-cross">✝</span>
+        Loading prayers...
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="submit-card">
+      <p class="card-label">Add Your Request</p>
+      <h2>Share a Prayer</h2>
+      <p>Your request will be reviewed before appearing on the wall.</p>
+
+      <div class="pr-field">
+        <label for="pr-name">Your Name (or "Anonymous")</label>
+        <input id="pr-name" type="text" maxlength="40" placeholder="e.g. Grace N.">
+      </div>
+
+      <div class="pr-field">
+        <label for="pr-category">Category</label>
+        <select id="pr-category" style="width:100%;background:rgba(255,253,245,0.06);border:1px solid rgba(201,168,76,0.25);border-radius:2px;padding:0.7rem 1rem;font-family:'Crimson Text',serif;font-size:1rem;color:var(--ivory);outline:none;">
+          <option value="general" style="background:var(--green-deep)">General Prayer</option>
+          <option value="healing" style="background:var(--green-deep)">Healing</option>
+          <option value="guidance" style="background:var(--green-deep)">Guidance & Direction</option>
+          <option value="family" style="background:var(--green-deep)">Family & Relationships</option>
+          <option value="provision" style="background:var(--green-deep)">Provision & Work</option>
+          <option value="salvation" style="background:var(--green-deep)">Salvation of a Loved One</option>
+          <option value="gratitude" style="background:var(--green-deep)">Praise & Thanksgiving</option>
+        </select>
+      </div>
+
+      <div class="pr-field">
+        <label for="pr-text">Your Prayer Request</label>
+        <textarea id="pr-text" rows="5" maxlength="400" placeholder="Share what is on your heart..."></textarea>
+        <p class="char-count"><span id="char-num">0</span> / 400</p>
+      </div>
+
+      <div class="anon-row">
+        <input type="checkbox" id="pr-anon">
+        <label for="pr-anon">Post anonymously (name not shown)</label>
+      </div>
+
+      <button class="btn-submit-prayer" id="submit-btn">
+        🙏 Submit Prayer Request
+      </button>
+
+      <div class="moderating-indicator" id="mod-indicator">
+        <span class="mod-dot"></span>
+        Reviewing your request with care...
+      </div>
+
+      <div class="submit-feedback" id="submit-feedback"></div>
+
+      <p class="privacy-note">
+        Your request is reviewed before appearing. We never share personal details.<br>
+        By submitting you consent to your prayer appearing on this wall.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-logo">To Christ 4 Christ</div>
+  <p>A discipleship community. Standing together in faith, prayer, and love.</p>
+  <div class="copy">© 2026 To Christ 4 Christ. All rights reserved.</div>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// SECURE PRAYER WALL - XSS Protected, No API Keys Exposed
+// All API calls go through serverless functions
+// ═══════════════════════════════════════════════════════════
+
+let allPrayers = [];
+let currentFilter = 'all';
+
+// Helper function to safely escape HTML (XSS prevention)
+function escapeHtml(str) {
+  if (!str) return '';
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// Load prayers from serverless function
+async function loadPrayers() {
+  try {
+    const response = await fetch('/.netlify/functions/get-prayers');
+    const data = await response.json();
+    if (data.prayers && data.prayers.length) {
+      allPrayers = data.prayers;
+    } else {
+      allPrayers = getSeedPrayers();
+    }
+    renderPrayers();
+  } catch (err) {
+    console.error('Failed to load prayers:', err);
+    allPrayers = getSeedPrayers();
+    renderPrayers();
+  }
+}
+
+// Fallback seed prayers
+function getSeedPrayers() {
+  return [
+    {
+      id: 'seed-1',
+      name: 'Grace N.',
+      category: 'healing',
+      text: 'Please pray for my mother who is recovering from surgery.',
+      prayCount: 14,
+      answered: false,
+      anonymous: false,
+      timestamp: Date.now() - 86400000 * 2,
+    },
+    {
+      id: 'seed-2',
+      name: 'Anonymous',
+      category: 'guidance',
+      text: 'I am at a crossroads in my career and need God\'s direction.',
+      prayCount: 9,
+      answered: false,
+      anonymous: true,
+      timestamp: Date.now() - 86400000,
+    },
+    {
+      id: 'seed-3',
+      name: 'David M.',
+      category: 'gratitude',
+      text: 'Praise God! After months of prayer, I finally got the job!',
+      prayCount: 22,
+      answered: true,
+      anonymous: false,
+      timestamp: Date.now() - 3600000 * 5,
+    },
+  ];
+}
+
+// Save prayer via serverless function
+async function savePrayerToServer(prayer) {
+  try {
+    const response = await fetch('/.netlify/functions/save-prayer', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(prayer)
+    });
+    return await response.json();
+  } catch (err) {
+    console.error('Failed to save prayer:', err);
+    return { success: false };
+  }
+}
+
+// Increment pray count via serverless function
+async function incrementPrayCount(prayerId) {
+  try {
+    const response = await fetch('/.netlify/functions/pray-for-prayer', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prayerId })
+    });
+    return await response.json();
+  } catch (err) {
+    console.error('Failed to increment pray count:', err);
+    return { success: false };
+  }
+}
+
+function timeAgo(ts) {
+  const diff = Date.now() - ts;
+  const h = Math.floor(diff / 3600000);
+  const d = Math.floor(diff / 86400000);
+  if (diff < 3600000) return 'just now';
+  if (h < 24) return `${h}h ago`;
+  if (d === 1) return 'yesterday';
+  return `${d} days ago`;
+}
+
+function categoryLabel(cat) {
+  const map = {
+    general: 'General Prayer', healing: 'Healing', guidance: 'Guidance & Direction',
+    family: 'Family', provision: 'Provision & Work',
+    salvation: 'Salvation', gratitude: 'Praise & Thanksgiving'
+  };
+  return map[cat] || cat;
+}
+
+// SAFE rendering using textContent (NO innerHTML for user content)
+function renderPrayers() {
+  const list = document.getElementById('prayer-list');
+  let prayers = [...allPrayers].sort((a, b) => b.timestamp - a.timestamp);
+
+  if (currentFilter === 'answered') {
+    prayers = prayers.filter(p => p.answered);
+  } else if (currentFilter !== 'all') {
+    prayers = prayers.filter(p => p.category === currentFilter);
+  }
+
+  // Update stats
+  const total = allPrayers.length;
+  const totalPrayed = allPrayers.reduce((s, p) => s + p.prayCount, 0);
+  const answered = allPrayers.filter(p => p.answered).length;
+  
+  const statTotal = document.getElementById('stat-total');
+  const statPrayed = document.getElementById('stat-prayed');
+  const statAnswered = document.getElementById('stat-answered');
+  if (statTotal) statTotal.textContent = total;
+  if (statPrayed) statPrayed.textContent = totalPrayed;
+  if (statAnswered) statAnswered.textContent = answered;
+
+  if (!prayers.length) {
+    list.innerHTML = `<div class="empty-wall"><span class="cross">✝</span>No prayers in this category yet.<br>Be the first to share one.</div>`;
+    return;
+  }
+
+  // Clear the list
+  list.innerHTML = '';
+  
+  // Build each card safely using DOM methods
+  prayers.forEach(prayer => {
+    const card = document.createElement('div');
+    card.className = 'prayer-card';
+    
+    if (prayer.answered) {
+      const badge = document.createElement('span');
+      badge.className = 'answered-badge';
+      badge.textContent = '✓ Answered';
+      card.appendChild(badge);
+    }
+    
+    const categoryP = document.createElement('p');
+    categoryP.className = 'prayer-category';
+    categoryP.textContent = categoryLabel(prayer.category);
+    card.appendChild(categoryP);
+    
+    const textP = document.createElement('p');
+    textP.className = 'prayer-text';
+    // SAFE: using textContent prevents XSS
+    textP.textContent = `"${prayer.text}"`;
+    card.appendChild(textP);
+    
+    const metaDiv = document.createElement('div');
+    metaDiv.className = 'prayer-meta';
+    
+    const whoDiv = document.createElement('div');
+    const whoP = document.createElement('p');
+    whoP.className = 'prayer-who';
+    whoP.appendChild(document.createTextNode('— '));
+    const nameSpan = document.createElement('span');
+    // SAFE: using textContent prevents XSS
+    nameSpan.textContent = prayer.anonymous ? 'Anonymous' : prayer.name;
+    whoP.appendChild(nameSpan);
+    whoDiv.appendChild(whoP);
+    
+    const ageP = document.createElement('p');
+    ageP.className = 'prayer-age';
+    ageP.textContent = timeAgo(prayer.timestamp);
+    whoDiv.appendChild(ageP);
+    
+    const prayBtn = document.createElement('button');
+    const prayedIds = getPrayedIds();
+    const hasPrayed = prayedIds.includes(prayer.id);
+    prayBtn.className = `pray-btn ${hasPrayed ? 'prayed' : ''}`;
+    prayBtn.innerHTML = `🙏 ${hasPrayed ? 'Prayed'

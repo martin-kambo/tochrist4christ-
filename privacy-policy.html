@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy — To Christ 4 Christ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-deep: #1B3A2E;
+    --green-mid: #2D5A40;
+    --green-light: #4A8C60;
+    --gold: #C9A84C;
+    --gold-light: #E8C96A;
+    --ivory: #F5EFE0;
+    --ivory-dark: #EDE5CC;
+    --brown: #2C1A0E;
+    --brown-light: #7A5230;
+    --cream: #FFFDF5;
+    --text-body: #3C2A1A;
+    --text-muted: #7A6A50;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Crimson Text', Georgia, serif;
+    background: var(--cream);
+    color: var(--text-body);
+    font-size: 18px;
+    line-height: 1.8;
+    overflow-x: hidden;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: var(--green-deep);
+    padding: 0.75rem 1.5rem;
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid rgba(201,168,76,0.3);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    color: var(--gold);
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 1.5rem; }
+  .nav-links a {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ivory);
+    text-decoration: none;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+  }
+  .nav-links a:hover { opacity: 1; color: var(--gold-light); }
+
+  /* ─── HERO ─── */
+  .policy-hero {
+    background: var(--green-deep);
+    padding: 7rem 1.5rem 4.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .policy-hero::after {
+    content: '§';
+    position: absolute;
+    font-size: 26rem;
+    color: rgba(201,168,76,0.025);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    font-family: 'Playfair Display', serif;
+    line-height: 1;
+  }
+  .policy-hero .eyebrow {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.2s forwards;
+  }
+  .policy-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    color: var(--ivory);
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.4s forwards;
+  }
+  .policy-hero h1 em { color: var(--gold); font-style: italic; }
+  .policy-hero .hero-meta {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: rgba(245,239,224,0.45);
+    opacity: 0;
+    animation: fadeUp 0.7s 0.6s forwards;
+  }
+  .policy-hero .hero-meta strong {
+    color: rgba(245,239,224,0.7);
+    font-weight: 500;
+  }
+
+  /* ─── LAYOUT ─── */
+  .policy-wrap {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem 6rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  @media(min-width: 780px) {
+    .policy-wrap { grid-template-columns: 220px 1fr; gap: 0 3.5rem; align-items: start; }
+  }
+
+  /* ─── STICKY TOC ─── */
+  .toc-sidebar {
+    position: sticky;
+    top: 5.5rem;
+    align-self: start;
+    margin-bottom: 3rem;
+  }
+  .toc-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--green-light);
+    margin-bottom: 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--ivory-dark);
+  }
+  .toc-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+  .toc-list a {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.63rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    text-decoration: none;
+    display: block;
+    padding: 0.3rem 0.6rem;
+    border-left: 2px solid transparent;
+    transition: all 0.2s;
+    line-height: 1.4;
+  }
+  .toc-list a:hover {
+    color: var(--green-deep);
+    border-left-color: var(--gold);
+    background: rgba(201,168,76,0.05);
+  }
+  .toc-list a.active {
+    color: var(--green-deep);
+    border-left-color: var(--gold);
+    font-weight: 500;
+  }
+
+  /* ─── CONTENT ─── */
+  .policy-content { min-width: 0; }
+
+  /* Summary box */
+  .summary-box {
+    background: var(--green-deep);
+    border-radius: 3px;
+    padding: 1.75rem 2rem;
+    margin-bottom: 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .summary-box::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 90% 10%, rgba(201,168,76,0.07) 0%, transparent 60%);
+  }
+  .summary-box .sum-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+  }
+  .summary-box h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: var(--ivory);
+    margin-bottom: 0.75rem;
+  }
+  .summary-box p {
+    font-size: 0.98rem;
+    color: rgba(245,239,224,0.65);
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+  .summary-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 0.75rem;
+    border-radius: 20px;
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold-light);
+  }
+  .pill.good { border-color: rgba(74,140,96,0.4); color: #A8D5B5; }
+
+  /* Sections */
+  .policy-section {
+    margin-bottom: 3.5rem;
+    scroll-margin-top: 5.5rem;
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .policy-section.visible { opacity: 1; transform: none; }
+
+  .section-num {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--green-light);
+    margin-bottom: 0.4rem;
+  }
+
+  .policy-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.55rem;
+    color: var(--green-deep);
+    margin-bottom: 0.5rem;
+    line-height: 1.25;
+  }
+
+  .section-rule {
+    width: 36px;
+    height: 2px;
+    background: var(--gold);
+    margin-bottom: 1.25rem;
+  }
+
+  .policy-section p {
+    color: var(--text-body);
+    margin-bottom: 1rem;
+    font-size: 1.02rem;
+  }
+  .policy-section p:last-child { margin-bottom: 0; }
+
+  /* Data table */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.25rem 0;
+    font-size: 0.92rem;
+  }
+  .data-table thead tr {
+    background: var(--green-deep);
+    color: var(--gold);
+  }
+  .data-table thead th {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border: none;
+  }
+  .data-table tbody tr {
+    border-bottom: 1px solid var(--ivory-dark);
+    transition: background 0.15s;
+  }
+  .data-table tbody tr:hover { background: var(--ivory); }
+  .data-table tbody td {
+    padding: 0.75rem 1rem;
+    color: var(--text-body);
+    font-family: 'Crimson Text', serif;
+    font-size: 1rem;
+    vertical-align: top;
+  }
+  .data-table tbody td:first-child {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--brown-light);
+    white-space: nowrap;
+  }
+
+  /* Processor cards */
+  .processor-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+    margin: 1.25rem 0;
+  }
+  @media(min-width: 500px) {
+    .processor-grid { grid-template-columns: 1fr 1fr; }
+  }
+  .processor-card {
+    background: var(--ivory);
+    border: 1px solid var(--ivory-dark);
+    border-left: 3px solid var(--gold);
+    border-radius: 2px;
+    padding: 1rem 1.1rem;
+  }
+  .processor-card .proc-name {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--green-deep);
+    margin-bottom: 0.25rem;
+  }
+  .processor-card .proc-purpose {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    margin-bottom: 0.35rem;
+    line-height: 1.5;
+  }
+  .processor-card .proc-location {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    opacity: 0.7;
+  }
+
+  /* Rights list */
+  .rights-list {
+    list-style: none;
+    margin: 1.25rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .rights-list li {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+    font-size: 1rem;
+    color: var(--text-body);
+    line-height: 1.6;
+  }
+  .rights-list li .right-icon {
+    flex-shrink: 0;
+    width: 22px; height: 22px;
+    background: var(--green-deep);
+    color: var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    margin-top: 0.15rem;
+  }
+  .rights-list li strong {
+    color: var(--green-deep);
+    font-weight: 600;
+  }
+
+  /* Highlight box */
+  .highlight-box {
+    background: rgba(201,168,76,0.07);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-left: 3px solid var(--gold);
+    border-radius: 2px;
+    padding: 1rem 1.25rem;
+    margin: 1.25rem 0;
+    font-size: 0.98rem;
+    color: var(--text-body);
+    line-height: 1.7;
+  }
+  .highlight-box strong { color: var(--green-deep); }
+
+  /* Contact card */
+  .contact-card {
+    background: var(--green-deep);
+    border-radius: 3px;
+    padding: 1.75rem 2rem;
+    margin-top: 1.25rem;
+  }
+  .contact-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    color: var(--ivory);
+    margin-bottom: 1rem;
+  }
+  .contact-item {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    margin-bottom: 0.65rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    color: rgba(245,239,224,0.6);
+    line-height: 1.5;
+  }
+  .contact-item .ci-label {
+    font-weight: 600;
+    color: var(--gold);
+    min-width: 70px;
+    flex-shrink: 0;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-size: 0.6rem;
+    padding-top: 0.1rem;
+  }
+  .contact-item a {
+    color: var(--gold-light);
+    text-decoration: none;
+  }
+  .contact-item a:hover { text-decoration: underline; }
+
+  /* Section divider */
+  .section-divider {
+    border: none;
+    border-top: 1px solid var(--ivory-dark);
+    margin: 3.5rem 0;
+  }
+
+  /* Last updated chip */
+  .updated-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.8rem;
+    border: 1px solid var(--ivory-dark);
+    border-radius: 20px;
+    color: var(--text-muted);
+    margin-bottom: 3rem;
+  }
+  .updated-chip::before { content: '●'; color: var(--green-light); font-size: 0.4rem; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--brown);
+    color: rgba(245,239,224,0.5);
+    padding: 3rem 1.5rem 2rem;
+    text-align: center;
+  }
+  footer .footer-logo {
+    font-family: 'Playfair Display', serif;
+    color: var(--gold);
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+  }
+  footer p { font-size: 0.88rem; max-width: 400px; margin: 0 auto 1.5rem; }
+  footer .footer-links {
+    display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+  footer .footer-links a {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(245,239,224,0.5);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  footer .footer-links a:hover { color: var(--gold); }
+  footer .copy {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.05em;
+    color: rgba(245,239,224,0.25);
+    border-top: 1px solid rgba(245,239,224,0.08);
+    padding-top: 1.5rem;
+  }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media(max-width: 500px) {
+    .nav-links { display: none; }
+    .toc-sidebar { display: none; }
+    .data-table { font-size: 0.85rem; }
+    .data-table thead th, .data-table tbody td { padding: 0.6rem 0.75rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html">To Christ 4 Christ</a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="index.html#modules">Lessons</a>
+    <a href="prayer-wall.html">Prayer Wall</a>
+    <a href="index.html#join">Join</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="policy-hero">
+  <p class="eyebrow">Your Data, Your Rights</p>
+  <h1>Privacy <em>Policy</em></h1>
+  <p class="hero-meta">
+    Governing law: <strong>Kenya Data Protection Act, 2019</strong> &nbsp;·&nbsp;
+    Effective: <strong>26 April 2026</strong>
+  </p>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="policy-wrap">
+
+  <!-- SIDEBAR TOC -->
+  <aside class="toc-sidebar">
+    <p class="toc-label">Contents</p>
+    <ul class="toc-list" id="toc">
+      <li><a href="#overview">1. Overview</a></li>
+      <li><a href="#who-we-are">2. Who We Are</a></li>
+      <li><a href="#what-we-collect">3. Data We Collect</a></li>
+      <li><a href="#how-we-use">4. How We Use It</a></li>
+      <li><a href="#consent">5. Consent</a></li>
+      <li><a href="#third-parties">6. Third-Party Processors</a></li>
+      <li><a href="#international">7. International Transfers</a></li>
+      <li><a href="#retention">8. Data Retention</a></li>
+      <li><a href="#children">9. Children's Privacy</a></li>
+      <li><a href="#prayer-wall">10. Prayer Wall</a></li>
+      <li><a href="#your-rights">11. Your Rights</a></li>
+      <li><a href="#security">12. Security</a></li>
+      <li><a href="#cookies">13. Cookies & Storage</a></li>
+      <li><a href="#changes">14. Policy Changes</a></li>
+      <li><a href="#contact">15. Contact Us</a></li>
+    </ul>
+  </aside>
+
+  <!-- CONTENT -->
+  <main class="policy-content">
+
+    <div class="updated-chip">Last updated: 26 April 2026</div>
+
+    <!-- SUMMARY BOX -->
+    <div class="summary-box">
+      <p class="sum-label">Plain-Language Summary</p>
+      <h2>What this means for you</h2>
+      <p>We collect only the personal information you voluntarily give us (your name, email, and location). We use it solely to manage your discipleship journey on this site. We do not sell it, share it for advertising, or use it for anything you have not consented to.</p>
+      <div class="summary-pills">
+        <span class="pill good">✓ No data selling</span>
+        <span class="pill good">✓ No advertising</span>
+        <span class="pill good">✓ You can delete anytime</span>
+        <span class="pill good">✓ Kenya DPA 2019 compliant</span>
+      </div>
+    </div>
+
+    <!-- 1. OVERVIEW -->
+    <section class="policy-section" id="overview">
+      <p class="section-num">Section 01</p>
+      <h2>Overview</h2>
+      <div class="section-rule"></div>
+      <p>To Christ 4 Christ ("we", "us", or "our") is a Christian discipleship ministry operating at <strong>tochrist4christ.org</strong>. We are committed to handling your personal information with the same care and integrity that we apply to our spiritual mission.</p>
+      <p>This Privacy Policy explains how we collect, use, store, and protect personal data submitted through our website, including the sign-up form, Prayer Wall, and lesson progress tracker. It is written in compliance with the <strong>Kenya Data Protection Act, 2019 (DPA 2019)</strong> and its accompanying regulations.</p>
+      <p>By using our website and voluntarily submitting your personal information, you acknowledge that you have read and understood this policy.</p>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- 2. WHO WE ARE -->
+    <section class="policy-section" id="who-we-are">
+      <p class="section-num">Section 02</p>
+      <h2>Who We Are</h2>
+      <div class="section-rule"></div>
+      <p>For the purposes of the Kenya Data Protection Act, 2019, To Christ 4 Christ is the <strong>Data Controller</strong> of personal information collected through this website. This means we determine the purposes and means of processing your personal data.</p>
+      <div class="highlight-box">
+        <strong>Data Controller:</strong> To Christ 4 Christ<br>
+        <strong>Website:</strong> tochrist4christ.org<br>
+        <strong>Contact Email:</strong> hello@tochrist4christ.org<br>
+        <strong>Country of Operation:</strong> Kenya
+      </div>
+      <p>We are in the process of registering with the <strong>Office of the Data Protection Commissioner (ODPC)</strong> of Kenya as required under Section 17 of the DPA 2019.</p>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- 3. WHAT WE COLLECT -->
+    <section class="policy-section" id="what-we-collect">
+      <p class="section-num">Section 03</p>
+      <h2>Data We Collect</h2>
+      <div class="section-rule"></div>
+      <p>We collect only the minimum personal information necessary to provide our service ("data minimisation" as required by Section 25 of the DPA 2019). We collect data in two ways: information you actively provide, and limited technical data your browser sends automatically.</p>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Data Type</th>
+            <th>What It Is</th>
+            <th>Why We Need It</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>First Name</td>
+            <td>Your given name as entered in the sign-up form</td>
+            <td>To personalise your progress tracker and welcome email</td>
+          </tr>
+          <tr>
+            <td>Last Name</td>
+            <td>Your family name (optional)</td>
+            <td>For our pastoral records</td>
+          </tr>
+          <tr>
+            <td>Email Address</td>
+            <td>Your email as entered in the sign-up form</td>
+            <td>To send your welcome email and discipleship updates</td>
+          </tr>
+          <tr>
+            <td>Location</td>
+            <td>City or country as entered by you (optional)</td>
+            <td>To understand the geographic reach of our ministry</td>
+          </tr>
+          <tr>
+            <td>Lesson Progress</td>
+            <td>Which lessons you have marked complete</td>
+            <td>To display your progress tracker on the site</td>
+          </tr>
+          <tr>
+            <td>Prayer Requests</td>
+            <td>Text submitted to the Prayer Wall</td>
+            <td>To display your request on the community wall</td>
+          </tr>
+          <tr>
+            <td>Form Submission Time</td>
+            <td>Timestamp of when you signed up</td>
+            <td>To maintain accurate records</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>We do <strong>not</strong> collect sensitive personal data such as health information, financial data, biometric data, or racial or ethnic origin. We do not collect data from social media logins or advertising networks.</p>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- 4. HOW WE USE IT -->
+    <section class="policy-section" id="how-we-use">
+      <p class="section-num">Section 04</p>
+      <h2>How We Use Your Data</h2>
+      <div class="section-rule"></div>
+      <p>We use personal data only for the specific purposes for which it was collected, in accordance with Section 26 of the DPA 2019. We will never use your data for purposes that are incompatible with why you shared it with us.</p>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Purpose</th>
+            <th>Legal Basis (DPA 2019)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Displaying your name and progress tracker on the site</td>
+            <td>Consent (Section 30)</td>
+          </tr>
+          <tr>
+            <td>Sending a welcome email when you register</td>
+            <td>Consent (Section 30)</td>
+          </tr>
+          <tr>
+            <td>Sending discipleship updates and lesson reminders</td>
+            <td>Consent (Section 30)</td>
+          </tr>
+          <tr>
+            <td>Publishing your prayer request on the Prayer Wall</td>
+            <td>Consent given at point of submission</td>
+          </tr>
+          <tr>
+            <td>Aggregate statistics (e.g. "how many people joined")</td>
+            <td>Legitimate interest — data is anonymised</td>
+          </tr>
+          <tr>
+            <td>Pastoral follow-up by ministry leadership</td>
+            <td>Consent (Section 30)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="highlight-box">
+        <strong>We will never:</strong> sell your data to any third party, share your data with advertisers, use your data for any commercial purpose, or send you unsolicited marketing unrelated to To Christ 4 Christ.
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- 5. CONSENT -->
+    <section class="policy-section" id="consent">
+      <p class="section-num">Section 05</p>
+      <h2>Consent</h2>
+      <div class="section-rule"></div>
+      <p>Under Section 30 of the Kenya Data Protection Act 2019, we are required to obtain your <strong>freely given, specific, informed, and unambiguous</strong> consent before processing your personal data. We obtain this consent when you submit the registration form on our website.</p>
+      <p>By completing and submitting the sign-up form, you consent to:</p>
+      <ul style="margin:0.75rem 0 1rem 1.5rem; color:var(--text-body); font-size:1rem; line-height:1.8;">
+        <li>To Christ 4 Christ storing your name, email, and location</li>
+        <li>Your name appearing in your personal progress tracker on this website</li>
+        <li>Receiving a welcome email and periodic discipleship updates at the email address you provide</li>
+        <li>Your data being processed by our third-party service providers (Netlify and EmailJS) as described in Section 6</li>
+      </ul>
+      <p><strong>Withdrawing consent:</strong> You have the right to withdraw consent at any time. To do so, email us at <a href="mailto:hello@tochrist4christ.org" style="color:var(--green-mid);">hello@tochrist4christ.org</a> with the subject line "Withdraw Consent". We will process your request within <strong>7 business days</strong> and confirm deletion of your data.</p>
+      <p>Withdrawing consent does not affect the lawfulness of any processing carried out before you withdrew it.</p>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- 6. THIRD PARTIES -->
+    <section class="policy-section" id="third-parties">
+      <p class="section-num">Section 06</p>
+      <h2>Third-Party Processors</h2>
+      <div class="section-rule"></div>
+      <p>We use a small number of carefully chosen third-party service providers ("Data Processors") to operate this website. These processors act only on our instructions and are contractually bound to protect your data. We do not sell data to or share data with any other parties.</p>
+
+      <div class="processor-grid">
+        <div class="processor-card">
+          <p class="proc-name">Netlify, Inc.</p>
+          <p class="proc-purpose">Hosts this website and receives form submissions when you register.</p>
+          <p class="proc-location">🌍 United States · GDPR-compliant · <a href="https://www.netlify.com/privacy/" target="_blank" style="color:var(--green-mid);font-size:0.85em;">Privacy Policy</a></p>
+        </div>
+        <div class="processor-card">
+          <p class="proc-name">EmailJS</p>
+          <p class="proc-purpose">Sends the welcome email to you when you register. Your email address is transmitted through their service.</p>
+          <p class="proc-location">🌍 United States · GDPR-compliant · <a href="https://www.emailjs.com/legal/privacy-policy/" target="_blank" style="color:var(--green-mid);font-size:0.85em;">Privacy Policy</a></p>
+        </div>
+        <div class="processor-card">
+          <p class="proc-name">Google Fonts</p>
+          <p class="proc-purpose">Delivers the fonts used on this website. Your IP address may be logged by Google when fonts are loaded.</p>
+          <p class="proc-location">🌍 United States · <a href="https://policies.google.com/privacy" target="_blank" style="color:var(--green-mid);font-size:0.85em;">Privacy Policy</a></p>
+        </div>
+        <div class="processor-card">
+          <p class="proc-name">Anthropic, PBC</p>
+          <p class="proc-purpose">Powers AI moderation of Prayer Wall submissions. Your prayer text is sent to the API for review before appearing publicly. No identifying data is retained by Anthropic.</p>
+          <p class="proc-location">🌍 United States · <a href="https://www.anthropic.com/privacy" target="_blank" style="color:var(--green-mid);font-size:0.85em;">Privacy Policy</a></p>
+        </div>
+      </div>
+
+      <p>We require all processors to implement appropriate technical and organisational security measures. We do not permit them to use your data for their own purposes.</p>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- 7. INTERNATIONAL TRANSFERS -->
+    <section class="policy-section" id="international">
+      <p class="section-num">Section 07</p>
+      <h2>International Data Transfers</h2>
+      <div class="section-rule"></div>
+      <p>Our service providers (Netlify, EmailJS, Google, and Anthropic) are based in the <strong>United States of America</strong>. When you submit your personal data through our website, it is transferred outside Kenya to servers located in the United States.</p>
+      <p>Under Section 48 of the Kenya Data Protection Act 2019, we may transfer personal data outside Kenya where the recipient country provides an adequate level of data protection. All our processors maintain compliance with the <strong>EU General Data Protection Regulation (GDPR)</strong>, which provides a standard of protection comparable to the DPA 2019.</p>
+      <p>By using our website and submitting your information, you expressly consent to this international transfer as described.</p>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- 8. RETENTION -->
+    <section class="policy-section" id="retention">
+      <p class="section-num">Section 08</p>
+      <h2>Data Retention</h2>
+      <div class="section-rule"></div>
+      <p>We retain your personal data only as long as is necessary for the purpose for which it was collected, as required by Section 39 of the DPA 2019.</p>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Retention Period</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Registration data (name, email, location)</td>
+            <td>Until you request deletion, or 3 years of inactivity</td>
+          </tr>
+          <tr>
+            <td>Lesson progress (stored in your browser)</td>
+            <td>Until you clear your browser storage or request reset</td>
+          </tr>
+          <tr>
+            <td>Prayer Wall submissions</td>
+            <td>Until you request removal, or 2 years</td>
+          </tr>
+          <tr>
+            <td>Email correspondence</td>
+            <td>2 years from last contact</td>
+          </tr>
+          <tr>
+            <td>Netlify form submission logs</td>
+            <td>Governed by Netlify's retention policy (30 days on free plan)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>When data is no longer required, we will securely delete or anonymise it.</p>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- 9. CHILDREN -->
+    <section class="policy-section" id="children">
+      <p class="section-num">Section 09</p>
+      <h2>Children's Privacy</h2>
+      <div class="section-rule"></div>
+      <p>This website is intended for persons aged <strong>18 years and older</strong>. We do not knowingly collect personal data from children under 18. Under the Kenya Data Protection Act 2019 and the Children Act (Cap. 141), processing the personal data of a child requires the consent of a parent or legal guardian.</p>
+      <p>If you are a parent or guardian and believe your child has submitted personal information to us without your consent, please contact us immediately at <a href="mailto:hello@tochrist4christ.org" style="color:var(--green-mid);">hello@tochrist4christ.org</a> and we will delete that information promptly.</p>
+      <div class="highlight-box">
+        Our sign-up form includes an age confirmation checkbox. Checking this box confirms that you are 18 years of age or older, or that you have the consent of a parent or guardian.
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- 10. PRAYER WALL -->
+    <section class="policy-section" id="prayer-wall">
+      <p class="section-num">Section 10</p>
+      <h2>Prayer Wall — Special Notice</h2>
+      <div class="section-rule"></div>
+      <p>Our Prayer Wall is a <strong>publicly visible</strong> feature of the website. When you submit a prayer request, that request — along with the name you provide — will be visible to all visitors of the site.</p>
+      <p>Please be aware of the following before submitting:</p>
+      <ul style="margin:0.75rem 0 1rem 1.5rem; color:var(--text-body); font-size:1rem; line-height:1.8;">
+        <li>All Prayer Wall submissions are reviewed by our AI moderation system before appearing publicly.</li>
+        <li>You may choose to post anonymously — your name will then appear as "Anonymous".</li>
+        <li>Do not include sensitive personal information (such as specific medical details, financial information, or contact numbers) in your prayer request.</li>
+        <li>By submitting, you consent to your request being displayed publicly on this website.</li>
+        <li>To request removal of your prayer, email us at <a href="mailto:hello@tochrist4christ.org" style="color:var(--green-mid);">hello@tochrist4christ.org</a>.</li>
+      </ul>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- 11. YOUR RIGHTS -->
+    <section class="policy-section" id="your-rights">
+      <p class="section-num">Section 11</p>
+      <h2>Your Rights Under the DPA 2019</h2>
+      <div class="section-rule"></div>
+      <p>The Kenya Data Protection Act 2019 grants you the following rights in relation to your personal data. We are committed to honouring these rights within the timelines required by law.</p>
+
+      <ul class="rights-list">
+        <li>
+          <span class="right-icon">1</span>
+          <div><strong>Right of Access (Section 26(a)):</strong> You may request a copy of all personal data we hold about you at any time. We will respond within <strong>21 days</strong>.</div>
+        </li>
+        <li>
+          <span class="right-icon">2</span>
+          <div><strong>Right to Rectification (Section 26(b)):</strong> If any data we hold about you is inaccurate or incomplete, you may request that we correct it.</div>
+        </li>
+        <li>
+          <span class="right-icon">3</span>
+          <div><strong>Right to Erasure (Section 26(c)):</strong> You may request that we permanently delete all personal data we hold about you. We will confirm deletion within <strong>7 business days</strong>.</div>
+        </li>
+        <li>
+          <span class="right-icon">4</span>
+          <div><strong>Right to Object (Section 26(d)):</strong> You may object to processing of your data for any purpose, including receiving emails from us.</div>
+        </li>
+        <li>
+          <span class="right-icon">5</span>
+          <div><strong>Right to Data Portability (Section 26(e)):</strong> You may request your data in a portable, machine-readable format (e.g. CSV) so you can transfer it to another service.</div>
+        </li>
+        <li>
+          <span class="right-icon">6</span>
+          <div><strong>Right to Withdraw Consent (Section 30(3)):</strong> You may withdraw consent for any processing at any time, without affecting the lawfulness of prior processing.</div>
+        </li>
+      </ul>
+
+      <p>To exercise any of these rights, contact us at <a href="mailto:hello@tochrist4christ.org" style="color:var(--green-mid);">hello@tochrist4christ.org</a> with the subject line "Data Rights Request". You may also lodge a complaint with the <strong>Office of the Data Protection Commissioner (ODPC)</strong> at <a href="https://www.odpc.go.ke" target="_blank" style="color:var(--green-mid);">odpc.go.ke</a> if you believe we have not handled your data lawfully.</p>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- 12. SECURITY -->
+    <section class="policy-section" id="security">
+      <p class="section-num">Section 12</p>
+      <h2>Security of Your Data</h2>
+      <div class="section-rule"></div>
+      <p>We take the security of your personal data seriously. We implement the following measures in line with Section 41 of the DPA 2019:</p>
+      <ul style="margin:0.75rem 0 1rem 1.5rem; color:var(--text-body); font-size:1rem; line-height:1.8;">
+        <li><strong>HTTPS encryption</strong> — all data transmitted between your browser and our website is encrypted using TLS.</li>
+        <li><strong>Password protection</strong> — our admin panel is protected by a password.</li>
+        <li><strong>Local storage</strong> — your lesson progress is stored only in your own browser and is never transmitted to our servers.</li>
+        <li><strong>Trusted processors only</strong> — we use only established, reputable service providers with their own robust security programmes.</li>
+      </ul>
+      <p>In the event of a data breach that is likely to result in a risk to your rights and freedoms, we will notify the <strong>ODPC within 72 hours</strong> of becoming aware of it, and will notify you directly if the breach poses a high risk to you.</p>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- 13. COOKIES -->
+    <section class="policy-section" id="cookies">
+      <p class="section-num">Section 13</p>
+      <h2>Cookies &amp; Browser Storage</h2>
+      <div class="section-rule"></div>
+      <p>This website uses <strong>localStorage</strong> (a browser technology similar to cookies) to remember your sign-up details and lesson progress locally on your device. This data never leaves your browser unless you explicitly submit a form.</p>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Storage Key</th>
+            <th>What It Stores</th>
+            <th>Expires</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>tc4c_user</td>
+            <td>Your first name, email, and location from sign-up</td>
+            <td>Until browser storage is cleared</td>
+          </tr>
+          <tr>
+            <td>tc4c_completed</td>
+            <td>IDs of lessons you have marked complete</td>
+            <td>Until browser storage is cleared</td>
+          </tr>
+          <tr>
+            <td>prayed_ids</td>
+            <td>IDs of prayer requests you have prayed for</td>
+            <td>Until browser storage is cleared</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>Google Fonts may set a session cookie to serve fonts efficiently. We do not use any advertising, tracking, or analytics cookies. You can clear all browser storage at any time through your browser settings.</p>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- 14. CHANGES -->
+    <section class="policy-section" id="changes">
+      <p class="section-num">Section 14</p>
+      <h2>Changes to This Policy</h2>
+      <div class="section-rule"></div>
+      <p>We may update this Privacy Policy from time to time to reflect changes in our practices, technology, or legal requirements. When we make material changes, we will update the "Last updated" date at the top of this page and, where appropriate, notify registered users by email.</p>
+      <p>We encourage you to review this page periodically. Your continued use of the website after any changes constitutes acceptance of the updated policy.</p>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- 15. CONTACT -->
+    <section class="policy-section" id="contact">
+      <p class="section-num">Section 15</p>
+      <h2>Contact Us</h2>
+      <div class="section-rule"></div>
+      <p>If you have any questions about this Privacy Policy, wish to exercise your data rights, or want to make a complaint, please contact us using the details below. We aim to respond to all data-related enquiries within <strong>5 business days</strong>.</p>
+
+      <div class="contact-card">
+        <h3>Data Controller Contact</h3>
+        <div class="contact-item">
+          <span class="ci-label">Ministry</span>
+          <span>To Christ 4 Christ</span>
+        </div>
+        <div class="contact-item">
+          <span class="ci-label">Email</span>
+          <a href="mailto:hello@tochrist4christ.org">hello@tochrist4christ.org</a>
+        </div>
+        <div class="contact-item">
+          <span class="ci-label">Website</span>
+          <a href="https://tochrist4christ.org">tochrist4christ.org</a>
+        </div>
+        <div class="contact-item">
+          <span class="ci-label">Country</span>
+          <span>Kenya</span>
+        </div>
+      </div>
+
+      <div class="contact-card" style="margin-top:1rem; background:var(--ivory); border:1px solid var(--ivory-dark);">
+        <h3 style="color:var(--green-deep);">Office of the Data Protection Commissioner</h3>
+        <div class="contact-item" style="color:var(--text-muted);">
+          <span class="ci-label" style="color:var(--green-mid);">Website</span>
+          <a href="https://www.odpc.go.ke" target="_blank" style="color:var(--green-mid);">www.odpc.go.ke</a>
+        </div>
+        <div class="contact-item" style="color:var(--text-muted);">
+          <span class="ci-label" style="color:var(--green-mid);">Email</span>
+          <a href="mailto:info@odpc.go.ke" style="color:var(--green-mid);">info@odpc.go.ke</a>
+        </div>
+        <div class="contact-item" style="color:var(--text-muted);">
+          <span class="ci-label" style="color:var(--green-mid);">Note</span>
+          <span>You have the right to lodge a complaint with the ODPC if you believe your data rights have been violated.</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">To Christ 4 Christ</div>
+  <p>A discipleship community built on faith, integrity, and the Word of God.</p>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="prayer-wall.html">Prayer Wall</a>
+    <a href="privacy-policy.html">Privacy Policy</a>
+    <a href="mailto:hello@tochrist4christ.org">Contact</a>
+  </div>
+  <div class="copy">© 2026 To Christ 4 Christ. All rights reserved. Governed by the Kenya Data Protection Act, 2019.</div>
+</footer>
+
+<script>
+  // ─── SCROLL SPY (TOC highlight) ───────────────────────────
+  const sections = document.querySelectorAll('.policy-section');
+  const tocLinks = document.querySelectorAll('.toc-list a');
+
+  const spy = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        tocLinks.forEach(a => {
+          a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  // ─── SCROLL REVEAL ────────────────────────────────────────
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        revealObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  sections.forEach(s => {
+    spy.observe(s);
+    revealObs.observe(s);
+  });
+</script>
+</body>
+</html>

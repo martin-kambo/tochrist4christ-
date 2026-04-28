@@ -1,0 +1,1625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>To Christ 4 Christ | A Discipleship Journey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-deep: #1B3A2E;
+    --green-mid: #2D5A40;
+    --green-light: #4A8C60;
+    --gold: #C9A84C;
+    --gold-light: #E8C96A;
+    --ivory: #F5EFE0;
+    --ivory-dark: #EDE5CC;
+    --brown: #2C1A0E;
+    --brown-light: #7A5230;
+    --cream: #FFFDF5;
+    --text-body: #3C2A1A;
+    --text-muted: #7A6A50;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Crimson Text', Georgia, serif;
+    background: var(--cream);
+    color: var(--text-body);
+    font-size: 18px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: var(--green-deep);
+    padding: 0.75rem 1.5rem;
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid rgba(201,168,76,0.3);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    color: var(--gold);
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 1.5rem; }
+  .nav-links a {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ivory);
+    text-decoration: none;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+  }
+  .nav-links a:hover { opacity: 1; color: var(--gold-light); }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    background: var(--green-deep);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 7rem 1.5rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 80%, rgba(201,168,76,0.06) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(74,140,96,0.08) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  /* Cross watermark */
+  .hero::after {
+    content: '✝';
+    position: absolute;
+    font-size: 28rem;
+    color: rgba(201,168,76,0.03);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    line-height: 1;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.25rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 7vw, 4.5rem);
+    color: var(--ivory);
+    line-height: 1.15;
+    max-width: 700px;
+    margin-bottom: 1rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s forwards;
+  }
+
+  .hero h1 em {
+    color: var(--gold);
+    font-style: italic;
+  }
+
+  .hero-verse {
+    font-family: 'Crimson Text', serif;
+    font-style: italic;
+    font-size: 1.15rem;
+    color: rgba(245,239,224,0.7);
+    max-width: 460px;
+    margin-bottom: 0.4rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.6s forwards;
+    min-height: 2.5rem;
+    transition: opacity 0.5s;
+  }
+
+  .hero-ref {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    opacity: 0;
+    animation: fadeUp 0.8s 0.7s forwards;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-actions {
+    display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.9s forwards;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--brown);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.9rem 2.2rem;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+  .btn-ghost {
+    display: inline-block;
+    border: 1px solid rgba(201,168,76,0.5);
+    color: var(--ivory);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.9rem 2.2rem;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--gold); background: rgba(201,168,76,0.08); }
+
+  .scroll-hint {
+    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+    opacity: 0; animation: fadeIn 1s 1.5s forwards;
+  }
+  .scroll-hint span {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(201,168,76,0.5);
+  }
+  .scroll-arrow {
+    width: 1px; height: 36px;
+    background: linear-gradient(to bottom, rgba(201,168,76,0.6), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  /* ─── SECTION BASE ─── */
+  section { padding: 5rem 1.5rem; }
+  .container { max-width: 780px; margin: 0 auto; }
+  .section-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--green-light);
+    margin-bottom: 0.75rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    line-height: 1.2;
+    color: var(--green-deep);
+    margin-bottom: 1.25rem;
+  }
+  .section-title em { color: var(--gold); font-style: italic; }
+  .divider {
+    width: 48px; height: 2px;
+    background: var(--gold);
+    margin: 1.5rem 0;
+  }
+
+  /* ─── ABOUT ─── */
+  .about { background: var(--cream); }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    margin-top: 3rem;
+  }
+  @media(min-width: 640px) {
+    .about-grid { grid-template-columns: 1fr 1fr; }
+  }
+  .about-card {
+    border-left: 2px solid var(--gold);
+    padding-left: 1.25rem;
+  }
+  .about-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: var(--green-deep);
+    margin-bottom: 0.5rem;
+  }
+  .about-card p { color: var(--text-muted); font-size: 1rem; }
+
+  /* ─── VERSE STRIP ─── */
+  .verse-strip {
+    background: var(--green-deep);
+    padding: 3.5rem 1.5rem;
+    text-align: center;
+  }
+  .verse-strip blockquote {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.2rem, 3vw, 1.7rem);
+    font-style: italic;
+    color: var(--ivory);
+    max-width: 640px;
+    margin: 0 auto 0.75rem;
+    line-height: 1.5;
+  }
+  .verse-strip cite {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    font-style: normal;
+  }
+
+  /* ─── COURSE MODULES ─── */
+  .modules { background: var(--ivory); }
+  .module-list { margin-top: 2.5rem; display: flex; flex-direction: column; gap: 1rem; }
+
+  .module-item {
+    background: var(--cream);
+    border: 1px solid var(--ivory-dark);
+    border-radius: 2px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .module-item:hover { border-color: var(--gold); }
+
+  .module-header {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1.1rem 1.25rem;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .module-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: var(--gold);
+    font-style: italic;
+    min-width: 2rem;
+    line-height: 1;
+  }
+
+  .module-info { flex: 1; }
+  .module-info h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    color: var(--green-deep);
+  }
+  .module-info small {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+  }
+
+  .module-toggle {
+    width: 20px; height: 20px;
+    border: 1px solid var(--ivory-dark);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, border-color 0.2s;
+    flex-shrink: 0;
+  }
+  .module-item.open .module-toggle { background: var(--gold); border-color: var(--gold); }
+  .module-toggle::after {
+    content: '+';
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1;
+  }
+  .module-item.open .module-toggle::after { content: '−'; color: var(--brown); }
+
+  .module-body {
+    display: none;
+    padding: 0 1.25rem 1.25rem 1.25rem;
+    border-top: 1px solid var(--ivory-dark);
+  }
+  .module-item.open .module-body { display: block; }
+  .module-body p { font-size: 0.98rem; color: var(--text-muted); margin-top: 0.75rem; }
+  .module-lessons {
+    list-style: none;
+    margin-top: 0.75rem;
+    display: flex; flex-direction: column; gap: 0.4rem;
+  }
+  .module-lessons li {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.78rem;
+    color: var(--text-body);
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .module-lessons li::before {
+    content: '◆';
+    font-size: 0.4rem;
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+
+  /* ─── AWM RESOURCE BOX ─── */
+  .module-resource {
+    margin-top: 1.1rem;
+    padding: 0.85rem 1rem;
+    background: rgba(201,168,76,0.06);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-left: 3px solid var(--gold);
+    border-radius: 2px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .module-resource .res-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--brown-light);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .module-resource .res-links {
+    display: flex; flex-wrap: wrap; gap: 0.5rem;
+  }
+  .res-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--green-mid);
+    text-decoration: none;
+    border: 1px solid rgba(45,90,64,0.3);
+    border-radius: 2px;
+    padding: 0.3rem 0.7rem;
+    transition: background 0.2s, border-color 0.2s;
+    white-space: nowrap;
+  }
+  .res-btn:hover { background: rgba(45,90,64,0.06); border-color: var(--green-mid); }
+  .res-btn::before { content: '↓'; font-size: 0.7rem; }
+
+  /* ─── SIGN UP ─── */
+  .signup {
+    background: var(--green-deep);
+    position: relative;
+    overflow: hidden;
+  }
+  .signup::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 70% 50%, rgba(201,168,76,0.05) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .signup .section-title { color: var(--ivory); }
+  .signup .section-label { color: var(--gold-light); }
+  .signup p { color: rgba(245,239,224,0.7); font-size: 1.05rem; margin-bottom: 2rem; }
+
+  .form-card {
+    background: rgba(255,253,245,0.04);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 4px;
+    padding: 2rem;
+    margin-top: 2rem;
+  }
+
+  .form-row { margin-bottom: 1.25rem; }
+  .form-row label {
+    display: block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+  }
+  .form-row input,
+  .form-row select,
+  .form-row textarea {
+    width: 100%;
+    background: rgba(255,253,245,0.06);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 2px;
+    padding: 0.75rem 1rem;
+    font-family: 'Crimson Text', serif;
+    font-size: 1rem;
+    color: var(--ivory);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-row input::placeholder { color: rgba(245,239,224,0.35); }
+  .form-row input:focus,
+  .form-row select:focus { border-color: var(--gold); }
+  .form-row select { color: var(--ivory); }
+  .form-row select option { background: var(--green-deep); }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0 1.25rem;
+  }
+  @media(min-width: 500px) {
+    .form-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  .form-submit {
+    width: 100%;
+    background: var(--gold);
+    color: var(--brown);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 1rem;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .form-submit:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .form-privacy {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.05em;
+    color: rgba(245,239,224,0.4);
+    text-align: center;
+    margin-top: 1rem;
+  }
+  .form-privacy a {
+    color: var(--gold-light);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .form-privacy a:hover { color: var(--gold); }
+
+  /* Age + consent checkbox row */
+  .consent-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    margin-bottom: 1.1rem;
+    padding: 0.85rem 1rem;
+    background: rgba(255,253,245,0.04);
+    border: 1px solid rgba(201,168,76,0.18);
+    border-radius: 2px;
+  }
+  .consent-row input[type="checkbox"] {
+    accent-color: var(--gold);
+    width: 15px; height: 15px;
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+    cursor: pointer;
+  }
+  .consent-row label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.04em;
+    color: rgba(245,239,224,0.55);
+    line-height: 1.6;
+    cursor: pointer;
+  }
+  .consent-row label a {
+    color: var(--gold-light);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .consent-row label a:hover { color: var(--gold); }
+
+  .success-msg {
+    display: none;
+    text-align: center;
+    padding: 2rem;
+    color: var(--ivory);
+  }
+  .success-msg .checkmark {
+    font-size: 2.5rem;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .success-msg h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  /* ─── COMMUNITY ─── */
+  .community { background: var(--cream); }
+  .pillars {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+  }
+  @media(min-width: 560px) {
+    .pillars { grid-template-columns: 1fr 1fr; }
+  }
+  .pillar {
+    background: var(--ivory);
+    border: 1px solid var(--ivory-dark);
+    padding: 1.5rem;
+    border-radius: 2px;
+    position: relative;
+  }
+  .pillar-icon {
+    font-size: 1.6rem;
+    margin-bottom: 0.75rem;
+    display: block;
+    filter: sepia(0.5);
+  }
+  .pillar h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--green-deep);
+    margin-bottom: 0.4rem;
+  }
+  .pillar p { font-size: 0.95rem; color: var(--text-muted); }
+
+  /* ─── STATS ─── */
+  .stats-strip {
+    background: var(--ivory-dark);
+    padding: 3rem 1.5rem;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--green-deep);
+    display: block;
+  }
+  .stat-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--brown);
+    color: rgba(245,239,224,0.6);
+    padding: 3rem 1.5rem 2rem;
+    text-align: center;
+  }
+  footer .footer-logo {
+    font-family: 'Playfair Display', serif;
+    color: var(--gold);
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+  }
+  footer p {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    max-width: 400px;
+    margin: 0 auto 1.5rem;
+  }
+  footer .footer-links {
+    display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+  footer .footer-links a {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(245,239,224,0.5);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  footer .footer-links a:hover { color: var(--gold); }
+  footer .copy {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.05em;
+    color: rgba(245,239,224,0.25);
+    border-top: 1px solid rgba(245,239,224,0.08);
+    padding-top: 1.5rem;
+  }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; } to { opacity: 1; }
+  }
+  @keyframes scrollPulse {
+    0%, 100% { transform: scaleY(1); opacity: 0.6; }
+    50% { transform: scaleY(0.6); opacity: 0.3; }
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  /* ─── MOBILE NAV TOGGLE ─── */
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .nav-toggle span {
+    display: block;
+    width: 20px; height: 1.5px;
+    background: var(--ivory);
+    transition: transform 0.2s;
+  }
+  @media(max-width: 500px) {
+    .nav-links { display: none; }
+    .nav-toggle { display: flex; }
+  }
+
+  /* Progress bar (for logged-in view preview) */
+  .progress-preview {
+    background: var(--green-deep);
+    padding: 2.5rem 1.5rem;
+  }
+  .progress-card {
+    background: rgba(255,253,245,0.05);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 4px;
+    padding: 1.5rem;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  .progress-card h4 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+  }
+  .progress-card .name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--ivory);
+    margin-bottom: 1rem;
+  }
+  .progress-bar-wrap {
+    background: rgba(255,253,245,0.08);
+    border-radius: 2px;
+    height: 4px;
+    margin-bottom: 0.4rem;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 2px;
+    transition: width 1.5s ease;
+    width: 0;
+  }
+  .progress-meta {
+    display: flex; justify-content: space-between;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: rgba(245,239,224,0.5);
+    margin-bottom: 1rem;
+  }
+  .badge-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .badge {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: rgba(201,168,76,0.12);
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold-light);
+    padding: 0.2rem 0.6rem;
+    border-radius: 2px;
+  }
+  .badge.earned { background: rgba(201,168,76,0.25); }
+
+  /* ─── REAL PROGRESS TRACKER ─── */
+  .progress-tracker {
+    background: var(--green-deep);
+    padding: 2.5rem 1.5rem;
+    display: none; /* shown via JS when user has signed up */
+  }
+  .progress-tracker.visible { display: block; }
+
+  .tracker-card {
+    background: rgba(255,253,245,0.05);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 6px;
+    padding: 1.75rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .tracker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .tracker-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: var(--ivory);
+  }
+  .tracker-pct {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+  }
+  .tracker-bar-wrap {
+    background: rgba(255,253,245,0.08);
+    border-radius: 3px;
+    height: 6px;
+    margin-bottom: 1.25rem;
+    overflow: hidden;
+  }
+  .tracker-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    border-radius: 3px;
+    transition: width 0.8s ease;
+    width: 0%;
+  }
+  .tracker-modules {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .tracker-mod-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .tracker-mod-name {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem;
+    color: rgba(245,239,224,0.6);
+    flex: 1;
+  }
+  .tracker-mod-bar-wrap {
+    width: 100px;
+    height: 3px;
+    background: rgba(255,253,245,0.08);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .tracker-mod-bar {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 2px;
+    transition: width 0.8s ease;
+  }
+  .tracker-mod-count {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.6rem;
+    color: rgba(245,239,224,0.4);
+    min-width: 32px;
+    text-align: right;
+  }
+  .tracker-badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 1.25rem;
+    padding-top: 1.1rem;
+    border-top: 1px solid rgba(201,168,76,0.1);
+  }
+  .tracker-reset {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    color: rgba(245,239,224,0.25);
+    margin-top: 1rem;
+    text-align: right;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .tracker-reset:hover { color: rgba(245,239,224,0.5); }
+
+  /* ─── LESSON CHECKBOXES ─── */
+  .module-lessons li {
+    cursor: pointer;
+    transition: color 0.2s;
+    padding: 0.3rem 0;
+  }
+  .module-lessons li.completed {
+    color: var(--text-muted);
+    text-decoration: line-through;
+    opacity: 0.6;
+  }
+  .module-lessons li::before {
+    transition: color 0.2s;
+  }
+  .module-lessons li.completed::before {
+    content: '✓';
+    color: var(--green-light);
+    font-size: 0.6rem;
+  }
+  .lesson-check-hint {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    color: var(--gold);
+    opacity: 0.6;
+    margin-top: 0.6rem;
+    display: block;
+  }
+</style>
+  <!-- EmailJS — sends real emails from the browser, no backend needed -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">To Christ 4 Christ</a>
+  <div class="nav-links">
+    <a href="#course">The Course</a>
+    <a href="#community">Community</a>
+    <a href="#signup">Begin</a>
+  </div>
+  <div class="nav-toggle" onclick="this.classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <img src="data:image/webp;base64,UklGRoJJAABXRUJQVlA4IHZJAACwVwKdASqwBLAEPrVaqk+nJTqmoXLog1AWiWdu+FVtAQnaHtqb8wfzv8P2p8j+rP3P9+/JD3zORe8L4f+C9dD+d3UfDf9TzWOh/Nt/v/VV+q/YS/Z3z3PW9+9Hqb/db1iPTt/ZPVI/uXVR+iJ00v7wZQH8y/1X+59SnzP+Z8bdZPg/+Q3N3ZL869Qj8l/rG+DgC/Tv8R6bE1b8e1APOrv9KAflL/+Xl4/av/J6ZHWlCecz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7dYRl14SwBbsXmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbm3P25n25n25n25n25n25n25n25n25n25n25n25n25n25n3HWZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9uaFnbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbrCMuvCWALdi8z7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7c25+3M+3M+3M+3M+3M+3M+3M+3M+3M+3M+3M+3M+3M+3M+46zPtzPtzPtzPtzPtzPtzPtzPtzPtzPtzPtzPtzPtzPtzQs7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7dYRl14SwBbsXmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbm3P25n25n25n25n25n25n25n25n25n25n25n25n25n25n3HWZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9uStK9YYuvCWALdi8z8wARl14SwBbsXmfbmfbmfbmfbmfbmfbTQLx48oHXqaFbsXmfbmfcdZn25n25n25n25n25n25n25n25n20C13g8mE83k158Suz9hkHxE20vU976VcP2jmkJl/k603CWALdi825+3M+3M+3M+3M+3M+3M+3M+3M+3MqbtZNLdsfGUyugacnF8w4D9Jyr+Gm1p5JvzR6tkxulS54L1rWU+BaaQEo7oB+wkeMq0RIy68JYAt3KS8z7cz7cz7cz7cz7cz7cz7cz7clYSbry3zt5w5InFgpWzjOo3KhO2TaGeUlEo3SHWwRqBCfKVKv1nOwI32ZezUobgyZAZxUqbALdi80LO3M+3M+3M+3M+3M+3M+3M+3M+viZWycQHiRrqaK4SwLSKFqWWfgxgJwDPUSmcmaPpv0ibgO4tCj8yJil+P8Iouo4+KYwslUBPhB3JwV4f7QDlPofmFOkCgFuxh1mfbmfbmfbmfbmfbmfbmfbmfbktwjnuZD3XrCz5jIQajALTXLQdxxF5IRlxXB5P/mE3/f698CaeDQge29kmV2ZmQg0jjF4q741hOxYlvTzfoVescu6eZBTg6wk6oi2NZlC+gJ20XgAj0jcqy0UwC4H7LzPtzPtzPtzPtzPtzPtzPtzPrso4aHiGjIuqHm/GbkjkjD/IB41rgmYTVsn2RsDfo0rrzvrSOeET+unsUipDOf3xxYYRu2SPUYYu5sBGlhISWb6uoyctjDkMU87Taw9GHF5n25oWduZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ6jknqME7nwjmwtDRvweikY/faXKTs2EhEIVjO4YsRduYkqo5qc710XLhXxYM5VUH766maesXA5tF7ZB2dZzFR4qDn2seE+TZnwCm4SwBcD9l5n25n25n25n25n25n25n25oGeA25Ad/y1xxionJm1EoFFwuHcFZWGYLwgKbwke3LZICzGNeunJD6wbsHXX5pyk4FFBZ4eDitHK+vAbv332COIEuxeZ9x1mfbmfbmfbmfbmfbmfbmfbmfbQLNNe46vO9jRh0ggaPsjdKsaCAOQWy5ocVw6czQsEj/6nirOYMSScjzoZ8VIGkcYyifuQgWONYBuCyj2M1mP2udwC9b9MjlBQDAPn7852EXmfbrCMuvCWALdi8z7cz7cz7cz7cz69ojKGj58qx9jSVG4fvIy+VNpTRjEE9tL6ZzRIBRZwg9cCG1FANvcElON07vKHeZUFL5MzbsppOsNI8pptb2XIqmR72ICMu94C3YvM+3M+3M+3M+3M+3M+3M9QBKtdHHsqsliOF6DCHtlncG73zpLLqmOPMkAwm71cOG/K5Qi49kLmA6JQ9VyBWfW5xkc04NgDkv+bAQlOwjUrMv8iicaTbmfbrCMuvCWALdi8z7cz7cz7cz7cz7B+Jp5GcAI7jFq/qYw3SznuX7knvx8t+i8YBSNPlbkfkzGe3sitDRSWL51UDTbLO7mcdiCeI+Cv3+7+iPWRiZQWXJEiPOKp2cBKzwPOk0mWhYit2RABGXXhLAFuxeZ9uZ9uZ9uZ9tIHElOokJPjJglG9QUayC+AQUkG4wGAbWC/c9qJ9A9vIH+uvOUKwT0pr2X+HJq/fej7/PfboyH6s7xlg2EkkglHKexcjFrl2jHXJbwoBgG7F5n25n25n25n25n25n25n1ylL48QMtMaD6SvQB8XN17w+7Ue9kh8BWB4EUiO4o4TRlpTAg2Yuwr/xNpREVS5jhiSxpW3haUQXWqFuxh1mfbmfbmfbmfbmfbmfbmfbmWoMkaZLIA6om13+xWuFwVGStJmuP1ZdY13ZBifPDPIQWLbRbtvVA6RhcFMw+STcJYFxX/7cz7cz7cz7cz7cz7cz7cklTcZ2eUCi7Coj1oESCvE12Ysxs0GmZLKg4ll5qD4l90tqRraw+2l9sGdP84vCGA84uCA+b+l2qt1/BPtd5L09UZ0xpCnBkv5PPJisDyzxXivd4q42fkCPnVeoJx2Ey1ISTc6QY5x0y6pK4gAq62AaC2rsNAVX/8wARl14SwBbsXmfbmfbmfbmeoAdypzUKFXTQakH46g/RCFVMv//9o5JazNanN5wYi7fSHwRMaOix3QeHeYFqtnDu2szEO4XCL/JDi2BrR8qNuTJCnBwmUfXNr/kC8GNh/lfmDuUy7UVo0MYVKwr/UYmdWt8EjCT7OPrlUaTqRnEzW5dUB9vB7BVFSIa2X3ekC2bRHnWYmd7d3OoUNoGLAX+EXm3P25n25n25n25n25n25n25nphFX4MTn+ODBLLpc//Q7+iPEwcTl+tTAM1oyvBLE6iC9ljdbwB95UyTgGxM48tcWCE6dIMAFsN2R3zp9KJhOgeyJdh8+LB67AtLg6HbvYooiAzPQGet3AnVa4sihFqochRal8Fdf/JWE5v8YzhOJlI88qH2HAlUmFwbF2fM+em4vWEZdeEsAW7F5n25n25n25n2HIvgR9IlcsrGFr5mSRajQPQSO2/suNITCp/RNAoWABYQ8741CptzMBwN453GLhtRXPWXbzU/oXzipMOiJhhsn/7uvGirVzyj2lhaWOCPQCMQ8itLwkYL/lE2lwDrdmJ6RB1wocx1pQLeg/wHH8yUWMA/meALe5SXmfbmfbmfbmfbmfbmfbmfXd4WZutfJ74Kvlvp+NN74moGiZQEgMxAI9s0hyJ/72+bW50dIEEyPF9Tcm6s7UPHlHVdxl3vAW7F5n25n25n25n25n25n115dEGGqjIlOiFWN+7p2R97ygIkx4vSOf++jBAkP/9PIM/pb1svGGxyQOXo7gKI4Tu2QX8Z1gAqUJ+0a/q4aron1fkpBG7IYdzAXA/ZeZ9uZ9uZ9uZ9uZ9uZ9uZ6ZfK0Sk093Y0mzbRWpTacDfkhCZu3NwcDm4RsYfdjhALe0lWzGvjDIQR28w4HTLDm9iEy1AlwxnWPH84LQnBmp3GsDQQxnodHYONlwm8h6SigtcMeHnLF5MKx9Q7hDDwWACztzPtzPtzPtzPtzPtzPtzPunQJ4yj6uXpMhIC0K1UM6G2XxAvsGq5AG6a23Rj3F176Tvtj43ptU+jWeUlt4gIEYvwc7yAjLnZH8/FzDU57oj4EXpdqM5GFitTYKK0+GXUObCKB1ENVWztdVWD3yGC/wOD+ijChwo5IMgsc+xOQE58eEuUXKTAGXc8bwuCuLzPtzPtzPtzPtzPtzPtzPTC+9fqg5K+TNCNb58FiqawWFx0JcbTcTlrfRDRKy0SQMZPKmGNkygrvqx5zuSLTzx/7upCgl5LAre74M4eH5HO6dEd5HDXxvidF5Xfvawnhi1vKXBDyN3oQM8n8PGNLFoHUuCWBcV/+3M+3M+3M+3M+3M+3M+3JVgu64dKNf1xpp6Q4diSJyGsbcPtWZw2Q7fMyGEQFbMSfKVsUpekmGQopKla6LzjrFd3JmNGA9G5w7q4cPVTn7dxylEpD4mm/P9hZSthZ3d3oyUca1jGNcQay1Vyniv9bEGX2gHtFncJcCXR+BFnsO8Ygk/5dghhLAFuxeZ9uZ9uZ9uZ9uZ9uSWcsa79puIFhyLVCqzNL/kRYN7+IJ3AYwKjkDE1ChXnWP366boU9Pixx+ACEiVGistqBAXWr7Jcb4uSVGUYfh9TXhWfoSM5c+Y1yUcjb6qqZw7dggOCWfbdT1i1QoKJ9usIy68JYAt2LzPtzPtzPtzPtzPuEkLkGGIpKBnTTH2QhwmHM/+gfjd9ggeE9Uda4iPJEIKF3Vgbt/NV6VtWnc/klWmSs6UiJFtqYe+6tKC0u8Hm/LzPt1hGXXhLAFuxeZ9uZ9uZ9uZ9uZ9s6n4LZrgKx0IchHaWEXya1EpQ8cYVnM1c+bTQjYaxnkHEtzuojCcWWhkQsJsoDNDLodLAGEzlFdvmIXVK7rGfUcEzvSJT+OOU4BFmjScg9kXuoHZeZ9x1mfbmfbmfbmfbmfbmfbmfbmfbO5l4duiHhsKaec35k2BkfQY4GdcK6zAs5XHOf7KwHfVFGnykSGA2HjR80wm550nOzFQMN4f3Yq7A7xXNcVKWyWNF/SmlhhATP0Pzzgn25n26wjLrwlgC3YvM+3M+3M+3M+3M+6Jer6vUaZmVpo7bxGojNarfo//w1j0qArVzGthKUpGVyDFZmE6W3GioI3sXsQBhhUyZ0M+WHky0sjflE6fimlA2tzjrcbCWALgfsvM+3M+3M+3M+3M+3M+3M+3M+vaKTvOfFpjUYVnM2QY8oCMuvI1vYvM+3M+3M+3M+3M+3M+3M+3M+3M+3M+3M+3M+3M+3NCztzPtzPtzPtzPtzPtzPtzPtzPtzPtzPtzPtzPtzPtzPt1hGXXhLAFuxeZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9ubc/bmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfcdZn25n25n25n25n25n25n25n25n25n25n25n25n25n25oWduZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9usIy68JYAt2LzPtzPtzPtzPtzPtzPtzPtzPtzPtzPtzPtzbn7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7jrM+3M+3M+3M+3M+3M+3M+3M+3M+3M+3M+3M+3M+3M+3NCztzPtzPtzPtzPtzPtzPtzPtzPtzPtzPtzPtzPtzPtzPt1hGXXhLAFuxeZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9ubc/bmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfcdZn25n25n25n25n25n25n25n25n25n25n25n25n25n25oWduZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9uZ9usIy68JYAt2LzPtzPtzPtzPtzPtzPtzPtzPtzPtzPtzPtzbn7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7cz7jrM+3M+3M+3M+3M+3M+3M+3M+3M+3M+3M+3M+3M+3M+3NCztzPtzPtzPtzPtzPtzPujbYJmyC2CZsgtgmbILYJmyC2CZsgtgmC//bmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbmfbOAA/v/RsAAAAAAAAAAAAAAAAAAAAAAAe5IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC+lwJtOL1bEAg4ePPtX4O9AAAKWqaffOyL3TN5kFpgc/ehKEklLr2ruiriL1MpzSowal1BDlA8ks//N7x7IKiZQACeokqd7zXHHSCujH5kpLL1AGjhd+PKkYqLHuiBPJKf3eBCryyH/UN/waNRMne8KTPTnt6OwV7wTQmqkF0wFPLoq56l9cScczsSCu24NhFlXYPfFX5c2ZggSWmwIf0f8eGqSS+jwvP2i5iNRGH5aG9JqcyOXVN0Nb7qwRuyM5sF1sHMYqjPHuO8lIvypVakQm3TyFPZfGWhYWOLKyT6SycLhEnLe9Kej/SAh7Ezsd16sAAQBAR8KuH+cDpoOBrekcGK7azcAOx/SXk5VGDipBZm57V/rr3H+25haGd91WK9V7hAoNSqIHgK6FGhTq4/Pl7cImLJNX5W8Y8SGmLcuGEhGKJkSLE37wvS++4yVCOGDqUWffnVOV2Dny8jcJynC91raXb58V1SymCx5HZEa4DW/PMmpnnhEu8zQKuLt/IzQc3FnO9QaPrTs8A3aj5QVaKqmuixsfrgAjCjAYlvgbHP2hT0A0y9lVTZMsu0lJsoB/OsyljdJMFr46laDaG4PTauDghkwPijAdRFwGY4cuK5WIvBzvg2oUT82AABb77fHozeOOuKvv4c2oJcG1VTBe5uogHBhQl7q/wYRUr2ir8/qIkKrpyUX5UVKlv0hKQQkMdnw2hwQyagMPtqnShY/n4XrNL62QJNMCw4XXfJ8Z9kW0nFA4SLkAbLNLQs/dOV0QfZictt+FpEvcrKFIAOZGDx4DMbzMFXu6LsoW//Q+hPZp+Jh+8jH5maSk1I6F8KBxRJW/xNcYPstCECTO4dmKbp8RRK56+2jBvYI0scrIMMfkTLUPAgc8cs6ufKrJpMJFc6ROUO+2Pwgp0gAAWFb5z56Veh6XwhYlFC+Ero2QFJ7DGMskecGD2Z8KbJjbZy0QDaaEdUj30uMed6vsJPshgwjdH4AQJvNYwvdhwcUZYxQZRB9H7tyqRnlw/4qMsNjGNnSxE69oZMtEzTWT8stwutsWrga8TWuKNPCLm9UBB8O2+WeoweyHF9i89gWgN/LP28KoAxlNGrwqF8XD8uz987lQc9uKtv4+/NaIyyz8chhJDkFtHGb2N2BoRvMaylP6R7khyetnXzjR20CJl9upIhtIu8GJb+wBUZALjVzAvPvr/u8I/+qt47p9KKNibBQSpIbpwQCMdiU4bEgLs6at9Lc3L210lgzbhYwNcu5twAAVbJS/R7gJx9jr0E89bmJKuxa5TU9uwdRA97ROFOCZlf+DBDYKFfni0YIYL/jMvEM0gZURHw41YsoUlxLTi3apBCb9U4caoR2hM0GDDmXaVzvBNjtyot0MgGWYHHCNArAiyefoaGOMoWvcRy8daBN4HoRjHssLwQw6LNnkSbsvnlQYjN6g2Ny2O4mo5tpdySxYeTvE1OaPRBkP5FIoL6zdt1fRR1QpQxZqUqXyOfmQituqVkc839suW9UV78QNhHaW5YhyaGlYWfDnUNU4it1uwSlG1G0mO7adf7LPL6eBTAMxc5UNiaz6WKAtVymLynkb2x83844L0lDqmaQEnsuijFlgiPfcVXs3AmbDsyp+DxzM6meBuMdRS76GgLcjdgsFJ+9rJuVSf1xFRIZxqZpbUg8MephvMKfYMwCmP3QtAAASWeFlW2hcHfuSrKYO4YPK8ZEYKmsMopTvj93E7n7mYCAurnuT+WW7B36wy7uRwqMfiTifT+Mb0fw4oZ0mtTacrPPMbuzlpaVBag0FKKiaSt/JPEEkjZpHC7KZOOFF85Nmr2fy36bGfWvZxNjuRDhHNz82lLGlMzifKPBKZAsWiiUbm3reV+iNaMNKCwJr4Bx34JwvsYQ+h019UNQkooiHSrfw72lBYS8TY3mR4isMAO1zSPnFbhBMRnPVvKqytESFGxWG7D1ibiQasmMfKOjxA0adDSkfL0rsSc1NSNauL/HyUfMyJ0Xz2QZ1ppX3Q2lJ5+qMeddjLfOrp7XwkGanGWMD7gAAD0otuOum9Ae9wuxKTVaBP/t+hYB5/CXpiNPdxdrRfHojupy62DHG1mV6TUlLAwAbbfuU7452+6IRTpj0QOTpgOfn1CpVDfgmKycUrzgVBJerci9bALMcxD/OOzfDOpc2QZBzLjpHP/VxPRHl8oDuuBFD4zNSt7K3XjM+e2YCkYUVqQC0eNCWCq9+aYf3TendMkW5jNaIN3AdKIERoflTNT0EAjDMpFWiHKmGXa5SqrcmWwjQ2x8F7YwhXvsLvvIIVVhw3TrNk0P1EDoiVEFGpJZL8BZQikoov5JMJEOKFfYGEXmm89pV+iX+4yqdfhz8iAdEHbNaLSAZYmezmuVPcx9OAWbLKDQAAHrDfNi+mggRCf78Pa9QPk4dcH+LUQLViQtvrnETSOkXy3dAdjz/BNeUV2uohD/tV2dE39yurFTizp10zLoBTjUv141Xm+OZEfFZb6/aPiyyxKozv46h20tMmYcOA/QlQ5zE3CNmUdhkI59fIdsVEjsTNlV0P3Tr/dk4pq3DokGgn/P+MwaszyAlYaEbD9smo4fslAz7zPSIFkj8CWzJR79bSE9u3Op2j/pGosYUoxixMvCsSva2awMONoIZy10iwZufZYK8f7wOQVtJuSUpuqX4bpDHdmQXQ88qxtttVT1Tuldvcm7t4R6pFHofyQVrQFvQ1XFROzYHlYCNY+xpxCKI9TrAAHy9Vmq1f936C5wKzxp/8Gew7pDkH8bmv/eV1icKC8ET8kd4SDCgR+iSDDG+fC0eWKG5k6RLXO7+o1TLqllzC5N2gLEYy8M1JXBuD+BXVRVD39tmD32vZzjOdrQOfMuIyZy0uoCDDC5IeeuOhyXfLRiLRCo2SeHYdUtkmqnNPCFpUH/zNM3ZYQ0899gF2uduDRF6LvmE+mXThVy7Nk+a4Z8Nk3MaKI7OBWkjNC4pW/AS5lOTnQQeK8MwinbmaKIz5NwR/oA0vURDFULhqaF12PDsBO5Qzlx3+xxxfu4sileMkz9hAX+RmGc+L6DO/WdID2gcfJkpLIGWkC2ps5tsvlWOq7irxMF9JKcgTF8P//TW0aTvLkirPlIlcZy0X8WCvMrM/3p/yhPEtT7G+KcJhMDGGGodJAkbwcfXW+fiX4q2OHlwAAG/9bpfXl5NYLsDCD0ZaPyraNf0tbp+L8vNWmyqps+1stRdmwV0QE4OeHslNoZoYO7yWnhItKycTO3QYNGuShY2sT/X9/nSD6J5jjhC8JJDcu4Ojk/rvo81LEuny8cVbgCs3A1sy+zsNYHvz2acJfR2hvzAyH3fADpYVCic+X/FL+qa0ahTHoRmtClCB7qcai8OSdW7DhHYwzr5PexbNR7SzR4QtpJKjNkFTo9pEWfiuc2tj5cWMjb+btslEgTkTry1d/z+euBo3fnpjdS5cJ4xhmNoU2No7Ho1ljv6iR2FRfSCGmz2K4WpXtNpK+XcrJt0F8r5ycj4eeASFIaABQSQweub3ALX6NVQEV2D6wrOHkjB2DnQpPNMkatyVa81zDSWX0MjD0L7ruzlzOQQ6T3MkMydaG37C0yEZVQ9rxVCwyp6j5PHCbS99iAv9ejcOc5U7Z9onG+Nzd8rWh8tPzcjpcGbVgUCrTaZnQNw6dptF6pD/+JEqwfp18QGpRV1PPht9DDoo1mI9foVuaFDRDFjYmIKfG70wFglFHwyIWz8TyWq9ZwPnLwz30sORbBnLHVcAYqEF4nVAchMp9Abm8iJWPuF2jwr3FsWcA5T4gEuFXiXWInxDFXPRnJP2hAN8RDOapsLql6EgdytCi4OPwXf99QeFigE0EprOV8o1E3IbypnnwVWmzsDBAsBE1Xt+l3Y/VISVxsCODQADqElyujUTq4xRYLNO9oCcwkC6Qz9KeQxTPBa4yhxTiexZM30gx1vdXmRG6ppwoFvUAmEh+kVtnrGJVNw5XflRb3yQPiHVg2xfmdArPvb0Guqn/UVBdEfBaSSXBIXysR+1odIhwhcstnf+SLDGeEmsuH+499gq1zUCwEGez4IWOTInRz8G1TbkspFnC9GDMI09Lx3LtqjNA1jfapGvptnzfpbo/B8N7ZRKshfysS8JMXhQNAd6DrmS6murEbFtQv+IwBXzstEeZWUh0bTciWdWXPcNbWFdCmpK+buYWy6950shEZjC2r06VfxQARozF2rHIOnF0eaZlHoDY66rw9pocct3Smn92O9yoZecw5t0T8yVY+zWwNVx6lZ0QMjiDcEBeOKRKAndiVTh4mB1owvJPlvzwlFf9MsV2fmWTBOK89yMyqMucHVZOEeAa79DAeuAMJJZleCjzKiuVIQ3EqajeY1iogs+F+MhbeSGlx9BWJgODPwruf7g7w32jG7lj/VxP0TaucnVuXI/cKcpbnid/S3ijDeB0Oab+fC/kvKLg5iEsjX5uS9CH/4ygeKApUsnNbpG9nABKRphw7JcIgxY3kfwfJiKdtIGWDorAWn29Ac1Xz5zG7nTg/bo+zZLEu6lrMllGnjumOLAENwIHJH6U4u7+FM6N4lhKHYmwi8n1B0For/YR8++PvBm8Lo6kzhPdQQjoio10l4kKNk47efKaDRqiTnYjwn8u8yIYLU+gxQtb2fhDDzJslszP/v2tzPZAWSkbnoX5sBQe42/cvFu7yRHhYT6XevTbujw4pmKe79GVllgv1iDHV0UbrA7NAYdJMQhY47bAUS/R3CKYa/Nz0sbwEdVSvtHgOFwi34cg+8MnuuIl/NwzZ0WXVtm9EDLXYKGrJUaXwhBsYDHh7YsW5VCnWUBhTZuobAI57SD+XK25p4L/oGCwNnIl0IFYSGyNIjJs+JviA9EQGdXLRJUuf8WUemK2cx0Pv+iTkz4F369My1UxlETVuB35B19rN+SBDVboUPEG+BpxD37o5g0IU/Ij9/cvgiy949iQ6CJICaElviMGn87JFHnd24CJWjSSf+g3s0UsH81wd607NtHjFfixDwqmCuQNuFGj/D33B47+rU/xfaVNkjA6dV5Vfo5QtFeojc6Kzte8ItUBMlacJ12WCv3TlsZ1z0bEI5K+q3bRwSZNhlxZFyIUgGQf66KLlJUGNVHEfQs1+xQARcT3Nis4Ws9agXcKkvG0Eq0fURG/hqYKP65+45surlTY8DPlcS66N8UY1oJdMkOf824Rd3W/shpRardXSyUI3CeI5BVlhnCqAvZ/umMSWlKyB/NULx1a1XmfM045VSoSfNFvQw+gP0PocqwY92c1A1wkhM9rJjM8dl3eR0g3L1st37JjqTPN+/alsJoG+mO/aby1MjsjdSQ+Qu5jldfSyHj0+Dxm6LI37hxpr9j0FrJJVXTyNRrzwUCAH79A0Tt3Hev5pww8/s3Yozonq30AqryVE3rMAgiKXU7MYtRnnzVcongRnHrupzE78JmBGt/eGWaWgsqb6zVxA7Kc9u1GkefkXbjcMLxyXEEuUyepyYBgcHC/PoQpOo822eVFAI7Gl6bJiZspVRYJ1WUY94kTLuI4AxMNOUwyOxLsgdv/eQsG0yPHAo4tx2IjSW9eV5lFYMDvS8WEWHfHcX7nimjNLOXIHuW/j/BOUnA1Hb90qOgBF9muvSIZ6KUyFimWzQVxvfBwQgcHaHpQuDgmm0K/6oalnCeYSHXbfvZsNcw92dGkBs4s+AtoiZMpuPqBwUJjClSZe0ATsK2QwoAfacleP0/qYAdBI+mor48QmglF2KFjlR4obPI8IdTr6ehMwKzcYmCfIw8miFsSTXrKtBZiTyAEBgrgdwb2aCBIbt+jVX0C/dEkfLX9oHjVn8/41YuYL5TRBFo3Vsxr1l2rqvr5TNjD6K7r23Q5F/Gc7gmK2PyQbw+1Hk2d5H4AAE6QlLOJbOj9wDoe1hfxp3KuQWHaYNWNXvLIivRYipp6Wh/G7/zY7x91ruzDg1NjvzFCXUjdJVI2DgIIoqAMYg1Psn53Rwkx5Y50GNjsqzdQsNM/1SoKZrBw53IWu9qAAR+9hCYlgMrBuL0KzEgmShZCENdAY5JzQWymiUkGY0+7uc8JWWbHTUP7WDiy4deVxKUdF6HHwofmxX0cE7JyNQiWQUIJP7PBqa6A6IqItNI20uZ4Zkx7aA8Wm+XfioNldqk/V0JKW2w2TA+7A/QpiOwmb8n9p91+wooufMvbnxhDdI6Jb6RXZOSBqHKrZDtW/jB2zTeG1XM/1rdKw7i33SK87/efPQGJf94YW0iTX0hvXhSMyGUg3bz2CBWedKovV2s3gWo0N1hHpRcpKNFhRl1V/1qhcclh0/+88Als1QcYQOy9VVFqgtg72bQvnBnVoAWzI6bq1BOunMtWfI+ZKNVwa/zL0XpBWm0rwNnpqCseSHiyUExLvi39Nw3IjeTPNFXNMVshie2GPSMZ+sqSccMFnqvrCeE48fTKfthLhv6Vyn9igwd/OgqiX5AbbioC0WorRfsLF65PmjRKn8GGILQ1nVAFDSIREknndzSazAvVpQ7lCrNhH0OrssF2ByqMk6cB6lb1WFSih1pOVbML+mbTNFy59skowiQUZmuPPbKDxrKExBMQakJwga3a3SAeEY80B8ZQ49KQxWBPUV4EKOQxC6xeUcZDfc8bhei59snZ+kgNywmbAaShFudYafdRBLhmaqI2+qNcvEWjg62F7639GOBFFXaqt8RT8QtuqimU7tVyaSRK1dkdx7AzxpJMKtpg8+OjxiEJK8QC3e7y/NBKnI9GVbrXYr5Y80P+grq1WMeZLAGjmvFCqaLe7PPpjuKjb0hzKOEenyAQ8X1hXuXZ/4QR0S3XGntB9e6rvZSEv+1EAiOZ1JoqUthMSv0ChtKRhb1PCM7SeCZ6jIWkDLXTsvkANgSbiWDM8bThUMYmTIs9Zw79B7eHSkrFtDAv/OhOBpbVBaWR/rq188tyVl2RNgczo5XvXvBIJpLKNXGyaMJeEAU73IOKQ+9+BEdRcKD3vxh55G0sNBBiOpi5vbNL+GC93bB0BN9pnJeIrC+vMsDSiqxA2PI47pNWYQv7iwi9s1vKRE34A8/BY53Lc1KpV2w/SK915nom+omoslQt9dNihEN4mUbQbU0IAK5UMQPkpCPqZCxaofo9gaU+OQKs6eP70YBLuSaSpPJ/lL8eXFLyJXijKFMrsqqeGpbEcNbuAf8BxmwmRCr+CyIb14/Saq830Wee0RKmZ9ngBh1sHR4Yqa20Jw3gdjwrNSF3vRfqDVyluBh82KEi/N6owF8qDgTUe/VnnIUuC3NLwzgP69dWtvlPDC/UjgbTyIFmbuKcEbbWkUpJ5BGRoF5TEpF8BZixT29nfTAZD/Gi7RnFX2b8yW+F4BTU4biAukvY6h0vucyqjDyy1ToBOlURIZ2g28vhRWEgHW+TcspX4aND+nV75TVPbd+PRTKQxx6aRvNJjdneYthBIQPwnV0tSB/5OlCk0exIuxa5z0fhhKXWmN1zKF2AcW0ASJMioKs3FRITo7Cvpo6RCYNGRDSajyuDtPWAMbvpALgxhiLM80nrLn+wVhtFzl7rjk1oQ4+Psq83F9Dx1TQ8Ww7hxiEgWSi4fFgLf1QWvXJ0Tm1aZYFGbI2mcaToZHywSJDDniYtGrVMWpt7Egj/+6OvoOma7WN70RZMH7caM3PZC4paeAjQaPOO+cQyLCjp/lofBCLvqmLcL7ho3d+BJ4AuGaZypWFwpOTciQFvVUa/C9n+lUX8N4Pjsh9dLHiT1h864ezmuL3rXK1uh2/lyB0OdWlXRfkYN/FROKg6LeEqTliJ6HreXkyaSmrfQuYU4FiavUt6oppVLn/8Cs+ybpJ4esiDq+25NkHl3Vq2zkApfjpmAIBjFG3LJkUHMw/UimZLEmp4NndBOScoJXJgJ1ClGdK7ph3Mg7PC1O/S4fzyz0ADGhUUq+P/OIoA8d3kfx8p7Y81F/cDbA1Yn4+HH9Eg1+/RUKlTXmBCU/FmFdZFBn7Ue3Y6VbhAPPZQ5oWsbvIDQpPS6hT7ptIFd55bRcwhOvShsCY43z98fGS4q17vUxjFvSCggrVmjr/fM18SnSqiaGIJZkwg/X/MgK/ixhIs/qjuO3CrR41+usSIvAz1hgSEuPENdrpVvDA68qiyKCApa3IL36EsTDUlC6QQx/wcfgK2PTMY2Wcrdu+3RvmlxSI5FS52Q9dFgWAFgxL+woJtc92cQ0UlVGrlS3zEPZJOqqlrK1Xn7xHLX0eLuw5SzP7FHQqoxwfBQZe4Kd0n2h8KTA0rj1se0hKDvgq7Fw1gG9ba/vK/2H+dFQyg09ODdg8GLrdbKAhJnRjc7A4sgwLTkxTsk9kKo73Qrm8V5HFhsVJNEJg9xmflgAgBb6u3LxO2E+RCwAAeudCKJe1m/iQlrFmWydC6injS9sp60OO1BRYmnC5pssF1YEzmXU8I/APDmesDzHE9DTgtb19cQmhy0hbd+l3Br/39n9xpFO1H8pyfB8APOTA4kbfrIAczbwy4RTNt1EGFKCnDTj95O42aeV2igOlf9OHFM6rv48eNao3f/WSxGX98sak84ygnMOdJhSBAYaAw4W5vnJk9CjsX/yZtmwBr7/vh9mw2Visxa9l4T3rTac895bdlM6co9VRyctrZNWkHcigMwxDGRrXEegq84xoKPcAsbTMT1qxExifWgswfh1FZqP/5yIRLndm28iOCISSOOF/YFAkzRWkfpnMqTJpGeJcnlB7aN0YA8xxxzfLJlL7tv4unT7RUPScYZwq4aCVu4rpvfYPHfunz7pktGkSeOUxtIr/nMApcwcVHN9Adsbac0q4iIGNDP6l1I/r7s0QKQ3xIbHQN17V7T8Nk60VSwUr+BpiVcCF9GpbE/Tj0maKsNscoafrMF1xTuEhBM8J/KOCReyv8d+OMww9tXwkaqVOdeOVDenP1FEGdoi041+YodY2N8IPWpVIgzphHfFq4h8j0LWhKGzH9BoGw+3LHbil8q5qItTvuOLdbQTVqXcOtjgnFXJlS6tzJzGY1L6dQUljrpE9kpinAdibqc6UnfA9j4bcZwY+0dACbceF9Ray4ee0wSb2V95Gqqu5eZ2W831oc9qfRjqtIlh6yz5MqzD6YIbBdjZsXp33lJ+1nvSGJUH9bOLKyajR+g8fszPqLJNQGKCDvqNSBjfC6Zc40rM9uQAT8iUkKrEfxZmjDkMESwdM45+oKNeP4QlH+1UsGkRZsO6DXEwXyaZgVzb5Cp/aMFwGktUZ7jwHU1thFfQcLPblwut6Y/BNk5chnPydtDP/0bypeOjLGJg4JaG1zZBXYUQyaN70t5nJFvVW5pkMQE70IJrgZIeK3fA0kIqiDtuCuTDvtfxw2I0OrLRwHby6g8W5PR9aGF6ksLp2/FJwVKNvobrWjlCSp4CZUuCPrY6Qsxpak/gqeK38zsKvXJLIDJO+OJUcIcn45C6O3gH1dbjZfZXm8kl+KWWsHkcoPvNPgHJUr07qRQSSCUiUEHro7EmbvZIbTMU/brMr3idxJfyAOUYLw/ArSBQ8+P74KJlkJgEmvtxBN2jnwv5H/EpqAc5QzPqmKXRSg6mZrZI0/pY7lZw2XBHYxWivZECr34bdjvxV+uSsvkg98rlD2Uz7Iar+4SkD2GJmEoK5XQA7SeEduXvjdAnU9GnPlCuSHVaLPjDmo3daYaSRsYT+ywCrNie5D0nv3IALbC0S/qQNb4ml5MG4SjqoIq8E/CCDU3P+9fn0hzVS584YGFsfCOcKqYKznYUW0pikZZWNe1E7T4By4pC62r8jgMuGhVgBMf7vfPdz5XZK3aTk7SfzMkg4vYndbk/sTaoZn+wxev7QQit7BUurJ7fhJiqDiuwctkX6cXHZV5Sid4KW3tq9iH8zOfkE839loBvpKuru5/dJ4lkER8AlXp1MXmzdKPqhsp4vlsCWrera0uYFYD0eOOiHz/9sRCWZiqRAUbnOWyLTmSMTUE4+d4dMf20UWfOpbnoXfJcaZqZRSV1d3JsGDAoAhdugdfGGvwDTqrfkCx+nMxa9M4n6i1mDnozV7YVucEqBJK7fz9Yu6xaUAvZe/6pw7WkqafQOePMQEtkYdAAHbj2d5/TF/NxW9aqg1V+M/SnTDe3eA4Tr9UAAAAEikDC3BALK41Tp+JSagtKbyTjNWe1DO9aSxIf0s0OTQKvzmMShPzgy3RasZTot46N9/oxlRoM8Jha3JfnhqY69WePuGX3NrahEiM7YCvJJEXyK/YKC4qr+QCJMqaYbQrpwHy3kQPUivuqSW8D/7KT6sZl8GIhe/wTGVxvUJfrT4dxDTNLHcwkrRCZcHhIoj+lzo8hagJwNXeRGoEDCViOwAAABnZwABlnH+2MnMhdTNldWkpTPAsZ6cGUeQQADUfuwXGK8MxfN5drzleDzn+Qsn+7hs4mKtWMgQSoJZwcaoTV/QERfrINmavHUJ7zCZIHwgwzVGHWQZaSlOyghPx05pTJt4noFBQVcDmgLABv1xHVNT5nFycN0GwORt6izAKj/y4GSTHZp48SEF8lRsZkQHO0V9kS9utrCU8GCnrYxFbAJazWMcovj281GR/iwbVPJpwA+LyACF1bALn4tuQ793tF2Mk6QbeP6bm4qfW49rYN3yXK2Vlwmvc30rtdEaXyHTtS9WniQBoshSdB2ZOmToh48Wz2lynPBnAGtmbbDacLmnMZkUqbzjgI8Jd95CodNnqFsctOz6PSPBnlghYtqFzJTQoPhSBUoeKewA7D7hNTvuHUUNgR/tlgAon76kGnAKOul/L2f4d8hPxwOwoDa+of3CEPuE9ggbp/NqU4xbp4684RIhy3M4IGqF40xAZMdb5oYQHkWL0NB7WybXV5Se+Bs1R0jhdAT/AxdLrcbeUpUykBvCaH3wnEn5JgNhl6e15xOM6CSIZwj41uBUgGrIYvcMpaBq10nc9/MNImcMzzReNsSeLjJ+Je4MidexaVfelv6G8waSzbo4aH7zfBHobsoIiPx2Ti6sxjMFmzKrvp+Z1WnH3gyHbcK22qAhXAJACcDpvOpvlNpwupfeCvYAjQdSvfXsqMAHw05vBuDtr5+x1qlbwJlj5bPanp2iZ8w+90kZPR7RL6Nzvoqx7Tbe5jYWKn9XR/Q4kISop9oNqqokZbObbm+5WMoty/BkeS2nBfxklr9olRdB8g52vgQSalsmagHETcyK2MDz+Qfg5anbqt8gwRkI8bgfFqgkIzK+4V2O1GzBL6pKZo7NKDeG3qv6m2zBd1CrsJwlyO9VIaed0khbH2jBhbn/APS5Ep59qJ+9fXmduT+HfMKbGNM3d7OReSA02wFsMrzasV6etcgA7iayZOFExnB7EJ4JtRFU3z3yqeiPUwyuh5mwwfGmhxZGguxg9w6OAd8DxOWJHBHG+LhkST95yVdrsCRQyMLWw177tZqqO69RiXqVZnqwNlLMzpz3TPE6GkA/Gm2Yo844NfaHuGXcoFLkO3NIAhyrNABdjCVgtnG+QxzTFWKerBd9VE4uVP466lAK/zprYeYFs+U3gMnCj1AELet3rK9LeNqzfQjd8l4Duo/tWQGQaZ3VL9hpfue2j9PsZAqiyPLCwC4x8DLDClatnuFcM/H+7cub2wL8oyY6X4S0zFyQyodvMv9PGtlvEAHsqJeW0JcWyYMEcZR2EFzUpi5rvMJGD7v1j7oja49jmEsFjHgV2FhJ2/SHxdskkkcXReGftZaWoYWoK78jt73oaPCDfI87/JdIdgmvAU6LJmKkAiguP5laBrGMIFoDTX7x9lxeIoOu+7Ez7EoQLqZP7exVUNfl0NvWGuMgKv4q6etAjMLE1kuFPFjTcuDIZQniHSAu3LG05CD/nXPbXoWRkn5fKh50t0TySDXllwBLzTSE4D7hjDI17gMGOboy3O+rAdIoPUewYIxNzRsSyuARTA58zMX4kLT/Zln/YFndZRAAboDN4Vfo4NPpjhcwW4nTWzRrTyUvisqVhS9lkzxxVSe+foa4T2V1Ag2l++bImjJm6gfs6rMdMB8U3p0enHnmcdR++rlCIT+hNN1haV5U0sBuOB/jyIUeI4c5Ru2RFhZpXaIg2koDbZ5JpacUSf1wBwF9bHA7nTfxakczzbMb/Z/MXbSi+pNIT7IwRSltQf3U8IL7o5sBuF1cYp/4fvtqcVI5FVP1Iemy2BX6CBIeAAaUIWqz1r00Z8pj5Y3C6ESJwJRZQZ709ISP74rBRrRhqhu54Im7Tq1tOuyEsm9zbqdOshCx0jU5p4MeGij1KP0dfBVj5B8ajEZuajMH36Xg0jRnRYJB9JEnnuCNMRYnxG4dBWLbjNitcxoS4e9dkgNZ4w9R50euhQNJL2mTHaxuAaAOQCpWo3bRRlnZcTunEqDy0oz2pnX1Tyj6593X5poCYRWoLK1wfsd9cN4ODSbMbdZkUygizPI9JoPW3VZl3/GyhoLMpF3r7fnfGTytvKiymdPOdKJZs/MKdPRiSm434MW1IEMQuclcVCNLjd2MX6XMDEuLBiewSzwOpAHq+me9O30dGuJ201amrnvy84y08763yHbdEfhX+H0rrzd9bJ4Rzv+eU7G4omKuiDZ0L01IrV3Id6EAdaOvjwI0N44e5Y6bIVlVDizRGueEfe7Dqklm751ZRofkvVaxWPAOzTyNETC3db+78Pu0AmVFiTT1sT6ONtyexNZNjj3rrh7HKRQxEzz+oB32kLVzh/YQuWLHgohM88vDyPSv5kPSkM/G9338ATOEvHq9AK+fb5kZqyrscvnrOVse6FdlVHp8/BxplKExxj4jOXtCq55P23F5Lw7SEzV0iw9oxb+G0X1skb8+68RR0kTG/itu80wuZ0Ah3fAVufj/Bfw/4XZXIhVcO1ZjGlIrLrp6nSBKiWZz2vKEmwXsmCo53jhGWyO7WULi5vFNj1i3Rgll8c/gw4If4ILKNDnpD07xXDE1gJkpd1LsAvgT0E3LNE7HYsJmcZpIBn6qQCPSyO0GCGfp6j+9TwvWV7hplF24Xwm0Tu1o0ava7h3PKufYOFdV/UjHTHPuZN8z3GPJJOhwjkg9JPoqDws70wJA8/fI75kFSNtYq1JVCvptNo8YwVmqo8JPWwlQh0A4BG9RQIPX+kX/u30m2tPR49Xuj10mW/eLpzwoIi39IqVuR+t2IhOBWfFZiLbDKfd/JPgpLUGAKXoz9/vGNiD3DPRpzpcxRSjdgITY/lEtMXDZStQ/9+NIxcTdfIGGNZyWm0sLzjhzYcv40b7jByA6nY+YKRamXQorRx/DxwvIaZBvo3jvhLrIRLS0l1Vfdsf07bjJ0J9ntGAMfuy+iUzFltIEABnDW+uFGGAiF65xEzgTBlWjLhzD0bH2SU+Ye4X/L78xfWC+BijfOLV5wBAhJarFc6ikPuAsQJoyB3q7iap3Ml1PrIVAah+N9xSLsf/7XDuDReBukRHoCk49OB1f0VAIDeD79LvNj4kayI3oDrWJajd2o8OALS7/8XpCvlQ+ODRk++dvYAKMRDJa0yVFj/NRJt2sVWMJ+/ox2C03ssMOJgsQKRUBSVTyPkl1YEW5bToXuXGyPgRXUnGCdJVGYizxx1P7lJoX6QsNDD+8Yd7hf76HYQ0paqDtXq9hxAeI1ydTSgqA/z9siOpQZFtLsdrl9VN8zUuJ9TQB/sQcC5Mycg8PE8MH9shngMjoho71CBoZI9RcjQCo181BWEQax9L35/ySDZOgddce2Yi/fiW3riEziJwCPNy+ht9mSoa4KfG6TvJqFCHsTPCUvXXT6dPpAV2zZakag7UDS436FEAo3lHE4G9y4u4Ghil3JJKGXJ/HgQ9kTqbKUr6KFs1FFyn1KyaOi8+pl2Q5tUG4j5Ra+I8ckWX6QqkY2BGNaScdhpwIoDttoXjdx63VSl60LVCut/zj5Mfl41Q1RNCmTXbXJuqbFhOAWE3dFbk5GYvcNR1BFHUopVSjWYVLA8VRxsFbL0fFQNYMTSqtAiLRGxWcHVRqZuqENMKfj6DwA2QHXGTyJlp/u1WEBIEC6+XNLh5aL9nd3DduDYII3XI33XXYCQkk9hmA1J6rtitgBkAoUDoGfywsJm6jC/t9UC30ksjtM4EPxPbAF0d31313gq1oa+wTa0dpv3JJZ8aY/rPhr1yATKCwT/iFqS8voeAkfsQE7LXIzoDL1WbKM+Us7D0fKCo1MmLFHMeDSwCAFBFmywGAW0yjgZS3MJsbhLrU+NLjh0Weyvr1lmDNXLxmBpJv4t6vUHu8u+QrQ7/YwxCT64e6jEA8rR7jjU3UPpbNzPVqNA3NXeLPVH08Qy/9uyVEW6yFxPmIE50oZ1Y5WR0SHCmPxGOgNB+mKAAGRV/GWnNO84k5MOiCoaEMHd4HFZdtZ67wLNc81S+TOy4I+tHPnENlZnsmbnki5mFIwrl0Fpqa05IovOzDm86i0kVUFt7NvZTDbRpXCeknnf8ZE1Sxzv1+cx0ltjhvdpQ29GG+8oevwHeMoenwI2ujh3LObophvNrv9HcsJGaqKZha+Cf/6kUBP3cjTmDtNE0kdTsqelhkahxfsV8rjLLA2BoboHKwI2oZp4I7/n4Gk13iEevo//qvk0KrlWPAKea1E9vDZnhKUNFfWX+L4l2L8tWiKM6lhnMTSh6gT6M8vC07fWWU5WWAYq+ZkB98wdDKkh/uTRXJsyrJzhQuPjcLUE5ey2+vJWiS0AsAt69hFu+SNDPN+ccAkAsAy06QbdYqR4xu8+wqJot2btPytMPl1ihL6IUzkRyqeGYKFEDFB/wg+ETBRcQkuAR3BwX3XKk4DDdSUHs9xKk3KYVykoFWV8d1jFBRuDbgujdWTJk4C1bHwqmKsK0IFvxOJm9Ubv+S6ho7U9tqprRziNvadYdhmP6aiJ+E5+BAKwv0542T6eaEVXxK25KcPibohkAGl03BWABZqqrUxhoEuvXhZFRIsMlesdrSVOJS8s5qqLXUJINiV7bV8VUe3L5HA3fuiq8Jvq/Xs59lus87CTX6xTyNM4DRzmn1IL8/IfIoWSCd2ywaDLqU/NhLFLrthmbWk5nF0y1b1S6AaauZ7iU1eJ1GfvoUYLx03MViZlAuAiPOzJUtn5wxdXCU8QY8PolNEnpWvSVAgBttEFpxtxy1fAjPOSEv/MWrWXBFFl4nvGAUS2a4ZMV9uG3DM/rVxgYGxWldsvyJjcZ+QgJ6VqyqxO+eCU9jk5v6ot+rqh/c27ku8uk35XgdEq82VLMknfr8+LFUmjSNTD+shNTpTFyZeyo2LIEwsfNWOBa24rC1onIsIqlCHTO0p/5iqb1ltoP/WcnY+/7oEZNybQMAlPaRshZHrPQopmmFEnPSqv1JzyRtUkZiFMDTf8gQReR24mTT2LWO017dRxcuHdV7//RNwieXSJ5QUKjvlWY2Wha4SSWKl18FEm8IuilKY5IIhuxhqUBJvSop2mAHmuEFX1CJVZj2/Ha1MrIIdlGpzP4CVl4B5d3qzpo3VZElF0aXYKh+Lc58/4NjEbC81SnTB0tLaBWQ74Ao9TV3b6SIWfo6i9Sznc8QjrFcqlF6LM99KeD09raZgOIthvtLs+VP/v57bJ8f7rqOcIAAHm8/tP2xNgc+RiVjlsGPz9YUM0XumVy+h/nb5YZQc1V1VhEA6Rrdcof8UNOkUv9kTk4XYGo4W9ip3MeD5XDSwgIB4HrXWSeyeQ8s3QDbpSBc0plqELnE0xjrILJUt5rX5rQXvBhcAocJc0e2/KHW3xG6XFTlUS/DeqrTPaGH0X1bZ/zSgqlIERBCMZHSvYStWRSbhAFRhKYqFzNYWrWRy12oFCCR+fN+Qo7/+RpeDTHwFr/ghLGR2l3lgCcQuz3MiQALkAz/o03mSgxPVcOhO8upmCJsBr8qhe7E6WBiBWj5GC6A7LRKJd+zTJVLIgnftpju9pURdQH/SntwQnE1dW1K/xige2el9aZ+AaTvbXT5GN1MYXPflDxJgqdoXVqlJJ9vQxfCErkN9NCo/yoQ9N+/OXVHNpgikPGnDjICBYyBhu7xoFkHLlbNvFcI5JBBm44xxlsbH5Wmbo0HQxw94mn+70ZFyv9PNJFDq9AuwBSEJWmELwVLNKfQktjHCSwk5jgIBIAw4loxfyAXufcdtmMHARSjfSS9plqfCg09QlZRYoci8i3MRzIlu02iLLeUTjaQD2cqgQIbAwIvVGlSAGgz+x99nfRl9rsd+w7eozKvzPPwwztidGmO4BhO3e1PaqyZD/qoLXjaJ2O7iziuP4+4ehxEfuGXKiAuhPODyaFCCSbXOdrozt2BT1Ko2N4FbGvpVeD7MNBOlZv0ajwngZWNjWDptZVTQIOU1cr1yEkEXKEsaXEiLLueqPpIKhEbdk8LrF3Zsw0AAANBrCMOIQIiH9XAP5ajVo4FThW98TUDl964d3RnsHnrvf8IgWNZHcyUmakqnKbBgtAxmiVPul/inWUk/EttaJhSL0ETCosVXDPgXWnw/nIhPCvEBO2y0m0I/U2rFX+2eQloh4X9ueCpMb6V3mT8GDEDFtZdj+irVY4A5LVhlLVHesm17Y0EQQYetpj2jDAaYuJBki5fn0/Zi95G+7E3ssdi5ZClMv+IeBAffWyLrxd357u4tRI8fos51gTqWSU1GgRi0X4oPtoGUUyIzD3lwIN2JY+1kk58zAMvQXJXBAKljgdRKL8HOhUriC8XprItlzfuJafMOoH0APsGA5D34fh8UkfVPrs7CbvC23lk/awEyk/duufdi2zW0KeJgfJv/OgIHPpWoNqw3qQlfMayRMjuJHLdUzX0R8BHzGDX/kRGivVjwVcbHd1zv0XaC0+41I4ABdiHjm3ulHKpleh78RerRbBkkQasjeDOAOzO8TTrPceVgt0OMV3vmvMisQGi5X4KeLg/YdfqKNPMul3CpDLuFSFb/L74s0HMwm5AB1PNiGGv+W0BgIOb3iP6UitAhrTDCucpxo3JFHugzjCDLeqlUm5KRaSr75fTGgzyMnc4HtgIE3hvF7U0HhNlY162uqWhcmYuReWvRXnytxxuFWJTl5XGHHzO2LeGKNkRfcTjGYOdDmSHHMHLyMr0E6izoUjjyc3nGc1oHih4fnDgRjkIGZqFDa16AcbS0kglAI87giHs8HJuwRY5mTAMAosH4BA/16f/6AQYtx0U9v1faUHLpJcjC0fZbrOvPDF3nPXzhZ6auvzD9tgw8ouKrb2sh6A6Kcdw6PLCpVX9IOYS4yMalb+53KbjFjrMQaxLOkHfSJ0+uNou5NHu8NibtgtZZRmu+GMySi4S0RbFJb0K9o45JF7WLeV7ezzJ5NnxQ2OHA92oLnEEClu3mgqWoRKjWwEoLXQsYkcvKkFk6BI/quiVqpn3WUW7Bct34sE61XBBOs03VVe3sl14N465Tecf8OOvakSHgdOW/uFGlPCSfx3rQmGIhJuCOVKg+9Qd86/+hvC0xgKu5F6+HOYkM22LEHh2rsqfT0mTRxEYri5dL+PQIIcHjBblZK1IG0ahsDYZjfvoN8MMRjAT4e6fwJx9+YAAMxK7VK21T3CaRuYnjVn7Dr9RQ2H3oWLfHRf5OHGcUGK5iY+yjXpqjhrmnr60Ufk0czLw6TOr5UL5wJMUYVV/XSbmLPoanb0pM3Un+Hj+UM4aDGbpcT9iEL2PQT0M4LCdgYti5JESNCOZi+OFNnqqejI8RcZ8MRP2FYplVucTdruxKdtEUD/AQBVVkV3IpsUMArUfqLEhoVMinV2U5tOhkNn4h41TIBUr1VIiSEsSPuMg6CxUcS/9TwC9S0cCiVkWhO/tpPogBnvRR1xxhcJDceE3gS+GHamohIX60RhEwqTL7MIkakqidS/m+PjjnM3FF6Eh25uB4g7x6pLV4UAhy+rNJITz1MmvuvRw1ZHk10kVr7gYr+neezUfE7dLWJLw/FYp7hYe4SubWzdduGP/tVR+KRVtCViYH5rOrT+SvUnvbDurEJUicsTu84tGsgKvq3cuQDmpnXuqnDDgkMYz2CgX7eW0KN01wXRHPFhgAMEeCLEF9zuaX5mFgsB7D0kcF/2EB1CQcyqM1hGAswwQrI6Aen/XR17p9+CVpkvUBpYYoOjjnt8lUotmOk0kAAAMNcDo/wcs9UH13C3Vj4Jn27jG0Rtm5IQ8Fkhhmv3zsS2g+Ihrs47BBWH1ZS7ds0tek9CQT+H6mVDDgFMq+E1oqo2Ub6EbDIBSIUDcsIL+T4Fj1bXMu9TTUwYMIUypwVZqE2g4gkJWtIq3r75tvbbA1c0M3jqMNFF05AAONhw5WFH2NKZCSacWj1vlRJRuxlWtp4XMFEsJ0LLxqXkr+rsh9oGXG/ptNkRI5VTAiXQHGY82zC13Nx4WxiYOfCXUYZ27yzjlH6DnFPm9ZZOi3ETJ3SdMsxjTRLX6wflvMADKhlmipNSa2ANpPlqURjBGnnZhehDLj7POhTJYlVzHun4JTfZSBLlrwi1SgqD0JtNs+kylEU8rbYyUjCo0Lfow61Kup2gl0YvidJPde+bWhSACQHf+hbAc8wmyPA0t4+pSuHcCs2ZRFkKv3348DQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==" alt="To Christ 4 Christ Logo" style="width:120px;height:120px;object-fit:contain;margin-bottom:1.5rem;border-radius:50%;opacity:0;animation:fadeUp 0.8s 0.1s forwards;" />
+  <p class="hero-eyebrow">A Discipleship Journey</p>
+  <h1>Walk Deeper.<br>Stand <em>Rooted.</em><br>Rise Higher.</h1>
+  <p class="hero-verse" id="hero-verse">Loading...</p>
+  <p class="hero-ref" id="hero-ref">—</p>
+  <div class="hero-actions">
+    <a href="#signup" class="btn-primary">Begin Your Journey</a>
+    <a href="#course" class="btn-ghost">See the Course</a>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="container">
+    <p class="section-label reveal">What This Is</p>
+    <h2 class="section-title reveal reveal-delay-1">Faith is not a destination.<br>It's a <em>daily walk.</em></h2>
+    <div class="divider reveal reveal-delay-2"></div>
+    <p class="reveal reveal-delay-2" style="color:var(--text-muted); max-width:560px;">
+      To Christ 4 Christ is a structured discipleship course built for anyone who has ever felt the pull of God's word but didn't know where to begin — or how to go deeper. Free. Interactive. At your own pace.
+    </p>
+    <div class="about-grid">
+      <div class="about-card reveal reveal-delay-1">
+        <h3>No prior theology required</h3>
+        <p>Whether you're new in faith or returning after years away — this course meets you exactly where you are.</p>
+      </div>
+      <div class="about-card reveal reveal-delay-2">
+        <h3>Built for real life</h3>
+        <p>Short, focused lessons. Daily reflection prompts. No long lectures — just truth you can carry with you.</p>
+      </div>
+      <div class="about-card reveal reveal-delay-1">
+        <h3>Community, not just content</h3>
+        <p>You'll be connected with others on the same journey. Growth happens in relationship, not isolation.</p>
+      </div>
+      <div class="about-card reveal reveal-delay-2">
+        <h3>Track your growth</h3>
+        <p>See your progress, earn milestones, and revisit lessons as many times as you need. Your pace, your path.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VERSE STRIP -->
+<div class="verse-strip">
+  <blockquote>"Like a tree planted by streams of water, which yields its fruit in season and whose leaf does not wither — whatever they do prospers."</blockquote>
+  <cite>Psalm 1:3</cite>
+</div>
+
+<!-- COURSE MODULES -->
+<section class="modules" id="course">
+  <div class="container">
+    <p class="section-label reveal">The Course</p>
+    <h2 class="section-title reveal reveal-delay-1">Six modules.<br><em>One transformation.</em></h2>
+    <div class="divider reveal reveal-delay-2"></div>
+    <p class="reveal reveal-delay-2" style="color:var(--text-muted); margin-bottom:0.5rem;">
+      Each module builds on the last. Complete them in order or revisit any lesson at any time.
+    </p>
+
+    <div class="module-list reveal">
+
+      <div class="module-item open">
+        <div class="module-header" onclick="toggleModule(this)">
+          <span class="module-num">1</span>
+          <div class="module-info">
+            <h3>The Foundation — Who Is God?</h3>
+            <small>5 Lessons · 2 Weeks · Beginner</small>
+          </div>
+          <div class="module-toggle"></div>
+        </div>
+        <div class="module-body">
+          <p>Before we can follow Jesus, we must know who He is. This module opens with the character of God as revealed in Scripture — His holiness, love, justice, and mercy — and why each of those attributes transforms the way we actually live. We'll wrestle honestly with the question "Who is God?" because it is the most important question any human being can answer. <em>Key scriptures: Genesis 1:1; John 1:1–14; Isaiah 6:1–8; Romans 5:8.</em></p>
+          <ul class="module-lessons" data-module="1">
+            <li data-lid="1-1">In the Beginning — The God Who Was There Before Everything (Genesis 1; John 1:1)</li>
+            <li data-lid="1-2">The Names of God: Yahweh, Elohim, El Shaddai — and What They Reveal About His Nature</li>
+            <li data-lid="1-3">Holy, Holy, Holy — Understanding God's Character Through Isaiah's Vision (Isaiah 6)</li>
+            <li data-lid="1-4">The God Who Pursues: Grace, Redemption, and Why the Cross Changes Everything</li>
+            <li data-lid="1-5">The Trinity — One God, Three Persons: A Grounded, Simple Explanation</li>
+          </ul>
+          <span class="lesson-check-hint">✦ Click a lesson to mark it complete</span>
+            <span class="res-label">📥 Free Study Material — Andrew Wommack</span>
+            <div class="res-links">
+              <a class="res-btn" href="https://cdn.awmi.net/documents/es25-true-nature-of-god-booklet-cs.pdf" target="_blank" rel="noopener">The True Nature of God (Booklet)</a>
+              <a class="res-btn" href="https://cdn.awmi.net/documents/study-guides/sg417/discipleship-evangelism-study-guide-language-english-level-1-lesson-5.pdf" target="_blank" rel="noopener">DE Study Guide — Lesson 5: The Nature of God</a>
+            </div>
+          </div>
+        </div>
+          <div class="module-info">
+            <h3>The Word — Reading Scripture With Purpose</h3>
+            <small>5 Lessons · 2 Weeks · Foundational</small>
+          </div>
+          <div class="module-toggle"></div>
+        </div>
+        <div class="module-body">
+          <p>The Bible is not just a history book — it is a living conversation between God and His people. In this module you'll learn <em>how</em> to read Scripture rather than simply what it says. We'll cover the basic skills of interpretation, how to study a passage in context, and how to build a reading habit that actually sticks. <em>Key scriptures: 2 Timothy 3:16–17; Hebrews 4:12; Psalm 119:105; Joshua 1:8.</em></p>
+          <ul class="module-lessons" data-module="2">
+            <li data-lid="2-1">An Overview of the 66 Books — How the Whole Bible Tells One Story</li>
+            <li data-lid="2-2">Old Covenant, New Covenant: Reading Both Testaments in Their Context</li>
+            <li data-lid="2-3">How to Study a Passage: Observation, Interpretation, Application (the OIA Method)</li>
+            <li data-lid="2-4">Lectio Divina — Sacred, Slow, Contemplative Reading for a Distracted Age</li>
+            <li data-lid="2-5">Building a Daily Scripture Habit That Survives Busy Seasons (Practical Tools)</li>
+          </ul>
+          <span class="lesson-check-hint">✦ Click a lesson to mark it complete</span>
+          <div class="module-resource">
+            <span class="res-label">📥 Free Study Material — Andrew Wommack</span>
+            <div class="res-links">
+              <a class="res-btn" href="https://cdn.awmi.net/documents/study-guides/sg418/spirit-soul-and-body-study-guide-language-english-full.pdf" target="_blank" rel="noopener">Spirit, Soul & Body — Full Study Guide</a>
+              <a class="res-btn" href="https://cdn.awmi.net/documents/study-guides/sg417/discipleship-evangelism-study-guide-language-english-level-1-lesson-2.pdf" target="_blank" rel="noopener">DE Study Guide — Lesson 2</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="module-item">
+        <div class="module-header" onclick="toggleModule(this)">
+          <span class="module-num">3</span>
+          <div class="module-info">
+            <h3>Prayer — Conversations With the Living God</h3>
+            <small>4 Lessons · 2 Weeks · Intermediate</small>
+          </div>
+          <div class="module-toggle"></div>
+        </div>
+        <div class="module-body">
+          <p>Most people know they <em>should</em> pray more. But something always gets in the way — distraction, doubt, the feeling that nothing is happening. In this module we diagnose why prayer feels hard and rebuild it from the ground up: not as a religious obligation, but as a genuine, life-giving conversation with a God who actually listens. <em>Key scriptures: Matthew 6:5–13; Luke 18:1–8; Philippians 4:6–7; Psalm 62:8.</em></p>
+          <ul class="module-lessons" data-module="3">
+            <li data-lid="3-1">Why Prayer Feels Hard — And the Real Reason We Avoid It</li>
+            <li data-lid="3-2">The Lord's Prayer as a Daily Framework: Unpacking Matthew 6:9–13</li>
+            <li data-lid="3-3">ACTS: Adoration, Confession, Thanksgiving, Supplication — A Living Model</li>
+            <li data-lid="3-4">Praying Through the Psalms — Using Scripture as the Language of Prayer</li>
+            <li data-lid="3-5">Keeping a Prayer Journal: Structure, Prompts, and a Downloadable Template</li>
+          </ul>
+          <span class="lesson-check-hint">✦ Click a lesson to mark it complete</span>
+          <div class="module-resource">
+            <span class="res-label">📥 Free Study Material — Andrew Wommack</span>
+            <div class="res-links">
+              <a class="res-btn" href="https://cdn.awmi.net/documents/study-guides/sg417/discipleship-evangelism-study-guide-language-english-level-1-lesson-9.pdf" target="_blank" rel="noopener">DE Study Guide — Lesson 9: Prayer</a>
+              <a class="res-btn" href="https://cdn.awmi.net/documents/study-guides/sg417/discipleship-evangelism-study-guide-language-english-level-1-lesson-10.pdf" target="_blank" rel="noopener">DE Study Guide — Lesson 10: Prayer cont.</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="module-item">
+        <div class="module-header" onclick="toggleModule(this)">
+          <span class="module-num">4</span>
+          <div class="module-info">
+            <h3>Identity — Who You Are in Christ</h3>
+            <small>5 Lessons · 2 Weeks · Intermediate</small>
+          </div>
+          <div class="module-toggle"></div>
+        </div>
+        <div class="module-body">
+          <p>Every believer carries wounds from old identities — shaped by failure, comparison, family history, or the opinions of others. Scripture tells a radically different story about who you are. This module takes you through what God actually says about you in Christ, and helps you <em>believe</em> it — not just intellectually, but in the decisions you make and the way you carry yourself each day. <em>Key scriptures: Ephesians 1:3–14; Romans 8:14–17; 2 Corinthians 5:17; Galatians 2:20.</em></p>
+          <ul class="module-lessons" data-module="4">
+            <li data-lid="4-1">Loved, Chosen, Adopted — Your New Identity Rooted in Ephesians 1</li>
+            <li data-lid="4-2">Breaking the Power of Shame: What the Cross Actually Accomplished</li>
+            <li data-lid="4-3">When Your Identity Clashes With Your Culture, Past, or Family Expectations</li>
+            <li data-lid="4-4">Calling vs Career — Discovering and Pursuing Your God-Given Purpose</li>
+            <li data-lid="4-5">Writing Your Identity Statement: A Personal Declaration Grounded in Scripture</li>
+          </ul>
+          <span class="lesson-check-hint">✦ Click a lesson to mark it complete</span>
+          <div class="module-resource">
+            <span class="res-label">📥 Free Study Material — Andrew Wommack</span>
+            <div class="res-links">
+              <a class="res-btn" href="https://cdn.awmi.net/documents/study-guides/sg420/youve-already-got-it-study-guide-language-english-full.pdf" target="_blank" rel="noopener">You've Already Got It! — Full Study Guide</a>
+              <a class="res-btn" href="https://cdn.awmi.net/documents/study-guides/sg418/spirit-soul-and-body-study-guide-language-english-full.pdf" target="_blank" rel="noopener">Spirit, Soul & Body — Full Study Guide</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="module-item">
+        <div class="module-header" onclick="toggleModule(this)">
+          <span class="module-num">5</span>
+          <div class="module-info">
+            <h3>Community — Iron Sharpens Iron</h3>
+            <small>4 Lessons · 2 Weeks · Applied</small>
+          </div>
+          <div class="module-toggle"></div>
+        </div>
+        <div class="module-body">
+          <p>The Christian life was never designed to be a solo journey. In Acts 2, the early church devoted themselves to one another — and the result was explosive growth, radical generosity, and genuine joy. This module equips you to find your place in a community of believers, and to be the kind of friend who actually makes others better. <em>Key scriptures: Acts 2:42–47; Proverbs 27:17; Hebrews 10:24–25; Galatians 6:2.</em></p>
+          <ul class="module-lessons" data-module="5">
+            <li data-lid="5-1">The Early Church Blueprint — A Close Reading of Acts 2:42–47</li>
+            <li data-lid="5-2">Finding a Mentor and Being One: What Spiritual Fathering and Mothering Looks Like</li>
+            <li data-lid="5-3">Navigating Conflict in Christian Relationships (Matthew 18:15–17, Practically Applied)</li>
+            <li data-lid="5-4">Accountability Without Shame — Bearing One Another's Burdens (Galatians 6:2)</li>
+            <li data-lid="5-5">Building Your Personal Advisory Circle: Who Should Be Speaking Into Your Life?</li>
+          </ul>
+          <span class="lesson-check-hint">✦ Click a lesson to mark it complete</span>
+          <div class="module-resource">
+            <span class="res-label">📥 Free Study Material — Andrew Wommack</span>
+            <div class="res-links">
+              <a class="res-btn" href="https://cdn.awmi.net/documents/study-guides/sg417/discipleship-evangelism-study-guide-language-english-full.pdf" target="_blank" rel="noopener">Discipleship Evangelism — Full Study Guide</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="module-item">
+        <div class="module-header" onclick="toggleModule(this)">
+          <span class="module-num">6</span>
+          <div class="module-info">
+            <h3>Mission — Go and Make Disciples</h3>
+            <small>5 Lessons · 2 Weeks · Advanced</small>
+          </div>
+          <div class="module-toggle"></div>
+        </div>
+        <div class="module-body">
+          <p>The Great Commission in Matthew 28 was not addressed to pastors or career missionaries — it was given to every disciple. This final module equips you with a clear, practical framework for sharing your faith naturally, walking with others in their own journey, and multiplying what you've received. Your story becomes someone else's starting point. <em>Key scriptures: Matthew 28:18–20; Acts 1:8; 1 Peter 3:15; 2 Timothy 2:2.</em></p>
+          <ul class="module-lessons" data-module="6">
+            <li data-lid="6-1">Understanding the Great Commission for Today — What "Go" Actually Means</li>
+            <li data-lid="6-2">Your Sphere of Influence: Mission Starts at Home, Work, and Your Neighbourhood</li>
+            <li data-lid="6-3">Sharing Your Faith Without Scripts, Pressure, or Awkwardness — Real Conversations</li>
+            <li data-lid="6-4">How to Lead a Small Discipleship Group: Structure, Questions, and Free Resources</li>
+            <li data-lid="6-5">Graduation: Writing Your Personal Mission Statement and Committing It to Prayer</li>
+          </ul>
+          <span class="lesson-check-hint">✦ Click a lesson to mark it complete</span>
+          <div class="module-resource">
+            <span class="res-label">📥 Free Study Material — Andrew Wommack</span>
+            <div class="res-links">
+              <a class="res-btn" href="https://cdn.awmi.net/documents/study-guides/sg427/believers-authority-study-guide-language-english-full.pdf" target="_blank" rel="noopener">The Believer's Authority — Full Study Guide</a>
+              <a class="res-btn" href="https://cdn.awmi.net/documents/study-guides/sg417/discipleship-evangelism-study-guide-language-english-level-2-lesson-1.pdf" target="_blank" rel="noopener">DE Study Guide — Level 2: Making Disciples</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- REAL PROGRESS TRACKER (shown after signup) -->
+<div class="progress-tracker" id="progress-tracker">
+  <div class="container">
+    <p class="section-label" style="color:var(--gold-light); margin-bottom:0.25rem;">Your Dashboard</p>
+    <p style="color:rgba(245,239,224,0.5); font-size:0.88rem; margin-bottom:1.25rem;">Click any lesson below to mark it complete. Your progress saves automatically.</p>
+    <div class="tracker-card">
+      <div class="tracker-header">
+        <span class="tracker-name" id="tracker-name">Welcome</span>
+        <span class="tracker-pct" id="tracker-pct">0% complete</span>
+      </div>
+      <div class="tracker-bar-wrap">
+        <div class="tracker-bar-fill" id="tracker-bar"></div>
+      </div>
+      <div class="tracker-modules" id="tracker-modules">
+        <!-- filled by JS -->
+      </div>
+      <div class="tracker-badge-row" id="tracker-badges">
+        <!-- filled by JS -->
+      </div>
+      <p class="tracker-reset" onclick="resetProgress()">↺ Reset my progress</p>
+    </div>
+  </div>
+</div>
+
+<!-- SIGN-UP PROMPT (shown when NOT signed up) -->
+<div class="progress-preview" id="progress-preview-cta">
+  <div class="container">
+    <p class="section-label" style="color:var(--gold-light); margin-bottom:0.5rem;">Your Dashboard</p>
+    <p style="color:rgba(245,239,224,0.6); font-size:0.95rem; margin-bottom:1.5rem; max-width:400px;">Sign up to unlock your personal progress tracker — mark lessons complete, earn badges, and see exactly where you are in the journey.</p>
+    <div class="progress-card" id="progress-demo">
+      <h4>My Progress</h4>
+      <p class="name">Your name here — <em style="font-style:italic;color:var(--gold);font-size:0.85rem;">sign up to begin</em></p>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="demo-bar"></div>
+      </div>
+      <div class="progress-meta">
+        <span>Module — of 6</span>
+        <span>0% complete</span>
+      </div>
+      <div class="badge-row">
+        <span class="badge">Foundation</span>
+        <span class="badge">The Word</span>
+        <span class="badge">Prayer</span>
+        <span class="badge">Identity</span>
+        <span class="badge">Community</span>
+        <span class="badge">Mission</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COMMUNITY -->
+<section class="community" id="community">
+  <div class="container">
+    <p class="section-label reveal">Community</p>
+    <h2 class="section-title reveal reveal-delay-1">You are not walking <em>alone.</em></h2>
+    <div class="divider reveal reveal-delay-2"></div>
+    <p class="reveal reveal-delay-2" style="color:var(--text-muted); max-width:520px; margin-bottom:0.5rem;">
+      Every person who scans a poster and signs up joins a living, breathing community of fellow disciples. Here's what that looks like:
+    </p>
+    <div class="pillars">
+      <div class="pillar reveal reveal-delay-1">
+        <span class="pillar-icon">📖</span>
+        <h3>Weekly Verse</h3>
+        <p>Every Monday, the whole community meditates on the same scripture passage together.</p>
+      </div>
+      <div class="pillar reveal reveal-delay-2">
+        <span class="pillar-icon">🙏</span>
+        <h3>Prayer Requests</h3>
+        <p>Share openly or anonymously. Every request is prayed over by members of the community.</p>
+      </div>
+      <div class="pillar reveal reveal-delay-1">
+        <span class="pillar-icon">💬</span>
+        <h3>Discussion Rooms</h3>
+        <p>Each module has a dedicated discussion thread. Ask questions, share insights, be heard.</p>
+      </div>
+      <div class="pillar reveal reveal-delay-2">
+        <span class="pillar-icon">🌍</span>
+        <h3>Local Chapters</h3>
+        <p>Connect with other disciples in your area for in-person fellowship and accountability.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip reveal">
+  <div class="stats-grid">
+    <div>
+      <span class="stat-num" id="count-modules">0</span>
+      <span class="stat-label">Modules</span>
+    </div>
+    <div>
+      <span class="stat-num" id="count-lessons">0</span>
+      <span class="stat-label">Lessons</span>
+    </div>
+    <div>
+      <span class="stat-num" id="count-weeks">0</span>
+      <span class="stat-label">Weeks</span>
+    </div>
+  </div>
+</div>
+
+<!-- SIGN UP -->
+<section class="signup" id="signup">
+  <div class="container">
+    <p class="section-label">Begin Today</p>
+    <h2 class="section-title">Your journey starts<br>with one <em>step.</em></h2>
+    <p>Fill in your details below. No payment required. No spam — ever. Just the Word, the community, and your next step.</p>
+
+    <div class="form-card" id="form-wrap">
+      <form id="join-form" name="signup" data-netlify="true" data-netlify-honeypot="bot-field" onsubmit="handleSubmit(event)">
+        <!-- Netlify Forms hidden fields -->
+        <input type="hidden" name="form-name" value="signup">
+        <p style="display:none;"><label>Don't fill this out: <input name="bot-field"></label></p>
+        <div class="form-grid">
+          <div class="form-row">
+            <label for="fname">First Name</label>
+            <input type="text" id="fname" name="firstName" placeholder="Your first name" required>
+          </div>
+          <div class="form-row">
+            <label for="lname">Last Name</label>
+            <input type="text" id="lname" name="lastName" placeholder="Your last name" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" placeholder="you@example.com" required>
+        </div>
+        <div class="form-row">
+          <label for="phone">WhatsApp Number (Optional)</label>
+          <input type="tel" id="phone" name="phone" placeholder="+254 700 000 000">
+        </div>
+        <div class="form-row">
+          <label for="location">Your Area / Neighbourhood</label>
+          <input type="text" id="location" name="location" placeholder="e.g. Westlands, Nairobi">
+        </div>
+        <div class="form-row">
+          <label for="faith">Where are you in your faith journey?</label>
+          <select id="faith" name="faithStage">
+            <option value="">— Select one —</option>
+            <option value="new">Just beginning — new believer</option>
+            <option value="returning">Returning after some time away</option>
+            <option value="growing">Active believer, wanting to go deeper</option>
+            <option value="mentor">Ready to mentor others</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="how">How did you hear about us?</label>
+          <select id="how" name="source">
+            <option value="">— Select one —</option>
+            <option value="qr">Scanned a QR code poster</option>
+            <option value="friend">Friend or family member</option>
+            <option value="church">My church</option>
+            <option value="social">Social media</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="consent-row">
+          <input type="checkbox" id="age-consent" name="ageConsent" required>
+          <label for="age-consent">
+            I confirm I am <strong style="color:rgba(245,239,224,0.75);">18 years of age or older</strong> (or have parental consent), and I agree to the
+            <a href="privacy-policy.html" target="_blank">Privacy Policy</a>.
+            I consent to To Christ 4 Christ storing my details and sending me discipleship emails. I understand I can unsubscribe at any time.
+          </label>
+        </div>
+        <button type="submit" class="form-submit">Begin My Journey &rarr;</button>
+        <p class="form-privacy">
+          We never sell or share your data. Read our
+          <a href="privacy-policy.html" target="_blank">Privacy Policy</a>
+          &middot; Governed by the Kenya Data Protection Act, 2019.
+        </p>
+      </form>
+
+      <div class="success-msg" id="success-msg">
+        <span class="checkmark">✝</span>
+        <h3>Welcome, <span id="success-name"></span>.</h3>
+        <p style="color:rgba(245,239,224,0.7); font-size:1rem; margin-bottom:0.5rem;">You are now part of the journey.</p>
+        <p style="color:rgba(245,239,224,0.5); font-size:0.88rem;">Check your email — a personal welcome and your first lesson are on their way. The community is waiting for you.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p class="footer-logo">To Christ 4 Christ</p>
+  <p>A free discipleship course rooted in Scripture, built for community, and made for people who are ready to go deeper in their walk with God.</p>
+  <div class="footer-links">
+    <a href="#about">About</a>
+    <a href="#course">The Course</a>
+    <a href="#community">Community</a>
+    <a href="prayer-wall.html">Prayer Wall</a>
+    <a href="#signup">Begin</a>
+    <a href="privacy-policy.html">Privacy Policy</a>
+    <a href="mailto:hello@toChrist4christ.org">Contact</a>
+    <a href="/admin" style="opacity:0.3; font-size:0.58rem;">Admin</a>
+  </div>
+  <p class="copy">© 2026 To Christ 4 Christ · Built with faith, intention, and love.</p>
+</footer>
+
+<script>
+  
+
+  // ─── PROGRESS TRACKING ───────────────────────────────────────────
+  const STORAGE_KEY  = 'tc4c_progress';
+  const USER_KEY     = 'tc4c_user';
+
+  // Module definitions (id → name, total lessons)
+  const MODULES = [
+    { id: 1, name: 'Foundation',  total: 5 },
+    { id: 2, name: 'The Word',    total: 5 },
+    { id: 3, name: 'Prayer',      total: 5 },
+    { id: 4, name: 'Identity',    total: 5 },
+    { id: 5, name: 'Community',   total: 5 },
+    { id: 6, name: 'Mission',     total: 5 },
+  ];
+  const TOTAL_LESSONS = MODULES.reduce((s, m) => s + m.total, 0);
+
+  function getCompleted() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+    catch { return []; }
+  }
+  function saveCompleted(arr) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+  }
+  function getUser() {
+    try { return JSON.parse(localStorage.getItem(USER_KEY)) || null; }
+    catch { return null; }
+  }
+
+  function toggleLesson(lid) {
+    let completed = getCompleted();
+    const idx = completed.indexOf(lid);
+    if (idx === -1) completed.push(lid);
+    else completed.splice(idx, 1);
+    saveCompleted(completed);
+    renderLessonStates();
+    renderTracker();
+  }
+
+  function renderLessonStates() {
+    const completed = getCompleted();
+    document.querySelectorAll('.module-lessons li[data-lid]').forEach(li => {
+      li.classList.toggle('completed', completed.includes(li.dataset.lid));
+    });
+  }
+
+  function renderTracker() {
+    const user      = getUser();
+    const completed = getCompleted();
+    const tracker   = document.getElementById('progress-tracker');
+    const preview   = document.getElementById('progress-preview-cta');
+
+    if (!user) {
+      tracker && (tracker.style.display = 'none');
+      preview && (preview.style.display = 'block');
+      return;
+    }
+
+    // Show real tracker, hide CTA
+    tracker && (tracker.style.display = 'block');
+    preview && (preview.style.display = 'none');
+
+    // Name
+    const nameEl = document.getElementById('tracker-name');
+    if (nameEl) nameEl.textContent = user.firstName + (user.location ? ' — ' + user.location : '');
+
+    // Overall %
+    const pct = Math.round((completed.length / TOTAL_LESSONS) * 100);
+    const pctEl = document.getElementById('tracker-pct');
+    if (pctEl) pctEl.textContent = pct + '% complete';
+    const barEl = document.getElementById('tracker-bar');
+    if (barEl) setTimeout(() => { barEl.style.width = pct + '%'; }, 50);
+
+    // Per-module rows
+    const modsEl = document.getElementById('tracker-modules');
+    if (modsEl) {
+      modsEl.innerHTML = MODULES.map(m => {
+        const done  = completed.filter(lid => lid.startsWith(m.id + '-')).length;
+        const mpct  = Math.round((done / m.total) * 100);
+        const colors = ['','var(--gold)','#4A8C60','#5B8FC9','#9B6BC9','#C97B6B','#6BC9C9'];
+        return `
+          <div class="tracker-mod-row">
+            <span class="tracker-mod-name">${m.id}. ${m.name}</span>
+            <div class="tracker-mod-bar-wrap">
+              <div class="tracker-mod-bar" style="width:${mpct}%;background:${colors[m.id]}"></div>
+            </div>
+            <span class="tracker-mod-count">${done}/${m.total}</span>
+          </div>`;
+      }).join('');
+    }
+
+    // Badges
+    const badgesEl = document.getElementById('tracker-badges');
+    if (badgesEl) {
+      badgesEl.innerHTML = MODULES.map(m => {
+        const done    = completed.filter(lid => lid.startsWith(m.id + '-')).length;
+        const earned  = done === m.total;
+        return `<span class="badge${earned ? ' earned' : ''}">${earned ? '✓ ' : ''}${m.name}</span>`;
+      }).join('');
+    }
+  }
+
+  function resetProgress() {
+    if (!confirm('Reset all lesson progress? This cannot be undone.')) return;
+    localStorage.removeItem(STORAGE_KEY);
+    renderLessonStates();
+    renderTracker();
+  }
+
+  // Attach click listeners to all lesson items
+  function initLessonClicks() {
+    document.querySelectorAll('.module-lessons li[data-lid]').forEach(li => {
+      li.addEventListener('click', () => toggleLesson(li.dataset.lid));
+    });
+  }
+
+  // ─── ROTATING HERO VERSES ───
+  const verses = [
+    { text: "Your word is a lamp to my feet and a light to my path.", ref: "Psalm 119:105" },
+    { text: "I can do all things through Christ who strengthens me.", ref: "Philippians 4:13" },
+    { text: "The Lord is my shepherd; I shall not want.", ref: "Psalm 23:1" },
+    { text: "Trust in the Lord with all your heart and lean not on your own understanding.", ref: "Proverbs 3:5" },
+    { text: "For I know the plans I have for you, declares the Lord, plans to prosper you.", ref: "Jeremiah 29:11" },
+    { text: "Be strong and courageous. Do not be afraid; do not be discouraged.", ref: "Joshua 1:9" },
+  ];
+  let vi = 0;
+  const verseEl = document.getElementById('hero-verse');
+  const refEl   = document.getElementById('hero-ref');
+  function showVerse(i) {
+    verseEl.style.opacity = 0;
+    refEl.style.opacity   = 0;
+    setTimeout(() => {
+      verseEl.textContent = '"' + verses[i].text + '"';
+      refEl.textContent   = '— ' + verses[i].ref;
+      verseEl.style.opacity = 1;
+      refEl.style.opacity   = 1;
+    }, 400);
+  }
+  showVerse(0);
+  setInterval(() => { vi = (vi + 1) % verses.length; showVerse(vi); }, 5000);
+
+  // ─── MODULE ACCORDION ───
+  function toggleModule(header) {
+    const item    = header.parentElement;
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.module-item').forEach(m => m.classList.remove('open'));
+    if (!wasOpen) item.classList.add('open');
+  }
+
+  // ─── SCROLL REVEAL ───
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        if (e.target.classList.contains('stats-strip')) {
+          animateCount('count-modules', 6);
+          animateCount('count-lessons', 28);
+          animateCount('count-weeks',   12);
+        }
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal, .stats-strip').forEach(el => observer.observe(el));
+
+  // ─── COUNT UP ───
+  function animateCount(id, target) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    let current = 0;
+    const step  = Math.ceil(target / 30);
+    const timer = setInterval(() => {
+      current = Math.min(current + step, target);
+      el.textContent = current;
+      if (current >= target) clearInterval(timer);
+    }, 40);
+  }
+
+  // ─── FORM SUBMIT ───
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const btn      = document.querySelector('.form-submit');
+    const errorBox = document.getElementById('form-error');
+    if (errorBox) errorBox.style.display = 'none';
+
+    const firstName = document.getElementById('fname').value.trim();
+    const lastName  = document.getElementById('lname') ? document.getElementById('lname').value.trim() : '';
+    const email     = document.getElementById('email').value.trim().toLowerCase();
+    const location  = document.getElementById('location') ? document.getElementById('location').value.trim() : '';
+
+    const ageConsent = document.getElementById('age-consent');
+    if (!firstName || !email) { showError('Please fill in your name and email address.'); return; }
+    if (!isValidEmail(email)) { showError('Please enter a valid email address.'); return; }
+    if (ageConsent && !ageConsent.checked) { showError('Please confirm you are 18 or older and agree to the Privacy Policy to continue.'); return; }
+
+    btn.textContent  = 'Sending…';
+    btn.disabled     = true;
+    btn.style.opacity = '0.7';
+
+    const formEl = document.getElementById('join-form');
+    const data   = new FormData(formEl);
+
+    try {
+      await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(data).toString(),
+      });
+    } catch (err) {
+      console.error('Netlify submission error:', err);
+      showError('Could not connect. Please check your internet and try again.');
+      btn.textContent  = 'Begin My Journey →';
+      btn.disabled     = false;
+      btn.style.opacity = '1';
+      return;
+    }
+
+    // ── Save user to localStorage so progress tracker activates ──
+    const userObj = { firstName, lastName, email, location, joinedAt: new Date().toISOString() };
+    localStorage.setItem(USER_KEY, JSON.stringify(userObj));
+
+    showSuccess(firstName);
+    renderTracker();
+
+    
+  }
+
+  function showSuccess(firstName) {
+    const form    = document.getElementById('join-form');
+    const success = document.getElementById('success-msg');
+    const nameEl  = document.getElementById('success-name');
+    if (nameEl) nameEl.textContent = firstName;
+    form.style.opacity    = '0';
+    form.style.transition = 'opacity 0.4s';
+    setTimeout(() => {
+      form.style.display        = 'none';
+      success.style.display     = 'block';
+      success.style.opacity     = '0';
+      success.style.transition  = 'opacity 0.4s';
+      setTimeout(() => { success.style.opacity = '1'; }, 50);
+    }, 400);
+  }
+
+  function showError(msg) {
+    let errorBox = document.getElementById('form-error');
+    if (!errorBox) {
+      errorBox = document.createElement('p');
+      errorBox.id = 'form-error';
+      errorBox.style.cssText = 'font-family:Montserrat,sans-serif;font-size:0.75rem;color:#F87171;text-align:center;margin-top:0.75rem;padding:0.6rem;background:rgba(248,113,113,0.08);border-radius:2px;border:1px solid rgba(248,113,113,0.2);';
+      document.querySelector('.form-submit').after(errorBox);
+    }
+    errorBox.textContent  = msg;
+    errorBox.style.display = 'block';
+    const btn = document.querySelector('.form-submit');
+    btn.textContent  = 'Begin My Journey →';
+    btn.disabled     = false;
+    btn.style.opacity = '1';
+  }
+
+  function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  // ─── INIT ON LOAD ───
+  document.addEventListener('DOMContentLoaded', () => {
+    initLessonClicks();
+    renderLessonStates();
+    renderTracker();
+  });
+</script>
+</body>
+</html>

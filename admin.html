@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — To Christ 4 Christ</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500;600&family=Crimson+Text:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0D1117;
+  --bg2: #161B22;
+  --bg3: #1F2630;
+  --bg4: #252D38;
+  --gold: #C9A84C;
+  --gold-dim: rgba(201,168,76,0.15);
+  --gold-border: rgba(201,168,76,0.25);
+  --green: #2D7A50;
+  --green-dim: rgba(45,122,80,0.15);
+  --red: #C0392B;
+  --red-dim: rgba(192,57,43,0.15);
+  --blue: #2E6DA4;
+  --blue-dim: rgba(46,109,164,0.15);
+  --text: #E8E0D0;
+  --text2: #9A8F7A;
+  --text3: #5A5248;
+  --border: rgba(255,255,255,0.06);
+  --border2: rgba(255,255,255,0.1);
+  --sidebar-w: 220px;
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.6;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  position: fixed; top: 0; left: 0; bottom: 0;
+  z-index: 50;
+  overflow: hidden;
+}
+.sidebar-logo {
+  padding: 1.5rem 1.25rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-logo .brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  color: var(--gold);
+  display: block;
+}
+.sidebar-logo .role {
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-top: 2px;
+}
+.sidebar-nav { flex: 1; padding: 1rem 0; overflow-y: auto; }
+.nav-section {
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text3);
+  padding: 0.75rem 1.25rem 0.4rem;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 0.65rem;
+  padding: 0.55rem 1.25rem;
+  color: var(--text2);
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: all 0.15s;
+  font-size: 0.78rem;
+  font-weight: 400;
+}
+.nav-item:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+.nav-item.active {
+  color: var(--gold);
+  border-left-color: var(--gold);
+  background: var(--gold-dim);
+  font-weight: 500;
+}
+.nav-icon { font-size: 0.85rem; width: 16px; text-align: center; }
+.nav-badge {
+  margin-left: auto;
+  background: var(--gold);
+  color: #1a1000;
+  font-size: 0.58rem;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 8px;
+}
+.sidebar-footer {
+  border-top: 1px solid var(--border);
+  padding: 1rem 1.25rem;
+}
+.admin-chip {
+  display: flex; align-items: center; gap: 0.6rem;
+}
+.admin-avatar {
+  width: 28px; height: 28px;
+  background: var(--gold-dim);
+  border: 1px solid var(--gold-border);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 0.75rem;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+.admin-name { font-size: 0.72rem; color: var(--text2); }
+.admin-email { font-size: 0.6rem; color: var(--text3); }
+
+/* ─── MAIN ─── */
+.main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  display: flex; flex-direction: column;
+  min-height: 100vh;
+}
+.topbar {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 1.75rem;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 40;
+}
+.topbar-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  color: var(--text);
+  font-weight: 400;
+}
+.topbar-title em { color: var(--gold); font-style: italic; }
+.topbar-right { display: flex; align-items: center; gap: 1rem; }
+.topbar-date { font-size: 0.68rem; color: var(--text3); }
+.notif-btn {
+  width: 30px; height: 30px;
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text2);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem;
+  transition: all 0.15s;
+  position: relative;
+}
+.notif-btn:hover { background: var(--bg3); color: var(--gold); }
+.notif-dot {
+  position: absolute; top: 5px; right: 5px;
+  width: 6px; height: 6px;
+  background: var(--gold);
+  border-radius: 50%;
+}
+
+/* ─── CONTENT ─── */
+.content { padding: 1.75rem; flex: 1; }
+
+/* ─── STAT CARDS ─── */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+.stat-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1.25rem;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.stat-card:hover { border-color: var(--border2); }
+.stat-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+}
+.stat-card.gold::before { background: var(--gold); }
+.stat-card.green::before { background: var(--green); }
+.stat-card.blue::before { background: var(--blue); }
+.stat-card.red::before { background: #8B5CF6; }
+.stat-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 0.5rem;
+}
+.stat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  color: var(--text);
+  line-height: 1;
+  margin-bottom: 0.4rem;
+}
+.stat-sub {
+  font-size: 0.65rem;
+  color: var(--text3);
+}
+.stat-sub .up { color: #4ADE80; }
+.stat-sub .down { color: #F87171; }
+.stat-icon {
+  position: absolute; top: 1rem; right: 1rem;
+  font-size: 1.3rem;
+  opacity: 0.15;
+}
+
+/* ─── GRID 2-COL ─── */
+.dash-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+.dash-grid.wide { grid-template-columns: 2fr 1fr; }
+
+/* ─── PANEL ─── */
+.panel {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.panel-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+.panel-title {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text2);
+}
+.panel-action {
+  font-size: 0.65rem;
+  color: var(--gold);
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.15s;
+}
+.panel-action:hover { opacity: 1; }
+.panel-body { padding: 1.25rem; }
+
+/* ─── MODULE PROGRESS BARS ─── */
+.module-row { margin-bottom: 1rem; }
+.module-row:last-child { margin-bottom: 0; }
+.module-meta {
+  display: flex; justify-content: space-between;
+  margin-bottom: 0.35rem;
+}
+.module-name { font-size: 0.72rem; color: var(--text); }
+.module-count { font-size: 0.65rem; color: var(--text3); }
+.bar-track {
+  height: 5px;
+  background: var(--bg4);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--gold);
+  transition: width 1.2s ease;
+  width: 0;
+}
+.bar-fill.green { background: var(--green); }
+.bar-fill.blue { background: var(--blue); }
+.bar-fill.purple { background: #7C3AED; }
+
+/* ─── SOURCE CHART ─── */
+.source-list { display: flex; flex-direction: column; gap: 0.75rem; }
+.source-item {
+  display: flex; align-items: center; gap: 0.75rem;
+}
+.source-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.source-name { font-size: 0.72rem; color: var(--text2); flex: 1; }
+.source-bar-wrap { width: 90px; height: 4px; background: var(--bg4); border-radius: 2px; overflow: hidden; }
+.source-bar { height: 100%; border-radius: 2px; transition: width 1s ease; width: 0; }
+.source-pct { font-size: 0.65rem; color: var(--text3); min-width: 28px; text-align: right; }
+
+/* ─── ACTIVITY FEED ─── */
+.activity-list { display: flex; flex-direction: column; gap: 0; }
+.activity-item {
+  display: flex; gap: 0.75rem; align-items: flex-start;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.activity-item:last-child { border-bottom: none; }
+.act-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+.act-text { font-size: 0.72rem; color: var(--text2); flex: 1; line-height: 1.5; }
+.act-text strong { color: var(--text); font-weight: 500; }
+.act-time { font-size: 0.6rem; color: var(--text3); flex-shrink: 0; }
+
+/* ─── MEMBERS TABLE ─── */
+.table-wrap { overflow-x: auto; }
+.members-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.members-table th {
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text3);
+  font-weight: 500;
+  padding: 0.6rem 0.9rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.members-table td {
+  padding: 0.75rem 0.9rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.73rem;
+  color: var(--text2);
+  vertical-align: middle;
+}
+.members-table tr:last-child td { border-bottom: none; }
+.members-table tr:hover td { background: rgba(255,255,255,0.02); }
+.member-name-cell { display: flex; align-items: center; gap: 0.6rem; }
+.m-avatar {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.6rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.m-name { color: var(--text); font-weight: 500; font-size: 0.75rem; }
+.m-loc { font-size: 0.6rem; color: var(--text3); }
+.progress-mini {
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.mini-bar {
+  width: 60px; height: 3px;
+  background: var(--bg4);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.mini-fill { height: 100%; border-radius: 2px; background: var(--gold); }
+.mini-pct { font-size: 0.65rem; color: var(--text3); }
+.badge {
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 3px;
+}
+.badge.active { background: var(--green-dim); color: #4ADE80; }
+.badge.new { background: var(--blue-dim); color: #60A5FA; }
+.badge.paused { background: rgba(255,255,255,0.06); color: var(--text3); }
+.badge.completed { background: var(--gold-dim); color: var(--gold); }
+.source-tag {
+  font-size: 0.6rem;
+  color: var(--text3);
+  background: var(--bg4);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+/* ─── SEARCH & FILTER BAR ─── */
+.table-controls {
+  display: flex; gap: 0.75rem; align-items: center;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+.search-input {
+  flex: 1;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.45rem 0.75rem;
+  color: var(--text);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.search-input::placeholder { color: var(--text3); }
+.search-input:focus { border-color: var(--gold-border); }
+.filter-btn {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.45rem 0.85rem;
+  color: var(--text2);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.68rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.filter-btn:hover, .filter-btn.active { border-color: var(--gold-border); color: var(--gold); background: var(--gold-dim); }
+.export-btn {
+  background: var(--gold);
+  border: none;
+  border-radius: 4px;
+  padding: 0.45rem 0.85rem;
+  color: #1a1000;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  white-space: nowrap;
+}
+.export-btn:hover { opacity: 0.88; }
+
+/* ─── MINI SPARKLINE (CSS only) ─── */
+.spark { display: flex; align-items: flex-end; gap: 2px; height: 24px; }
+.spark-bar { width: 4px; background: var(--gold); border-radius: 1px; opacity: 0.7; }
+
+/* ─── WEEK GRID HEATMAP ─── */
+.heatmap-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+  margin-top: 0.75rem;
+}
+.heat-day {
+  height: 14px;
+  border-radius: 2px;
+  background: var(--bg4);
+}
+.heat-day.h1 { background: rgba(201,168,76,0.2); }
+.heat-day.h2 { background: rgba(201,168,76,0.4); }
+.heat-day.h3 { background: rgba(201,168,76,0.65); }
+.heat-day.h4 { background: rgba(201,168,76,0.9); }
+.heatmap-labels {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+  margin-top: 4px;
+}
+.heat-label {
+  font-size: 0.55rem;
+  color: var(--text3);
+  text-align: center;
+}
+
+/* ─── DONUT CHART CANVAS ─── */
+canvas { display: block; }
+
+/* ─── PRAYER REQUESTS ─── */
+.prayer-item {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.85rem;
+  margin-bottom: 0.75rem;
+  transition: border-color 0.15s;
+}
+.prayer-item:hover { border-color: var(--gold-border); }
+.prayer-item:last-child { margin-bottom: 0; }
+.prayer-header { display: flex; justify-content: space-between; margin-bottom: 0.4rem; }
+.prayer-who { font-size: 0.7rem; font-weight: 500; color: var(--text); }
+.prayer-when { font-size: 0.6rem; color: var(--text3); }
+.prayer-text { font-family: 'Crimson Text', serif; font-style: italic; font-size: 0.9rem; color: var(--text2); line-height: 1.5; }
+.prayer-actions { display: flex; gap: 0.5rem; margin-top: 0.6rem; }
+.pray-btn {
+  font-size: 0.62rem;
+  color: var(--text3);
+  background: var(--bg4);
+  border: none;
+  border-radius: 3px;
+  padding: 3px 8px;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  transition: all 0.15s;
+}
+.pray-btn:hover { background: var(--gold-dim); color: var(--gold); }
+.pray-btn.prayed { background: var(--gold-dim); color: var(--gold); }
+
+/* ─── PAGE SECTIONS (tab system) ─── */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 2px; }
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.fade-in { animation: fadeIn 0.4s ease forwards; }
+
+/* ─── MODAL ─── */
+.modal-bg {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.65);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+}
+.modal-bg.open { display: flex; }
+.modal {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 1.75rem;
+  width: 480px;
+  max-width: 95vw;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+.modal h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  color: var(--gold);
+  margin-bottom: 0.4rem;
+}
+.modal-sub { font-size: 0.7rem; color: var(--text3); margin-bottom: 1.25rem; }
+.modal-row { margin-bottom: 1rem; }
+.modal-row label {
+  display: block;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 0.35rem;
+}
+.modal-input {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.55rem 0.75rem;
+  color: var(--text);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.78rem;
+  outline: none;
+}
+.modal-input:focus { border-color: var(--gold-border); }
+.modal-actions { display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.25rem; }
+.modal-cancel {
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  border-radius: 4px;
+  padding: 0.5rem 1.1rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+.modal-save {
+  background: var(--gold);
+  border: none;
+  color: #1a1000;
+  border-radius: 4px;
+  padding: 0.5rem 1.1rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ─── MEMBER DETAIL PANEL ─── */
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem; }
+.detail-item label { font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text3); display: block; margin-bottom: 2px; }
+.detail-item span { font-size: 0.78rem; color: var(--text); }
+.module-checklist { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.5rem; }
+.mod-check { display: flex; align-items: center; gap: 0.6rem; font-size: 0.72rem; color: var(--text2); }
+.mod-check .tick { width: 14px; height: 14px; border-radius: 2px; border: 1px solid var(--border2); display: flex; align-items: center; justify-content: center; font-size: 0.55rem; flex-shrink: 0; }
+.mod-check.done .tick { background: var(--gold-dim); border-color: var(--gold-border); color: var(--gold); }
+.mod-check.done { color: var(--text); }
+
+/* Login screen */
+.login-overlay {
+  position: fixed; inset: 0;
+  background: #0D1117;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Montserrat', sans-serif;
+}
+.login-card {
+  width: 340px;
+  text-align: center;
+  padding: 2rem;
+}
+.login-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  opacity: 0.9;
+}
+.login-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: #C9A84C;
+  margin-bottom: 0.25rem;
+}
+.login-sub {
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #3A3530;
+  margin-bottom: 2rem;
+}
+.login-input {
+  width: 100%;
+  background: #161B22;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 4px;
+  padding: 0.9rem 1rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.95rem;
+  color: #E8E0D0;
+  text-align: center;
+  outline: none;
+  margin-bottom: 1rem;
+}
+.login-input:focus { border-color: rgba(201,168,76,0.35); }
+.login-btn {
+  width: 100%;
+  background: #C9A84C;
+  color: #1a1000;
+  border: none;
+  border-radius: 4px;
+  padding: 0.9rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.login-btn:hover { opacity: 0.85; }
+.login-error {
+  display: none;
+  font-size: 0.72rem;
+  color: #F87171;
+  margin-top: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(248,113,113,0.08);
+  border: 1px solid rgba(248,113,113,0.18);
+  border-radius: 3px;
+}
+.login-hint {
+  font-size: 0.58rem;
+  color: #2A2520;
+  margin-top: 2rem;
+  letter-spacing: 0.05em;
+}
+
+/* Utility */
+.hidden { display: none !important; }
+
+@media (max-width: 900px) {
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  .dash-grid, .dash-grid.wide { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div id="login-screen" class="login-overlay">
+  <div class="login-card">
+    <img src="/logo.webp" alt="Logo" class="login-logo" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Ccircle cx=\'50\' cy=\'50\' r=\'48\' fill=\'%23161B22\' stroke=\'%23C9A84C\' stroke-width=\'2\'/%3E%3Ctext x=\'50\' y=\'65\' text-anchor=\'middle\' fill=\'%23C9A84C\' font-size=\'28\' font-family=\'Georgia\'%3E✝%3C/text%3E%3C/svg%3E'">
+    <h1 class="login-title">To Christ 4 Christ</h1>
+    <p class="login-sub">Admin Access Only</p>
+    <input type="password" id="login-password" class="login-input" placeholder="Enter password" autofocus>
+    <button id="login-button" class="login-btn">Enter Dashboard →</button>
+    <div id="login-error" class="login-error">Incorrect password. Please try again.</div>
+    <p class="login-hint">This is a private page. If you are not the administrator, please close this tab.</p>
+  </div>
+</div>
+
+<div id="app-content" class="hidden">
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <span class="brand">To Christ 4 Christ</span>
+    <span class="role">Admin Dashboard</span>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Overview</div>
+    <div class="nav-item" data-page="overview">
+      <span class="nav-icon">◈</span> Dashboard
+    </div>
+    <div class="nav-item" data-page="members">
+      <span class="nav-icon">◉</span> Members
+      <span class="nav-badge">47</span>
+    </div>
+    <div class="nav-section">Ministry</div>
+    <div class="nav-item" data-page="progress">
+      <span class="nav-icon">◎</span> Course Progress
+    </div>
+    <div class="nav-item" data-page="prayers">
+      <span class="nav-icon">✝</span> Prayer Wall
+      <span class="nav-badge">8</span>
+    </div>
+    <div class="nav-section">Growth</div>
+    <div class="nav-item" data-page="sources">
+      <span class="nav-icon">◈</span> QR & Sources
+    </div>
+    <div class="nav-item" data-page="community">
+      <span class="nav-icon">◉</span> Community
+    </div>
+    <div class="nav-section">Settings</div>
+    <div class="nav-item" data-page="settings">
+      <span class="nav-icon">⊙</span> Settings
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="admin-chip">
+      <div class="admin-avatar">M</div>
+      <div>
+        <div class="admin-name">Martin</div>
+        <div class="admin-email">admin@tochrist4christ.org</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<main class="main">
+  <header class="topbar">
+    <span class="topbar-title">Hello & welcome, <em>Martin</em> ✝</span>
+    <div class="topbar-right">
+      <span class="topbar-date" id="live-date"></span>
+      <button id="notif-btn" class="notif-btn">🔔<span class="notif-dot"></span></button>
+      <button id="export-csv" class="export-btn">↓ Export</button>
+    </div>
+  </header>
+
+  <div id="nl-banner" class="nl-banner">
+    <span>✅ Secure admin access via Netlify Identity</span>
+    <button id="logout-btn" class="logout-btn">Sign Out</button>
+  </div>
+
+  <div id="page-overview" class="page active fade-in">
+    <div class="stat-grid">
+      <div class="stat-card gold">
+        <div class="stat-label">Total Members</div>
+        <div class="stat-num" id="s-members">0</div>
+        <div class="stat-sub"><span class="up">↑ 6</span> this week</div>
+        <div class="stat-icon">◉</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-label">Active This Week</div>
+        <div class="stat-num" id="s-active">0</div>
+        <div class="stat-sub"><span class="up">↑ 12%</span> vs last week</div>
+        <div class="stat-icon">◎</div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-label">Modules Completed</div>
+        <div class="stat-num" id="s-completions">0</div>
+        <div class="stat-sub">across all members</div>
+        <div class="stat-icon">◈</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-label">QR Scans (30 days)</div>
+        <div class="stat-num" id="s-scans">0</div>
+        <div class="stat-sub"><span class="up">↑ 34%</span> conversion rate</div>
+        <div class="stat-icon">⊙</div>
+      </div>
+    </div>
+
+    <div class="dash-grid wide">
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-title">Module Completion Rate</span>
+          <span class="panel-action" data-page="progress">View all →</span>
+        </div>
+        <div class="panel-body">
+          <div class="module-row">
+            <div class="module-meta"><span class="module-name">1 · The Foundation</span><span class="module-count">38 / 47</span></div>
+            <div class="bar-track"><div class="bar-fill" data-w="81"></div></div>
+          </div>
+          <div class="module-row">
+            <div class="module-meta"><span class="module-name">2 · The Word</span><span class="module-count">29 / 47</span></div>
+            <div class="bar-track"><div class="bar-fill green" data-w="62"></div></div>
+          </div>
+          <div class="module-row">
+            <div class="module-meta"><span class="module-name">3 · Prayer</span><span class="module-count">21 / 47</span></div>
+            <div class="bar-track"><div class="bar-fill blue" data-w="45"></div></div>
+          </div>
+          <div class="module-row">
+            <div class="module-meta"><span class="module-name">4 · Identity</span><span class="module-count">14 / 47</span></div>
+            <div class="bar-track"><div class="bar-fill purple" data-w="30"></div></div>
+          </div>
+          <div class="module-row">
+            <div class="module-meta"><span class="module-name">5 · Community</span><span class="module-count">8 / 47</span></div>
+            <div class="bar-track"><div class="bar-fill" style="background:#7C3AED" data-w="17"></div></div>
+          </div>
+          <div class="module-row">
+            <div class="module-meta"><span class="module-name">6 · Mission</span><span class="module-count">3 / 47</span></div>
+            <div class="bar-track"><div class="bar-fill" style="background:#EC4899" data-w="6"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:1rem;">
+        <div class="panel">
+          <div class="panel-head">
+            <span class="panel-title">Signup Sources</span>
+          </div>
+          <div class="panel-body">
+            <div class="source-list">
+              <div class="source-item">
+                <div class="source-dot" style="background:var(--gold)"></div>
+                <span class="source-name">QR Poster — Westlands</span>
+                <div class="source-bar-wrap"><div class="source-bar" style="background:var(--gold)" data-w="78"></div></div>
+                <span class="source-pct">78%</span>
+              </div>
+              <div class="source-item">
+                <div class="source-dot" style="background:var(--green)"></div>
+                <span class="source-name">QR Poster — CBD</span>
+                <div class="source-bar-wrap"><div class="source-bar" style="background:var(--green)" data-w="55"></div></div>
+                <span class="source-pct">55%</span>
+              </div>
+              <div class="source-item">
+                <div class="source-dot" style="background:var(--blue)"></div>
+                <span class="source-name">Word of Mouth</span>
+                <div class="source-bar-wrap"><div class="source-bar" style="background:var(--blue)" data-w="30"></div></div>
+                <span class="source-pct">30%</span>
+              </div>
+              <div class="source-item">
+                <div class="source-dot" style="background:#8B5CF6"></div>
+                <span class="source-name">Church Referral</span>
+                <div class="source-bar-wrap"><div class="source-bar" style="background:#8B5CF6" data-w="18"></div></div>
+                <span class="source-pct">18%</span>
+              </div>
+              <div class="source-item">
+                <div class="source-dot" style="background:#EC4899"></div>
+                <span class="source-name">Social Media</span>
+                <div class="source-bar-wrap"><div class="source-bar" style="background:#EC4899" data-w="10"></div></div>
+                <span class="source-pct">10%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><span class="panel-title">Weekly Activity Heatmap</span></div>
+          <div class="panel-body">
+            <div class="heatmap-grid" id="heatmap"></div>
+            <div class="heatmap-labels">
+              <span class="heat-label">M</span><span class="heat-label">T</span><span class="heat-label">W</span>
+              <span class="heat-label">T</span><span class="heat-label">F</span><span class="heat-label">S</span><span class="heat-label">S</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-grid">
+      <div class="panel">
+        <div class="panel-head"><span class="panel-title">Live Activity Feed</span><span class="panel-action" id="pause-feed">Pause</span></div>
+        <div class="panel-body" style="padding:0;">
+          <div class="activity-list" id="activity-feed">
+            <div class="activity-item">
+              <div class="act-dot" style="background:var(--gold)"></div>
+              <span class="act-text"><strong>Grace M.</strong> completed Module 1 — The Foundation</span>
+              <span class="act-time">2m ago</span>
+            </div>
+            <div class="activity-item">
+              <div class="act-dot" style="background:var(--green)"></div>
+              <span class="act-text"><strong>David K.</strong> joined the community from Westlands QR poster</span>
+              <span class="act-time">14m ago</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-title">Newest Members</span>
+          <span class="panel-action" data-page="members">View all →</span>
+        </div>
+        <div class="panel-body" style="padding:0;">
+          <div id="new-members-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="page-members" class="page fade-in">
+    <div class="panel">
+      <div class="table-controls">
+        <input type="text" id="member-search" class="search-input" placeholder="Search by name, email, or location…">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="active">Active</button>
+        <button class="filter-btn" data-filter="new">New</button>
+        <button class="filter-btn" data-filter="completed">Completed</button>
+      </div>
+      <div class="table-wrap">
+        <table class="members-table">
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th>Joined</th>
+              <th>Progress</th>
+              <th>Module</th>
+              <th>Status</th>
+              <th>Source</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="members-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="page-prayers" class="page fade-in">
+    <div class="dash-grid">
+      <div class="panel">
+        <div class="panel-head"><span class="panel-title">Prayer Requests — Pending</span></div>
+        <div class="panel-body" id="pending-prayers"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><span class="panel-title">Answered Prayers 🙏</span></div>
+        <div class="panel-body" id="answered-prayers"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="page-progress" class="page fade-in">
+    <div class="panel" style="margin-bottom:1rem;">
+      <div class="panel-head"><span class="panel-title">Course Completion by Module</span></div>
+      <div class="panel-body">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
+          <div>
+            <div class="module-row">
+              <div class="module-meta"><span class="module-name">Module 1 · The Foundation</span><span class="module-count">81% · 38 members</span></div>
+              <div class="bar-track"><div class="bar-fill" data-w="81"></div></div>
+            </div>
+            <div class="module-row">
+              <div class="module-meta"><span class="module-name">Module 2 · The Word</span><span class="module-count">62% · 29 members</span></div>
+              <div class="bar-track"><div class="bar-fill green" data-w="62"></div></div>
+            </div>
+            <div class="module-row">
+              <div class="module-meta"><span class="module-name">Module 3 · Prayer</span><span class="module-count">45% · 21 members</span></div>
+              <div class="bar-track"><div class="bar-fill blue" data-w="45"></div></div>
+            </div>
+          </div>
+          <div>
+            <div class="module-row">
+              <div class="module-meta"><span class="module-name">Module 4 · Identity</span><span class="module-count">30% · 14 members</span></div>
+              <div class="bar-track"><div class="bar-fill purple" data-w="30"></div></div>
+            </div>
+            <div class="module-row">
+              <div class="module-meta"><span class="module-name">Module 5 · Community</span><span class="module-count">17% · 8 members</span></div>
+              <div class="bar-track"><div class="bar-fill" style="background:#7C3AED" data-w="17"></div></div>
+            </div>
+            <div class="module-row">
+              <div class="module-meta"><span class="module-name">Module 6 · Mission</span><span class="module-count">6% · 3 members</span></div>
+              <div class="bar-track"><div class="bar-fill" style="background:#EC4899" data-w="6"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="page-sources" class="page fade-in">
+    <div class="dash-grid">
+      <div class="panel">
+        <div class="panel-head"><span class="panel-title">Poster Performance</span></div>
+        <div class="panel-body">
+          <table class="members-table">
+            <thead><tr><th>Poster Location</th><th>Scans</th><th>Signups</th><th>Conversion</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Westlands — Junction Mall</strong></td><td>89</td><td>24</td><td><span style="color:#4ADE80">27%</span></td><td><span class="badge active">Live</span></td></tr>
+              <tr><td><strong>CBD — Archives Road</strong></td><td>61</td><td>14</td><td><span style="color:#4ADE80">23%</span></td><td><span class="badge active">Live</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="page-community" class="page fade-in">
+    <div class="panel">
+      <div class="panel-head"><span class="panel-title">Community Overview</span></div>
+      <div class="panel-body">
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1rem;">
+          <div style="background:var(--bg4); border-radius:4px; padding:1rem; text-align:center;">
+            <div style="font-family:'Playfair Display',serif; font-size:1.8rem; color:var(--gold)">47</div>
+            <div style="font-size:0.62rem;">Total Members</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="page-settings" class="page fade-in">
+    <div class="panel" style="max-width:560px;">
+      <div class="panel-head"><span class="panel-title">Ministry Settings</span></div>
+      <div class="panel-body">
+        <div class="modal-row"><label>Ministry Name</label><input class="modal-input" value="To Christ 4 Christ"></div>
+        <div class="modal-row"><label>Your Email</label><input class="modal-input" value="admin@tochrist4christ.org"></div>
+        <button id="save-settings" class="export-btn">Save Settings</button>
+      </div>
+    </div>
+  </div>
+</main>
+</div>
+
+<div id="member-modal" class="modal-bg"></div>
+<div id="toast" class="toast"></div>
+
+<style>
+.nl-banner {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  padding: 0.6rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(201,168,76,0.07);
+  border-bottom: 1px solid rgba(201,168,76,0.2);
+}
+.logout-btn {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  background: transparent;
+  border: 1px solid rgba(201,168,76,0.3);
+  color: var(--gold);
+  padding: 0.25rem 0.9rem;
+  border-radius: 2px;
+  cursor: pointer;
+}
+.logout-btn:hover {
+  background: var(--gold-dim);
+}
+.toast {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 9999;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  background: #1F2630;
+  border: 1px solid rgba(201,168,76,0.35);
+  color: var(--text);
+  padding: 0.75rem 1.2rem;
+  border-radius: 4px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; }
+.hidden { display: none !important; }
+</style>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// SECURE ADMIN PANEL
+// Uses Netlify Identity for authentication
+// All API calls go through serverless functions
+// ═══════════════════════════════════════════════════════════
+
+// DOM Elements
+const loginScreen = document.getElementById('login-screen');
+const appContent = document.getElementById('app-content');
+const loginBtn = document.getElementById('login-button');
+const loginPassword = document.getElementById('login-password');
+const loginError = document.getElementById('login-error');
+const logoutBtn = document.getElementById('logout-btn');
+const exportBtn = document.getElementById('export-csv');
+const saveSettingsBtn = document.getElementById('save-settings');
+
+// State
+let currentUser = null;
+let activeMembers = [];
+let activeFilter = 'all';
+let feedRunning = true;
+let feedInterval;
+
+// ─── AUTHENTICATION (Netlify Identity) ─────────────────────
+async function checkAuth() {
+  // Check if we have a valid session via serverless function
+  try {
+    const response = await fetch('/.netlify/functions/verify-auth', {
+      credentials: 'include'
+    });
+    const data = await response.json();
+    if (data.authenticated) {
+      currentUser = data.user;
+      showApp();
+      loadData();
+    } else {
+      showLogin();
+    }
+  } catch (err) {
+    console.error('Auth check failed:', err);
+    showLogin();
+  }
+}
+
+async function login(password) {
+  try {
+    const response = await fetch('/.netlify/functions/admin-login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password }),
+      credentials: 'include'
+    });
+    const data = await response.json();
+    if (data.success) {
+      currentUser = data.user;
+      showApp();
+      loadData();
+      return true;
+    } else {
+      return false;
+    }
+  } catch (err) {
+    console.error('Login failed:', err);
+    return false;
+  }
+}
+
+async function logout() {
+  await fetch('/.netlify/functions/admin-logout', { method: 'POST', credentials: 'include' });
+  currentUser = null;
+  showLogin();
+}
+
+function showLogin() {
+  loginScreen.classList.remove('hidden');
+  appContent.classList.add('hidden');
+  loginPassword.value = '';
+  loginError.style.display = 'none';
+}
+
+function showApp() {
+  loginScreen.classList.add('hidden');
+  appContent.classList.remove('hidden');
+  document.getElementById('live-date').textContent = new Date().toLocaleDateString('en-KE', {
+    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+  });
+  startFeed();
+  buildHeatmap();
+  animateBars();
+  animateSourceBars();
+}
+
+// ─── DATA LOADING (via serverless functions) ──────────────
+async function loadData() {
+  try {
+    const response = await fetch('/.netlify/functions/get-members', { credentials: 'include' });
+    const data = await response.json();
+    if (data.members) {
+      activeMembers = data.members;
+      updateStats();
+      renderMembers();
+      renderNewMembers();
+    }
+  } catch (err) {
+    console.error('Failed to load members:', err);
+    showToast('Failed to load member data');
+  }
+}
+
+async function deleteMember(memberId) {
+  try {
+    const response = await fetch('/.netlify/functions/delete-member', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ memberId }),
+      credentials: 'include'
+    });
+    const data = await response.json();
+    if (data.success) {
+      loadData(); // Refresh
+      showToast('Member removed successfully');
+      return true;
+    } else {
+      showToast(data.error || 'Failed to delete member');
+      return false;
+    }
+  } catch (err) {
+    console.error('Delete failed:', err);
+    showToast('Error deleting member');
+    return false;
+  }
+}
+
+async function sendEncouragementEmail(memberId, subject, message) {
+  try {
+    const response = await fetch('/.netlify/functions/send-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ memberId, subject, message }),
+      credentials: 'include'
+    });
+    const data = await response.json();
+    if (data.success) {
+      showToast('Email sent successfully');
+      return true;
+    } else {
+      showToast(data.error || 'Failed to send email');
+      return false;
+    }
+  } catch (err) {
+    console.error('Email failed:', err);
+    showToast('Error sending email');
+    return false;
+  }
+}
+
+async function exportMembersCSV() {
+  try {
+    const response = await fetch('/.netlify/functions/export-members', { credentials: 'include' });
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'to-christ-4christ-members.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch (err) {
+    console.error('Export failed:', err);
+    showToast('Failed to export members');
+  }
+}
+
+// ─── UI RENDERING ─────────────────────────────────────────
+function updateStats() {
+  document.getElementById('s-members').textContent = activeMembers.length;
+  document.getElementById('s-active').textContent = activeMembers.filter(m => m.status === 'active').length;
+  document.getElementById('s-completions').textContent = activeMembers.filter(m => m.status === 'completed').length;
+  document.getElementById('s-scans').textContent = activeMembers.length;
+}
+
+function renderMembers() {
+  const tbody = document.getElementById('members-tbody');
+  if (!tbody) return;
+  
+  let filtered = [...activeMembers];
+  const searchTerm = document.getElementById('member-search')?.value.toLowerCase() || '';
+  if (searchTerm) {
+    filtered = filtered.filter(m => 
+      m.name.toLowerCase().includes(searchTerm) ||
+      (m.email && m.email.toLowerCase().includes(searchTerm)) ||
+      (m.loc && m.loc.toLowerCase().includes(searchTerm))
+    );
+  }
+  if (activeFilter !== 'all') {
+    filtered = filtered.filter(m => m.status === activeFilter);
+  }
+  
+  tbody.innerHTML = filtered.map((m, idx) => {
+    const initials = (m.name || 'U').substring(0, 2).toUpperCase();
+    const statusBadge = `<span class="badge ${m.status}">${m.status}</span>`;
+    return `
+      <tr>
+        <td>
+          <div class="member-name-cell">
+            <div class="m-avatar" style="background:rgba(201,168,76,0.15); border:1px solid rgba(201,168,76,0.3); color:var(--gold)">${initials}</div>
+            <div><div class="m-name">${escapeHtml(m.name)}</div><div class="m-loc">${escapeHtml(m.loc || 'Unknown')}</div></div>
+          </div>
+        </td>
+        <td>${escapeHtml(m.joined)}</td>
+        <td>
+          <div class="progress-mini">
+            <div class="mini-bar"><div class="mini-fill" style="width:${m.progress || 0}%"></div></div>
+            <span class="mini-pct">${m.progress || 0}%</span>
+          </div>
+        </td>
+        <td>Module ${m.module || 1}</td>
+        <td>${statusBadge}</td>
+        <td><span class="source-tag">${escapeHtml(m.source || 'Unknown')}</span></td>
+        <td>
+          <button class="pray-btn view-member" data-idx="${idx}">View →</button>
+          <button class="pray-btn delete-member" data-idx="${idx}" style="color:#f87171;">✕ Remove</button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+  
+  // Attach event listeners
+  document.querySelectorAll('.view-member').forEach(btn => {
+    btn.addEventListener('click', () => openMember(parseInt(btn.dataset.idx)));
+  });
+  document.querySelectorAll('.delete-member').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      confirmDelete(parseInt(btn.dataset.idx));
+    });
+  });
+}
+
+function renderNewMembers() {
+  const container = document.getElementById('new-members-list');
+  if (!container) return;
+  const recent = activeMembers.slice(0, 5);
+  container.innerHTML = recent.map(m => `
+    <div class="activity-item">
+      <div class="m-avatar" style="background:rgba(201,168,76,0.15); width:28px;height:28px;font-size:0.6rem;">${(m.name || 'U').substring(0,2)}</div>
+      <div style="flex:1">
+        <div style="font-size:0.73rem; color:var(--text); font-weight:500">${escapeHtml(m.name)}</div>
+        <div style="font-size:0.62rem; color:var(--text3)">${escapeHtml(m.loc || 'Unknown')}</div>
+      </div>
+      <span class="act-time">${escapeHtml(m.joined)}</span>
+    </div>
+  `).join('');
+}
+
+// ─── MEMBER MODAL ─────────────────────────────────────────
+function openMember(idx) {
+  const m = activeMembers[idx];
+  if (!m) return;
+  
+  const modal = document.getElementById('member-modal');
+  modal.innerHTML = `
+    <div class="modal">
+      <h2>${escapeHtml(m.name)}</h2>
+      <p class="modal-sub">${escapeHtml(m.loc || 'Unknown')} · Joined ${escapeHtml(m.joined)}</p>
+      <div class="detail-grid">
+        <div class="detail-item"><label>Email</label><span>${escapeHtml(m.email || '—')}</span></div>
+        <div class="detail-item"><label>Status</label><span class="badge ${m.status}">${m.status}</span></div>
+        <div class="detail-item"><label>Progress</label><span>${m.progress || 0}%</span></div>
+        <div class="detail-item"><label>Source</label><span>${escapeHtml(m.source || 'Unknown')}</span></div>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-cancel" id="close-modal-btn">Close</button>
+        <button class="modal-cancel" id="delete-member-btn" style="color:#f87171;">✕ Remove Member</button>
+        <button class="modal-save" id="email-member-btn">✉ Send Message</button>
+      </div>
+    </div>
+  `;
+  modal.classList.add('open');
+  
+  document.getElementById('close-modal-btn').addEventListener('click', () => modal.classList.remove('open'));
+  document.getElementById('delete-member-btn').addEventListener('click', () => {
+    modal.classList.remove('open');
+    confirmDelete(idx);
+  });
+  document.getElementById('email-member-btn').addEventListener('click', () => {
+    modal.classList.remove('open');
+    openEmailModal(idx);
+  });
+}
+
+function confirmDelete(idx) {
+  const m = activeMembers[idx];
+  if (!m) return;
+  
+  if (confirm(`Remove ${m.name} from the system? This action cannot be undone.`)) {
+    deleteMember(m.id);
+  }
+}
+
+// ─── EMAIL MODAL ──────────────────────────────────────────
+let currentEmailTarget = null;
+
+function openEmailModal(idx) {
+  const m = activeMembers[idx];
+  if (!m) return;
+  currentEmailTarget = m;
+  
+  const modalHtml = `
+    <div class="modal">
+      <h2>Send Encouragement</h2>
+      <p class="modal-sub">To: ${escapeHtml(m.name)} · ${escapeHtml(m.email)}</p>
+      <div class="modal-row">
+        <label>Subject</label>
+        <input type="text" id="email-subject" class="modal-input" value="Thinking of you, ${escapeHtml(m.name.split(' ')[0])} ✝">
+      </div>
+      <div class="modal-row">
+        <label>Message</label>
+        <textarea id="email-body" class="modal-input" rows="6">Hi ${escapeHtml(m.name.split(' ')[0])},
+
+I wanted to reach out and encourage you on your discipleship journey. You're doing great!
+
+Keep pressing forward — we're walking with you.
+
+Blessings,
+The To Christ 4 Christ Team</textarea>
+      </div>
+      <div id="email-status" style="display:none; margin-bottom:1rem; padding:0.5rem; border-radius:3px;"></div>
+      <div class="modal-actions">
+        <button class="modal-cancel" id="close-email-btn">Cancel</button>
+        <button class="modal-save" id="send-email-btn">✉ Send Email</button>
+      </div>
+    </div>
+  `;
+  
+  const modal = document.getElementById('member-modal');
+  modal.innerHTML = modalHtml;
+  modal.classList.add('open');
+  
+  document.getElementById('close-email-btn').addEventListener('click', () => modal.classList.remove('open'));
+  document.getElementById('send-email-btn').addEventListener('click', async () => {
+    const subject = document.getElementById('email-subject').value;
+    const message = document.getElementById('email-body').value;
+    const statusDiv = document.getElementById('email-status');
+    const sendBtn = document.getElementById('send-email-btn');
+    
+    if (!subject || !message) {
+      statusDiv.textContent = 'Please fill in both subject and message.';
+      statusDiv.style.display = 'block';
+      statusDiv.style.color = '#f87171';
+      return;
+    }
+    
+    sendBtn.disabled = true;
+    sendBtn.textContent = 'Sending...';
+    statusDiv.style.display = 'none';
+    
+    const success = await sendEncouragementEmail(currentEmailTarget.id, subject, message);
+    
+    if (success) {
+      statusDiv.textContent = '✓ Email sent successfully!';
+      statusDiv.style.color = '#4ade80';
+      statusDiv.style.display = 'block';
+      setTimeout(() => modal.classList.remove('open'), 1500);
+    } else {
+      statusDiv.textContent = 'Failed to send email. Please try again later.';
+      statusDiv.style.color = '#f87171';
+      statusDiv.style.display = 'block';
+      sendBtn.disabled = false;
+      sendBtn.textContent = '✉ Send Email';
+    }
+  });
+}
+
+// ─── UTILITIES ────────────────────────────────────────────
+function escapeHtml(str) {
+  if (!str) return '';
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+function buildHeatmap() {
+  const grid = document.getElementById('heatmap');
+  if (!grid) return;
+  const levels = [0,1,0,2,3,4,2, 1,2,3,4,3,2,1, 0,1,2,3,2,1,0];
+  levels.forEach(l => {
+    const d = document.createElement('div');
+    d.className = 'heat-day' + (l ? ' h'+l : '');
+    grid.appendChild(d);
+  });
+}
+
+function animateBars() {
+  setTimeout(() => {
+    document.querySelectorAll('.bar-fill[data-w]').forEach(b => {
+      b.style.width = b.dataset.w + '%';
+    });
+  }, 300);
+}
+
+function animateSourceBars() {
+  setTimeout(() => {
+    document.querySelectorAll('.source-bar[data-w]').forEach(b => {
+      b.style.width = b.dataset.w + '%';
+    });
+  }, 400);
+}
+
+function startFeed() {
+  const events = [
+    { color:'#C9A84C', text:'<strong>New member</strong> completed Module 1' },
+    { color:'#2D7A50', text:'<strong>New member</strong> joined' },
+    { color:'#60A5FA', text:'<strong>A member</strong> submitted a reflection' },
+  ];
+  let idx = 0;
+  feedInterval = setInterval(() => {
+    if (!feedRunning) return;
+    const feed = document.getElementById('activity-feed');
+    if (!feed) return;
+    const evt = events[idx % events.length];
+    idx++;
+    const item = document.createElement('div');
+    item.className = 'activity-item';
+    item.style.opacity = '0';
+    item.innerHTML = `<div class="act-dot" style="background:${evt.color}"></div>
+      <span class="act-text">${evt.text}</span>
+      <span class="act-time">just now</span>`;
+    feed.insertBefore(item, feed.firstChild);
+    if (feed.children.length > 8) feed.removeChild(feed.lastChild);
+    setTimeout(() => { item.style.opacity = '1'; }, 20);
+  }, 8000);
+}
+
+// ─── EVENT LISTENERS ──────────────────────────────────────
+loginBtn.addEventListener('click', async () => {
+  const password = loginPassword.value;
+  if (!password) {
+    loginError.style.display = 'block';
+    return;
+  }
+  loginBtn.disabled = true;
+  loginBtn.textContent = 'Verifying...';
+  
+  const success = await login(password);
+  if (success) {
+    // Login successful
+  } else {
+    loginError.style.display = 'block';
+    loginBtn.disabled = false;
+    loginBtn.textContent = 'Enter Dashboard →';
+  }
+});
+
+loginPassword.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') loginBtn.click();
+});
+
+if (logoutBtn) {
+  logoutBtn.addEventListener('click', () => logout());
+}
+
+if (exportBtn) {
+  exportBtn.addEventListener('click', () => exportMembersCSV());
+}
+
+if (saveSettingsBtn) {
+  saveSettingsBtn.addEventListener('click', () => showToast('Settings saved (demo mode)'));
+}
+
+// Navigation
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const page = item.dataset.page;
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(`page-${page}`).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    item.classList.add('active');
+    setTimeout(() => { animateBars(); animateSourceBars(); }, 100);
+  });
+});
+
+document.querySelectorAll('.panel-action[data-page]').forEach(action => {
+  action.addEventListener('click', () => {
+    const page = action.dataset.page;
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(`page-${page}`).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const navItem = document.querySelector(`.nav-item[data-page="${page}"]`);
+    if (navItem) navItem.classList.add('active');
+  });
+});
+
+document.querySelectorAll('.filter-btn[data-filter]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    activeFilter = btn.dataset.filter;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderMembers();
+  });
+});
+
+const searchInput = document.getElementById('member-search');
+if (searchInput) {
+  searchInput.addEventListener('input', () => renderMembers());
+}
+
+const pauseFeedBtn = document.getElementById('pause-feed');
+if (pauseFeedBtn) {
+  pauseFeedBtn.addEventListener('click', () => {
+    feedRunning = !feedRunning;
+    pauseFeedBtn.textContent = feedRunning ? 'Pause' : 'Resume';
+  });
+}
+
+// ─── INIT ─────────────────────────────────────────────────
+checkAuth();
+</script>
+</body>
+</html>
