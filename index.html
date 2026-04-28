@@ -896,8 +896,8 @@
     display: block;
   }
 </style>
-  <!-- EmailJS — sends real emails from the browser, no backend needed -->
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+ 
 </head>
 <body>
 
@@ -1535,52 +1535,73 @@
 
   // ─── FORM SUBMIT ───
   async function handleSubmit(e) {
-    e.preventDefault();
-    const btn      = document.querySelector('.form-submit');
-    const errorBox = document.getElementById('form-error');
-    if (errorBox) errorBox.style.display = 'none';
+  e.preventDefault();
+  const btn = document.querySelector('.form-submit');
+  const errorBox = document.getElementById('form-error');
+  if (errorBox) errorBox.style.display = 'none';
 
-    const firstName = document.getElementById('fname').value.trim();
-    const lastName  = document.getElementById('lname') ? document.getElementById('lname').value.trim() : '';
-    const email     = document.getElementById('email').value.trim().toLowerCase();
-    const location  = document.getElementById('location') ? document.getElementById('location').value.trim() : '';
+  const firstName = document.getElementById('fname').value.trim();
+  const lastName = document.getElementById('lname') ? document.getElementById('lname').value.trim() : '';
+  const email = document.getElementById('email').value.trim().toLowerCase();
+  const location = document.getElementById('location') ? document.getElementById('location').value.trim() : '';
 
-    const ageConsent = document.getElementById('age-consent');
-    if (!firstName || !email) { showError('Please fill in your name and email address.'); return; }
-    if (!isValidEmail(email)) { showError('Please enter a valid email address.'); return; }
-    if (ageConsent && !ageConsent.checked) { showError('Please confirm you are 18 or older and agree to the Privacy Policy to continue.'); return; }
+  const ageConsent = document.getElementById('age-consent');
+  if (!firstName || !email) { showError('Please fill in your name and email address.'); return; }
+  if (!isValidEmail(email)) { showError('Please enter a valid email address.'); return; }
+  if (ageConsent && !ageConsent.checked) { showError('Please confirm you are 18 or older and agree to the Privacy Policy to continue.'); return; }
 
-    btn.textContent  = 'Sending…';
-    btn.disabled     = true;
-    btn.style.opacity = '0.7';
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+  btn.style.opacity = '0.7';
 
-    const formEl = document.getElementById('join-form');
-    const data   = new FormData(formEl);
+  const formEl = document.getElementById('join-form');
+  const data = new FormData(formEl);
 
-    try {
-      await fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(data).toString(),
-      });
-    } catch (err) {
-      console.error('Netlify submission error:', err);
-      showError('Could not connect. Please check your internet and try again.');
-      btn.textContent  = 'Begin My Journey →';
-      btn.disabled     = false;
-      btn.style.opacity = '1';
-      return;
-    }
-
-    // ── Save user to localStorage so progress tracker activates ──
-    const userObj = { firstName, lastName, email, location, joinedAt: new Date().toISOString() };
-    localStorage.setItem(USER_KEY, JSON.stringify(userObj));
-
-    showSuccess(firstName);
-    renderTracker();
-
-    
+  try {
+    await fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(data).toString(),
+    });
+  } catch (err) {
+    console.error('Netlify submission error:', err);
+    showError('Could not connect. Please check your internet and try again.');
+    btn.textContent = 'Begin My Journey →';
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    return;
   }
+
+  // Save user to localStorage
+  const userObj = { firstName, lastName, email, location, joinedAt: new Date().toISOString() };
+  localStorage.setItem(USER_KEY, JSON.stringify(userObj));
+
+  // ✅ ADD THIS: Send welcome email via serverless function
+  try {
+    const emailResponse = await fetch('/.netlify/functions/send-welcome-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        to_email: email,
+        to_name: firstName,
+        firstName: firstName,
+        lastName: lastName
+      })
+    });
+    
+    if (emailResponse.ok) {
+      console.log('Welcome email sent successfully');
+    } else {
+      console.error('Welcome email failed:', await emailResponse.text());
+    }
+  } catch (emailErr) {
+    console.error('Welcome email error (non-critical):', emailErr);
+    // Don't block signup if email fails
+  }
+
+  showSuccess(firstName);
+  renderTracker();
+}
 
   function showSuccess(firstName) {
     const form    = document.getElementById('join-form');
