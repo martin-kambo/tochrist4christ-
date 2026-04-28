@@ -1490,11 +1490,20 @@
 
   // ─── MODULE ACCORDION ───
   function toggleModule(header) {
-    const item    = header.parentElement;
-    const wasOpen = item.classList.contains('open');
-    document.querySelectorAll('.module-item').forEach(m => m.classList.remove('open'));
-    if (!wasOpen) item.classList.add('open');
+  const item = header.parentElement;
+  const wasOpen = item.classList.contains('open');
+  
+  // Close all modules
+  const allModules = document.querySelectorAll('.module-item');
+  allModules.forEach(module => {
+    module.classList.remove('open');
+  });
+  
+  // If it wasn't open, open this one
+  if (!wasOpen) {
+    item.classList.add('open');
   }
+}
 
   // ─── SCROLL REVEAL ───
   const observer = new IntersectionObserver((entries) => {
