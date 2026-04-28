@@ -1,18 +1,9 @@
 // netlify/functions/send-email.js
 
 exports.handler = async (event) => {
+  // Only allow POST requests
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
-  }
-  
-  const cookies = parseCookies(event.headers.cookie || '');
-  const sessionToken = cookies.admin_session;
-  
-  if (!sessionToken || sessionToken !== process.env.ADMIN_SESSION_TOKEN) {
-    return {
-      statusCode: 401,
-      body: JSON.stringify({ error: 'Unauthorized' })
-    };
   }
   
   try {
@@ -25,6 +16,7 @@ exports.handler = async (event) => {
       };
     }
     
+    // EmailJS configuration from environment variables
     const emailJsPayload = {
       service_id: process.env.EMAILJS_SERVICE_ID,
       template_id: process.env.EMAILJS_ADMIN_TEMPLATE,
@@ -32,18 +24,23 @@ exports.handler = async (event) => {
       template_params: {
         to_name: memberName,
         to_email: memberEmail,
-        from_name: 'Martin — To Christ 4 Christ',
+        from_name: 'To Christ 4 Christ',
         reply_to: 'hello@tochrist4christ.org',
         subject: subject,
         message: message
       }
     };
     
+    console.log('Sending email to:', memberEmail);
+    
     const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(emailJsPayload)
     });
+    
+    const responseText = await response.text();
+    console.log('EmailJS response:', response.status, responseText);
     
     if (response.ok) {
       return {
@@ -53,25 +50,14 @@ exports.handler = async (event) => {
     } else {
       return {
         statusCode: 500,
-        body: JSON.stringify({ error: 'Failed to send email' })
+        body: JSON.stringify({ error: 'EmailJS error: ' + responseText })
       };
     }
   } catch (error) {
+    console.error('Email error:', error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Server error' })
+      body: JSON.stringify({ error: 'Server error: ' + error.message })
     };
   }
 };
-
-function parseCookies(cookieString) {
-  const cookies = {};
-  if (!cookieString) return cookies;
-  
-  cookieString.split(';').forEach(cookie => {
-    const [name, value] = cookie.trim().split('=');
-    cookies[name] = value;
-  });
-  
-  return cookies;
-}
