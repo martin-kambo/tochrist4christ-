@@ -1,63 +1,109 @@
-// netlify/functions/send-email.js
+const crypto = require('crypto');
 
-exports.handler = async (event) => {
-  // Only allow POST requests
+const SECRET        = process.env.ADMIN_SESSION_SECRET || 'change-this-secret';
+const API_TOKEN     = process.env.NETLIFY_API_TOKEN;
+const SITE_ID       = process.env.NETLIFY_SITE_ID;
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
+
+function verifyToken(token) {
+  try {
+    const [data, sig] = token.split('.');
+    if (!data || !sig) return null;
+    const expectedSig = crypto.createHmac('sha256', SECRET).update(data).digest('base64url');
+    if (sig !== expectedSig) return null;
+    const payload = JSON.parse(Buffer.from(data, 'base64url').toString());
+    if (Date.now() - payload.iat > 8 * 60 * 60 * 1000) return null;
+    return payload;
+  } catch { return null; }
+}
+
+function getTokenFromCookie(cookieHeader) {
+  if (!cookieHeader) return null;
+  const cookies = cookieHeader.split(';').map(c => c.trim());
+  for (const c of cookies) {
+    const [name, ...rest] = c.split('=');
+    if (name.trim() === 'tc4c_admin') return rest.join('=');
+  }
+  return null;
+}
+
+exports.handler = async function (event) {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
-  
+
+  const token = getTokenFromCookie(event.headers.cookie);
+  if (!verifyToken(token)) {
+    return { statusCode: 401, body: JSON.stringify({ error: 'Unauthorized' }) };
+  }
+
+  let body;
+  try { body = JSON.parse(event.body); }
+  catch { return { statusCode: 400, body: JSON.stringify({ error: 'Invalid JSON' }) }; }
+
+  const { memberId, subject, message } = body;
+  if (!memberId || !subject || !message) {
+    return { statusCode: 400, body: JSON.stringify({ error: 'memberId, subject, and message are required' }) };
+  }
+
+  // Look up the member's email from Netlify submissions
   try {
-    const { memberEmail, memberName, subject, message } = JSON.parse(event.body);
-    
-    if (!memberEmail || !subject || !message) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ error: 'Email, subject, and message are required' })
-      };
+    const subResponse = await fetch(
+      `https://api.netlify.com/api/v1/submissions/${memberId}`,
+      { headers: { Authorization: `Bearer ${API_TOKEN}` } }
+    );
+
+    if (!subResponse.ok) {
+      return { statusCode: 404, body: JSON.stringify({ error: 'Member not found' }) };
     }
-    
-    // EmailJS configuration from environment variables
-    const emailJsPayload = {
-      service_id: process.env.EMAILJS_SERVICE_ID,
-      template_id: process.env.EMAILJS_ADMIN_TEMPLATE,
-      user_id: process.env.EMAILJS_PUBLIC_KEY,
-      template_params: {
-        to_name: memberName,
-        to_email: memberEmail,
-        from_name: 'To Christ 4 Christ',
-        reply_to: 'hello@tochrist4christ.org',
-        subject: subject,
-        message: message
-      }
-    };
-    
-    console.log('Sending email to:', memberEmail);
-    
-    const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+
+    const submission = await subResponse.json();
+    const d = submission.data || {};
+    const toEmail = d.email;
+    const firstName = d.firstName || d.name || 'Friend';
+
+    if (!toEmail) {
+      return { statusCode: 400, body: JSON.stringify({ error: 'Member has no email address' }) };
+    }
+
+    // Send via Resend
+    const htmlMessage = message.replace(/\n/g, '<br>');
+
+    const emailRes = await fetch('https://api.resend.com/emails', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(emailJsPayload)
+      headers: {
+        'Authorization': `Bearer ${RESEND_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: 'Martin — To Christ 4 Christ <onboarding@resend.dev>',
+        to: [toEmail],
+        subject: subject,
+        text: message,
+        html: `
+          <div style="font-family:Georgia,serif;max-width:560px;margin:0 auto;padding:40px 20px;">
+            <p style="font-size:13px;letter-spacing:2px;color:#C9A84C;text-transform:uppercase;margin-bottom:24px;">To Christ 4 Christ</p>
+            <div style="font-size:16px;color:#3C2A1A;line-height:1.8;">${htmlMessage}</div>
+            <hr style="border:none;border-top:1px solid #EDE5CC;margin:32px 0;">
+            <p style="font-size:12px;color:#7A6A50;">— Martin, To Christ 4 Christ</p>
+          </div>
+        `,
+      }),
     });
-    
-    const responseText = await response.text();
-    console.log('EmailJS response:', response.status, responseText);
-    
-    if (response.ok) {
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ success: true, message: 'Email sent successfully' })
-      };
-    } else {
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ error: 'EmailJS error: ' + responseText })
-      };
+
+    if (!emailRes.ok) {
+      const err = await emailRes.json();
+      console.error('Resend error:', err);
+      return { statusCode: 502, body: JSON.stringify({ error: 'Failed to send email via Resend' }) };
     }
-  } catch (error) {
-    console.error('Email error:', error);
+
     return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'Server error: ' + error.message })
+      statusCode: 200,
+      body: JSON.stringify({ success: true }),
     };
+
+  } catch (err) {
+    console.error('send-email error:', err);
+    return { statusCode: 500, body: JSON.stringify({ error: 'Internal server error' }) };
   }
 };
