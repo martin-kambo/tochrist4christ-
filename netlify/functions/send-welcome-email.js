@@ -65,7 +65,7 @@ exports.handler = async (event) => {
           </a>
         </div>
         <p style="font-size: 15px; color: #7A6A50; line-height: 1.7;">
-          In His grace,<br>
+          With love,<br>
           <strong>The To Christ 4 Christ Team</strong>
         </p>
       </div>
