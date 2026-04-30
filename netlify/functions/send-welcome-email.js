@@ -1,8 +1,13 @@
 // netlify/functions/send-welcome-email.js
 // Place this file at: netlify/functions/send-welcome-email.js
+//
+// SETUP:
+// 1. Sign up at resend.com
+// 2. Go to API Keys → create a key
+// 3. In Netlify: Site Settings → Environment Variables, add:
+//      RESEND_API_KEY = your key from Resend
 
 exports.handler = async (event) => {
-  // Only allow POST
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
@@ -83,7 +88,7 @@ exports.handler = async (event) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'To Christ 4 Christ <onboarding@resend.dev>', // ← change this
+        from: 'To Christ 4 Christ <onboarding@resend.dev>',
         to: [to_email],
         subject: `Welcome, ${firstName} — Your Discipleship Journey Begins`,
         html: emailHtml,
