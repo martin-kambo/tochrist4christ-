@@ -88,7 +88,7 @@ exports.handler = async (event) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'To Christ 4 Christ <onboarding@resend.dev>',
+        from: 'To Christ 4 Christ <tochristforchrist.org>',
         to: [to_email],
         subject: `Welcome, ${firstName} — Your Discipleship Journey Begins`,
         html: emailHtml,

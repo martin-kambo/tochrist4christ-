@@ -76,7 +76,7 @@ exports.handler = async function (event) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Martin — To Christ 4 Christ <onboarding@resend.dev>',
+        from: 'Martin — To Christ 4 Christ <tochristforchrist.org>',
         to: [toEmail],
         subject: subject,
         text: message,
