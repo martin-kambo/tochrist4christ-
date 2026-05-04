@@ -1,51 +1,88 @@
+// netlify/functions/admin-login.js
+//
+// Reads ADMIN_PASSWORD and SESSION_SECRET from Netlify environment variables.
+// Neither value is ever sent to the browser.
+//
+// Set these in: Netlify Dashboard → Site → Environment variables
+//   ADMIN_PASSWORD  — your chosen password (e.g. "MySecurePass2024!")
+//   SESSION_SECRET  — a long random string (generate one at: randomkeygen.com)
+
 const crypto = require('crypto');
 
-const SECRET  = process.env.ADMIN_SESSION_SECRET || 'change-this-secret';
-const PASSWORD = process.env.ADMIN_PASSWORD;
+// Build an HMAC-signed session token — no database needed.
+// Format: base64(payload) + '.' + hmac-sha256(base64(payload), secret)
+function createToken(secret) {
+  const payload = Buffer.from(
+    JSON.stringify({
+      role: 'admin',
+      // Token expires after 24 hours
+      exp: Date.now() + 24 * 60 * 60 * 1000,
+    })
+  ).toString('base64url');
 
-function signToken(payload) {
-  const data = Buffer.from(JSON.stringify(payload)).toString('base64url');
-  const sig  = crypto.createHmac('sha256', SECRET).update(data).digest('base64url');
-  return data + '.' + sig;
+  const sig = crypto
+    .createHmac('sha256', secret)
+    .update(payload)
+    .digest('base64url');
+
+  return `${payload}.${sig}`;
 }
 
-exports.handler = async function (event) {
+exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
-  if (!PASSWORD) {
-    return { statusCode: 500, body: JSON.stringify({ error: 'ADMIN_PASSWORD env var not set' }) };
+  const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+  const SESSION_SECRET = process.env.SESSION_SECRET;
+
+  if (!ADMIN_PASSWORD || !SESSION_SECRET) {
+    console.error('Missing ADMIN_PASSWORD or SESSION_SECRET env vars');
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ success: false, error: 'Server misconfigured — contact administrator' }),
+    };
   }
 
-  let body;
-  try { body = JSON.parse(event.body); }
-  catch { return { statusCode: 400, body: JSON.stringify({ error: 'Invalid JSON' }) }; }
+  let password;
+  try {
+    ({ password } = JSON.parse(event.body || '{}'));
+  } catch {
+    return { statusCode: 400, body: JSON.stringify({ success: false, error: 'Bad request' }) };
+  }
 
-  const { password } = body;
+  // timingSafeEqual prevents timing-attack — both buffers must be same length
+  const submitted = Buffer.alloc(ADMIN_PASSWORD.length);
+  submitted.write(password || '');
+  const expected = Buffer.from(ADMIN_PASSWORD);
 
-  // Constant-time comparison to prevent timing attacks
-  const expected = Buffer.from(PASSWORD);
-  const received = Buffer.from(password || '');
-  const match = expected.length === received.length &&
-    crypto.timingSafeEqual(expected, received);
+  let match = false;
+  try {
+    match = crypto.timingSafeEqual(submitted, expected);
+  } catch {
+    // Different lengths — definitely wrong password
+    match = false;
+  }
 
   if (!match) {
     return {
       statusCode: 401,
-      body: JSON.stringify({ success: false, error: 'Incorrect password' }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ success: false }),
     };
   }
 
-  const token = signToken({ user: 'admin', iat: Date.now() });
-  const cookieExpiry = new Date(Date.now() + 8 * 60 * 60 * 1000).toUTCString(); // 8 hours
+  const token = createToken(SESSION_SECRET);
 
   return {
     statusCode: 200,
     headers: {
-      'Set-Cookie': `tc4c_admin=${token}; HttpOnly; Secure; SameSite=Strict; Path=/; Expires=${cookieExpiry}`,
       'Content-Type': 'application/json',
+      // HttpOnly — JS cannot read this cookie at all
+      // SameSite=Strict — blocks CSRF attacks
+      // Secure — only sent over HTTPS (Netlify always uses HTTPS)
+      'Set-Cookie': `admin_session=${token}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=86400`,
     },
-    body: JSON.stringify({ success: true, user: { name: 'Martin', role: 'admin' } }),
+    body: JSON.stringify({ success: true, user: { role: 'admin' } }),
   };
 };

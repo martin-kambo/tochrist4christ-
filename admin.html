@@ -1080,9 +1080,14 @@ canvas { display: block; }
 <script>
 // ═══════════════════════════════════════════════════════════
 // SECURE ADMIN PANEL
-// Uses Netlify Identity for authentication
-// All API calls go through serverless functions
+// Password lives in Netlify environment variables — never here.
+// Authentication is handled by netlify/functions/admin-login.js
+// Session is proved by an HttpOnly signed cookie the browser
+// cannot read or forge.
 // ═══════════════════════════════════════════════════════════
+
+// Key used to cache members in localStorage between sessions
+const MEMBERS_KEY = 'tc4c-members';
 
 // DOM Elements
 const loginScreen = document.getElementById('login-screen');
@@ -1101,13 +1106,11 @@ let activeFilter = 'all';
 let feedRunning = true;
 let feedInterval;
 
-// ─── AUTHENTICATION (Netlify Identity) ─────────────────────
+// ─── AUTHENTICATION ────────────────────────────────────────
 async function checkAuth() {
-  // Check if we have a valid session via serverless function
   try {
-    const response = await fetch('/.netlify/functions/verify-auth', {
-      credentials: 'include'
-    });
+    const response = await fetch('/.netlify/functions/verify-auth', { credentials: 'include' });
+    if (!response.ok) { showLogin(); return; }          // function not deployed yet
     const data = await response.json();
     if (data.authenticated) {
       currentUser = data.user;
@@ -1130,23 +1133,31 @@ async function login(password) {
       body: JSON.stringify({ password }),
       credentials: 'include'
     });
+    if (!response.ok) {
+      showToast('Login service unavailable — deploy Netlify functions first');
+      return false;
+    }
     const data = await response.json();
     if (data.success) {
       currentUser = data.user;
       showApp();
       loadData();
       return true;
-    } else {
-      return false;
     }
+    return false;
   } catch (err) {
     console.error('Login failed:', err);
+    showToast('Could not reach login service');
     return false;
   }
 }
 
 async function logout() {
-  await fetch('/.netlify/functions/admin-logout', { method: 'POST', credentials: 'include' });
+  try {
+    await fetch('/.netlify/functions/admin-logout', { method: 'POST', credentials: 'include' });
+  } catch (err) {
+    console.error('Logout request failed:', err);
+  }
   currentUser = null;
   showLogin();
 }
@@ -1164,27 +1175,43 @@ function showApp() {
   document.getElementById('live-date').textContent = new Date().toLocaleDateString('en-KE', {
     weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
   });
+  // ── Fix: mark the default (overview) nav item as active ──
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const overviewNav = document.querySelector('.nav-item[data-page="overview"]');
+  if (overviewNav) overviewNav.classList.add('active');
+
   startFeed();
   buildHeatmap();
   animateBars();
   animateSourceBars();
 }
 
-// ─── DATA LOADING (via serverless functions) ──────────────
 async function loadData() {
+  let loaded = false;
   try {
     const response = await fetch('/.netlify/functions/get-members', { credentials: 'include' });
-    const data = await response.json();
-    if (data.members) {
-      activeMembers = data.members;
-      updateStats();
-      renderMembers();
-      renderNewMembers();
+    if (response.ok) {
+      const data = await response.json();
+      if (data.members) {
+        activeMembers = data.members;
+        localStorage.setItem(MEMBERS_KEY, JSON.stringify(activeMembers));
+        loaded = true;
+      }
     }
-  } catch (err) {
-    console.error('Failed to load members:', err);
-    showToast('Failed to load member data');
+  } catch (err) { /* function not yet deployed */ }
+
+  if (!loaded) {
+    try {
+      const stored = localStorage.getItem(MEMBERS_KEY);
+      activeMembers = stored ? JSON.parse(stored) : [];
+    } catch (e) {
+      activeMembers = [];
+    }
   }
+
+  updateStats();
+  renderMembers();
+  renderNewMembers();
 }
 
 async function deleteMember(memberId) {
@@ -1197,7 +1224,7 @@ async function deleteMember(memberId) {
     });
     const data = await response.json();
     if (data.success) {
-      loadData(); // Refresh
+      loadData();
       showToast('Member removed successfully');
       return true;
     } else {
@@ -1205,9 +1232,14 @@ async function deleteMember(memberId) {
       return false;
     }
   } catch (err) {
-    console.error('Delete failed:', err);
-    showToast('Error deleting member');
-    return false;
+    // Fallback: remove from localStorage directly
+    activeMembers = activeMembers.filter(m => m.id !== memberId);
+    localStorage.setItem(MEMBERS_KEY, JSON.stringify(activeMembers));
+    updateStats();
+    renderMembers();
+    renderNewMembers();
+    showToast('Member removed');
+    return true;
   }
 }
 

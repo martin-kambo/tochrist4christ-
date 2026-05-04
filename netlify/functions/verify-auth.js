@@ -1,31 +1,59 @@
+// netlify/functions/verify-auth.js
+//
+// Reads the HttpOnly session cookie set by admin-login and
+// verifies its HMAC signature. Returns { authenticated: true/false }.
+// The browser cannot forge this cookie without SESSION_SECRET.
+
 const crypto = require('crypto');
 
-const SECRET = process.env.ADMIN_SESSION_SECRET || 'change-this-secret';
-
-function verifyToken(token) {
+function verifyToken(token, secret) {
   try {
-    const [data, sig] = token.split('.');
-    if (!data || !sig) return null;
-    const expectedSig = crypto.createHmac('sha256', SECRET).update(data).digest('base64url');
-    if (sig !== expectedSig) return null;
-    return JSON.parse(Buffer.from(data, 'base64url').toString());
+    const [payload, sig] = token.split('.');
+    if (!payload || !sig) return null;
+
+    const expectedSig = crypto
+      .createHmac('sha256', secret)
+      .update(payload)
+      .digest('base64url');
+
+    // Constant-time compare — prevents timing attacks on the signature
+    const sigBuffer = Buffer.from(sig);
+    const expBuffer = Buffer.from(expectedSig);
+    if (sigBuffer.length !== expBuffer.length) return null;
+    if (!crypto.timingSafeEqual(sigBuffer, expBuffer)) return null;
+
+    const data = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
+
+    // Check expiry
+    if (!data.exp || data.exp < Date.now()) return null;
+
+    return data;
   } catch {
     return null;
   }
 }
 
-function getTokenFromCookie(cookieHeader) {
-  if (!cookieHeader) return null;
-  const cookies = cookieHeader.split(';').map(c => c.trim());
-  for (const cookie of cookies) {
-    const [name, ...rest] = cookie.split('=');
-    if (name.trim() === 'tc4c_admin') return rest.join('=');
-  }
-  return null;
+function parseCookies(cookieHeader = '') {
+  return Object.fromEntries(
+    cookieHeader.split(';').map((c) => {
+      const [k, ...v] = c.trim().split('=');
+      return [k, v.join('=')];
+    })
+  );
 }
 
-exports.handler = async function (event) {
-  const token = getTokenFromCookie(event.headers.cookie);
+exports.handler = async (event) => {
+  const SESSION_SECRET = process.env.SESSION_SECRET;
+  if (!SESSION_SECRET) {
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ authenticated: false }),
+    };
+  }
+
+  const cookies = parseCookies(event.headers.cookie);
+  const token = cookies['admin_session'];
+
   if (!token) {
     return {
       statusCode: 200,
@@ -33,24 +61,14 @@ exports.handler = async function (event) {
     };
   }
 
-  const payload = verifyToken(token);
-  if (!payload) {
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ authenticated: false }),
-    };
-  }
-
-  // Token expires after 8 hours
-  if (Date.now() - payload.iat > 8 * 60 * 60 * 1000) {
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ authenticated: false }),
-    };
-  }
+  const user = verifyToken(token, SESSION_SECRET);
 
   return {
     statusCode: 200,
-    body: JSON.stringify({ authenticated: true, user: { name: 'Martin', role: 'admin' } }),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      authenticated: !!user,
+      user: user ? { role: 'admin' } : null,
+    }),
   };
 };
