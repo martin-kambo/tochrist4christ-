@@ -1573,30 +1573,27 @@
   }
 
   // Save user to localStorage
+  // Save user to localStorage
   const userObj = { firstName, lastName, email, location, joinedAt: new Date().toISOString() };
   localStorage.setItem(USER_KEY, JSON.stringify(userObj));
 
-  // ✅ ADD THIS: Send welcome email via serverless function
+  // ── Save to Netlify Blobs so admin dashboard can see this member ──
   try {
-    const emailResponse = await fetch('/.netlify/functions/send-welcome-email', {
+    await fetch('/.netlify/functions/add-member', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        to_email: email,
-        to_name: firstName,
-        firstName: firstName,
-        lastName: lastName
-      })
+        name:       `${firstName} ${lastName}`.trim(),
+        email:      email,
+        phone:      document.getElementById('phone')?.value.trim()  || '',
+        loc:        location,
+        source:     document.getElementById('how')?.value            || 'Direct',
+        faithStage: document.getElementById('faith')?.value          || '',
+      }),
     });
-    
-    if (emailResponse.ok) {
-      console.log('Welcome email sent successfully');
-    } else {
-      console.error('Welcome email failed:', await emailResponse.text());
-    }
-  } catch (emailErr) {
-    console.error('Welcome email error (non-critical):', emailErr);
-    // Don't block signup if email fails
+  } catch (err) {
+    // Non-critical — signup still succeeds even if this fails
+    console.error('add-member sync error:', err);
   }
 
   showSuccess(firstName);
