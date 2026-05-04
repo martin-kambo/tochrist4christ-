@@ -1,21 +1,15 @@
 // netlify/functions/admin-login.js
 //
-// Reads ADMIN_PASSWORD and SESSION_SECRET from Netlify environment variables.
-// Neither value is ever sent to the browser.
-//
-// Set these in: Netlify Dashboard → Site → Environment variables
-//   ADMIN_PASSWORD  — your chosen password (e.g. "MySecurePass2024!")
-//   SESSION_SECRET  — a long random string (generate one at: randomkeygen.com)
+// Reads ADMIN_PASSWORD_HASH and SESSION_SECRET from Netlify environment variables.
+// ADMIN_PASSWORD_HASH is a SHA-256 hex digest of your password.
+// The plain password never needs to be stored anywhere.
 
 const crypto = require('crypto');
 
-// Build an HMAC-signed session token — no database needed.
-// Format: base64(payload) + '.' + hmac-sha256(base64(payload), secret)
 function createToken(secret) {
   const payload = Buffer.from(
     JSON.stringify({
       role: 'admin',
-      // Token expires after 24 hours
       exp: Date.now() + 24 * 60 * 60 * 1000,
     })
   ).toString('base64url');
@@ -33,11 +27,11 @@ exports.handler = async (event) => {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
-  const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+  const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;
   const SESSION_SECRET = process.env.SESSION_SECRET;
 
-  if (!ADMIN_PASSWORD || !SESSION_SECRET) {
-    console.error('Missing ADMIN_PASSWORD or SESSION_SECRET env vars');
+  if (!ADMIN_PASSWORD_HASH || !SESSION_SECRET) {
+    console.error('Missing ADMIN_PASSWORD_HASH or SESSION_SECRET env vars');
     return {
       statusCode: 500,
       body: JSON.stringify({ success: false, error: 'Server misconfigured — contact administrator' }),
@@ -51,16 +45,21 @@ exports.handler = async (event) => {
     return { statusCode: 400, body: JSON.stringify({ success: false, error: 'Bad request' }) };
   }
 
-  // timingSafeEqual prevents timing-attack — both buffers must be same length
-  const submitted = Buffer.alloc(ADMIN_PASSWORD.length);
-  submitted.write(password || '');
-  const expected = Buffer.from(ADMIN_PASSWORD);
+  // Hash the submitted password with SHA-256 and compare against stored hash
+  const submittedHash = crypto
+    .createHash('sha256')
+    .update(password || '')
+    .digest('hex');
+
+  // Timing-safe compare — prevents brute-force timing attacks
+  const submittedBuffer = Buffer.from(submittedHash);
+  const storedBuffer   = Buffer.from(ADMIN_PASSWORD_HASH);
 
   let match = false;
   try {
-    match = crypto.timingSafeEqual(submitted, expected);
+    match = submittedBuffer.length === storedBuffer.length &&
+            crypto.timingSafeEqual(submittedBuffer, storedBuffer);
   } catch {
-    // Different lengths — definitely wrong password
     match = false;
   }
 
@@ -78,9 +77,6 @@ exports.handler = async (event) => {
     statusCode: 200,
     headers: {
       'Content-Type': 'application/json',
-      // HttpOnly — JS cannot read this cookie at all
-      // SameSite=Strict — blocks CSRF attacks
-      // Secure — only sent over HTTPS (Netlify always uses HTTPS)
       'Set-Cookie': `admin_session=${token}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=86400`,
     },
     body: JSON.stringify({ success: true, user: { role: 'admin' } }),
