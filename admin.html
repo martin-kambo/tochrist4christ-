@@ -709,7 +709,7 @@ canvas { display: block; }
     </div>
     <div class="nav-item" data-page="members">
       <span class="nav-icon">◉</span> Members
-      <span class="nav-badge">47</span>
+      <span class="nav-badge" id="member-count-badge">0</span>
     </div>
     <div class="nav-section">Ministry</div>
     <div class="nav-item" data-page="progress">
@@ -733,10 +733,10 @@ canvas { display: block; }
   </nav>
   <div class="sidebar-footer">
     <div class="admin-chip">
-      <div class="admin-avatar">M</div>
+      <div class="admin-avatar" id="admin-avatar">M</div>
       <div>
-        <div class="admin-name">Martin</div>
-        <div class="admin-email">admin@tochristforchrist.org</div>
+        <div class="admin-name" id="admin-name">Martin</div>
+        <div class="admin-email" id="admin-email">admin@tochristforchrist.org</div>
       </div>
     </div>
   </div>
@@ -744,7 +744,7 @@ canvas { display: block; }
 
 <main class="main">
   <header class="topbar">
-    <span class="topbar-title">Hello & welcome, <em>Martin</em> ✝</span>
+    <span class="topbar-title">Hello & welcome, <em id="admin-welcome-name">Martin</em> ✝</span>
     <div class="topbar-right">
       <span class="topbar-date" id="live-date"></span>
       <button id="notif-btn" class="notif-btn">🔔<span class="notif-dot"></span></button>
@@ -1079,9 +1079,7 @@ canvas { display: block; }
 
 <script>
 // ═══════════════════════════════════════════════════════════
-// SECURE ADMIN PANEL
-// Uses Netlify Identity for authentication
-// All API calls go through serverless functions
+// SECURE ADMIN PANEL - BUG FIXED VERSION
 // ═══════════════════════════════════════════════════════════
 
 // DOM Elements
@@ -1101,7 +1099,7 @@ let activeFilter = 'all';
 let feedRunning = true;
 let feedInterval;
 
-// ─── AUTHENTICATION (Netlify Identity) ─────────────────────
+// ─── AUTHENTICATION ─────────────────────────────────────
 async function checkAuth() {
   try {
     const response = await fetch('/.netlify/functions/verify-auth', { credentials: 'include' });
@@ -1147,6 +1145,11 @@ async function login(password) {
 }
 
 async function logout() {
+  // Clear feed interval on logout
+  if (feedInterval) {
+    clearInterval(feedInterval);
+    feedInterval = null;
+  }
   try {
     await fetch('/.netlify/functions/admin-logout', { method: 'POST', credentials: 'include' });
   } catch (err) {
@@ -1157,6 +1160,11 @@ async function logout() {
 }
 
 function showLogin() {
+  // Clear feed interval when showing login
+  if (feedInterval) {
+    clearInterval(feedInterval);
+    feedInterval = null;
+  }
   loginScreen.classList.remove('hidden');
   appContent.classList.add('hidden');
   loginPassword.value = '';
@@ -1169,7 +1177,17 @@ function showApp() {
   document.getElementById('live-date').textContent = new Date().toLocaleDateString('en-KE', {
     weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
   });
-  // Fix: no nav item was marked active after login — tabs appeared unresponsive
+  
+  // FIXED: Update admin name in UI dynamically
+  if (currentUser && currentUser.name) {
+    document.getElementById('admin-name').textContent = currentUser.name;
+    document.getElementById('admin-welcome-name').textContent = currentUser.name;
+    document.getElementById('admin-email').textContent = currentUser.email || 'admin@tochristforchrist.org';
+    // Update avatar initial
+    const avatarInitial = currentUser.name.charAt(0).toUpperCase();
+    document.getElementById('admin-avatar').textContent = avatarInitial;
+  }
+  
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   const defaultNav = document.querySelector('.nav-item[data-page="overview"]');
   if (defaultNav) defaultNav.classList.add('active');
@@ -1183,10 +1201,15 @@ function showApp() {
 async function loadData() {
   try {
     const response = await fetch('/.netlify/functions/get-members', { credentials: 'include' });
-    // Fix: .json() on a 401/404/500 HTML response throws and silently
-    // leaves activeMembers=[] — always check response.ok first
+    
+    // FIXED: Handle 401 session expiry - redirect to login
     if (!response.ok) {
-      const msg = response.status === 401 ? 'Session expired — please log in again' : `get-members error (${response.status})`;
+      if (response.status === 401) {
+        showToast('Session expired — please log in again');
+        showLogin();
+        return;
+      }
+      const msg = `get-members error (${response.status})`;
       showToast(msg);
       console.error('loadData:', msg);
       return;
@@ -1197,6 +1220,9 @@ async function loadData() {
       updateStats();
       renderMembers();
       renderNewMembers();
+      // Update member count badge
+      const badge = document.getElementById('member-count-badge');
+      if (badge) badge.textContent = activeMembers.length;
     }
   } catch (err) {
     console.error('Failed to load members:', err);
@@ -1213,6 +1239,11 @@ async function deleteMember(memberId) {
       credentials: 'include'
     });
     if (!response.ok) {
+      if (response.status === 401) {
+        showToast('Session expired — please log in again');
+        showLogin();
+        return false;
+      }
       showToast(`Delete failed (${response.status})`);
       return false;
     }
@@ -1240,8 +1271,12 @@ async function sendEncouragementEmail(memberId, subject, message) {
       body: JSON.stringify({ memberId, subject, message }),
       credentials: 'include'
     });
-    // Bug fix: without response.ok check, a 404/500 HTML body crashes .json()
     if (!response.ok) {
+      if (response.status === 401) {
+        showToast('Session expired — please log in again');
+        showLogin();
+        return false;
+      }
       console.error('send-email returned', response.status);
       showToast(`Email failed (${response.status}) — check RESEND_API_KEY is set`);
       return false;
@@ -1264,8 +1299,12 @@ async function sendEncouragementEmail(memberId, subject, message) {
 async function exportMembersCSV() {
   try {
     const response = await fetch('/.netlify/functions/export-members', { credentials: 'include' });
-    // Bug fix: calling .blob() on a 401/500 HTML response produces a corrupt file
     if (!response.ok) {
+      if (response.status === 401) {
+        showToast('Session expired — please log in again');
+        showLogin();
+        return;
+      }
       showToast(`Export failed (${response.status}) — please log in again`);
       return;
     }
@@ -1336,7 +1375,6 @@ function renderMembers() {
     `;
   }).join('');
   
-  // Attach event listeners
   document.querySelectorAll('.view-member').forEach(btn => {
     btn.addEventListener('click', () => openMember(parseInt(btn.dataset.idx)));
   });
@@ -1352,8 +1390,6 @@ function renderNewMembers() {
   const container = document.getElementById('new-members-list');
   if (!container) return;
 
-  // Fix: slice(0,5) on an unsorted array returns the oldest members
-  // (storage insertion order). Sort by ISO date descending first.
   const recent = [...activeMembers]
     .sort((a, b) => new Date(b.joinedISO || b.joined) - new Date(a.joinedISO || a.joined))
     .slice(0, 5);

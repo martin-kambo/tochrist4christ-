@@ -4,17 +4,23 @@
 // Saves the member to Netlify Blobs so get-members.js can retrieve them.
 //
 // Expected POST body (JSON):
-//   { name, email, phone, loc, source }
+//   { name, email, phone, loc, source, faithStage }
 //
 // Usage in index.html:
 //   fetch('/.netlify/functions/add-member', {
 //     method: 'POST',
 //     headers: { 'Content-Type': 'application/json' },
-//     body: JSON.stringify({ name, email, phone, loc, source })
+//     body: JSON.stringify({ name, email, phone, loc, source, faithStage })
 //   })
 
 const { getStore } = require('@netlify/blobs');
 const crypto = require('crypto');
+
+// Email validation helper
+function isValidEmail(email) {
+  if (!email) return true; // Email is optional
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
@@ -28,7 +34,7 @@ exports.handler = async (event) => {
     return { statusCode: 400, body: JSON.stringify({ success: false, error: 'Bad request' }) };
   }
 
-  const { name, email, phone, loc, source } = body;
+  const { name, email, phone, loc, source, faithStage } = body;
 
   // Basic validation
   if (!name || !name.trim()) {
@@ -39,22 +45,32 @@ exports.handler = async (event) => {
     };
   }
 
+  // Email validation
+  if (email && !isValidEmail(email)) {
+    return {
+      statusCode: 400,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ success: false, error: 'Invalid email format' }),
+    };
+  }
+
   // Build member record
   const id = crypto.randomUUID();
   const member = {
     id,
-    name:     name.trim(),
-    email:    (email || '').trim(),
-    phone:    (phone || '').trim(),
-    loc:      (loc || '').trim(),
-    source:   (source || 'Direct').trim(),
-    joined:   new Date().toLocaleDateString('en-KE', {
+    name: name.trim(),
+    email: (email || '').trim(),
+    phone: (phone || '').trim(),
+    loc: (loc || '').trim(),
+    source: (source || 'Direct').trim(),
+    faithStage: faithStage || '',  // ← ADDED: faithStage field
+    joined: new Date().toLocaleDateString('en-KE', {
                 day: 'numeric', month: 'short', year: 'numeric'
               }),
     joinedISO: new Date().toISOString(),   // used for sorting in admin
-    status:   'new',
+    status: 'new',
     progress: 0,
-    module:   1,
+    module: 1,
   };
 
   try {
