@@ -1,107 +1,88 @@
+// netlify/functions/get-members.js
+//
+// Returns all members stored in Netlify Blobs.
+// Protected — requires a valid admin session cookie (verified inline).
+//
+// Netlify Blobs docs: https://docs.netlify.com/blobs/overview/
+
+const { getStore } = require('@netlify/blobs');
 const crypto = require('crypto');
 
-const SECRET    = process.env.ADMIN_SESSION_SECRET || 'change-this-secret';
-const API_TOKEN = process.env.NETLIFY_API_TOKEN;
-const SITE_ID   = process.env.NETLIFY_SITE_ID;
+// ── Reuse the same token verification logic as verify-auth.js ──
+function parseCookies(cookieHeader = '') {
+  return Object.fromEntries(
+    cookieHeader.split(';').map((c) => {
+      const [k, ...v] = c.trim().split('=');
+      return [k, v.join('=')];
+    })
+  );
+}
 
-function verifyToken(token) {
+function verifySession(event) {
+  const SESSION_SECRET = process.env.SESSION_SECRET;
+  if (!SESSION_SECRET) return false;
+  const cookies = parseCookies(event.headers.cookie);
+  const token = cookies['admin_session'];
+  if (!token) return false;
   try {
-    const [data, sig] = token.split('.');
-    if (!data || !sig) return null;
-    const expectedSig = crypto.createHmac('sha256', SECRET).update(data).digest('base64url');
-    if (sig !== expectedSig) return null;
-    const payload = JSON.parse(Buffer.from(data, 'base64url').toString());
-    if (Date.now() - payload.iat > 8 * 60 * 60 * 1000) return null;
-    return payload;
-  } catch { return null; }
-}
-
-function getTokenFromCookie(cookieHeader) {
-  if (!cookieHeader) return null;
-  const cookies = cookieHeader.split(';').map(c => c.trim());
-  for (const c of cookies) {
-    const [name, ...rest] = c.split('=');
-    if (name.trim() === 'tc4c_admin') return rest.join('=');
+    const [payload, sig] = token.split('.');
+    if (!payload || !sig) return false;
+    const expectedSig = crypto
+      .createHmac('sha256', SESSION_SECRET)
+      .update(payload)
+      .digest('base64url');
+    const sigBuf = Buffer.from(sig);
+    const expBuf = Buffer.from(expectedSig);
+    if (sigBuf.length !== expBuf.length) return false;
+    if (!crypto.timingSafeEqual(sigBuf, expBuf)) return false;
+    const data = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
+    return data.exp && data.exp > Date.now();
+  } catch {
+    return false;
   }
-  return null;
 }
 
-function formatDate(isoString) {
-  if (!isoString) return 'Unknown';
-  return new Date(isoString).toLocaleDateString('en-KE', {
-    day: 'numeric', month: 'short', year: 'numeric'
-  });
-}
+exports.handler = async (event) => {
+  // Only allow GET
+  if (event.httpMethod !== 'GET') {
+    return { statusCode: 405, body: 'Method Not Allowed' };
+  }
 
-function inferStatus(submission) {
-  const daysSince = (Date.now() - new Date(submission.created_at)) / (1000 * 60 * 60 * 24);
-  if (daysSince <= 7) return 'new';
-  return 'active';
-}
-
-exports.handler = async function (event) {
   // Auth check
-  const token = getTokenFromCookie(event.headers.cookie);
-  if (!verifyToken(token)) {
-    return { statusCode: 401, body: JSON.stringify({ error: 'Unauthorized' }) };
-  }
-
-  if (!API_TOKEN || !SITE_ID) {
+  if (!verifySession(event)) {
     return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'NETLIFY_API_TOKEN or NETLIFY_SITE_ID not set' })
+      statusCode: 401,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: 'Unauthorized' }),
     };
   }
 
   try {
-    // Fetch all submissions from the "signup" form
-    const response = await fetch(
-      `https://api.netlify.com/api/v1/sites/${SITE_ID}/submissions?per_page=500`,
-      { headers: { Authorization: `Bearer ${API_TOKEN}` } }
+    const store = getStore('members');
+    const { blobs } = await store.list();
+
+    // Fetch each member record in parallel
+    const members = await Promise.all(
+      blobs.map(async ({ key }) => {
+        const member = await store.get(key, { type: 'json' });
+        return member;
+      })
     );
 
-    if (!response.ok) {
-      const text = await response.text();
-      console.error('Netlify API error:', response.status, text);
-      return { statusCode: 502, body: JSON.stringify({ error: 'Failed to fetch from Netlify API' }) };
-    }
-
-    const submissions = await response.json();
-
-    // Filter to only signup form submissions and map to member objects
-    const members = submissions
-      .filter(s => s.form_name === 'signup')
-      .map(s => {
-        const d = s.data || {};
-        const firstName = d.firstName || d['first-name'] || '';
-        const lastName  = d.lastName  || d['last-name']  || '';
-        const name = [firstName, lastName].filter(Boolean).join(' ') || d.name || 'Unknown';
-        return {
-          id:       s.id,
-          name:     name,
-          email:    d.email || '',
-          loc:      d.location || d.area || '',
-          source:   d.source || 'Unknown',
-          faith:    d.faithStage || '',
-          phone:    d.phone || '',
-          joined:   formatDate(s.created_at),
-          joinedAt: s.created_at,
-          status:   inferStatus(s),
-          progress: 0,
-          module:   1,
-        };
-      })
-      // Most recent first
-      .sort((a, b) => new Date(b.joinedAt) - new Date(a.joinedAt));
+    // Filter out any null/corrupt entries
+    const valid = members.filter(Boolean);
 
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ members, total: members.length }),
+      body: JSON.stringify({ members: valid }),
     };
-
   } catch (err) {
     console.error('get-members error:', err);
-    return { statusCode: 500, body: JSON.stringify({ error: 'Internal server error' }) };
+    return {
+      statusCode: 500,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: 'Failed to load members', members: [] }),
+    };
   }
 };

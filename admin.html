@@ -1080,14 +1080,9 @@ canvas { display: block; }
 <script>
 // ═══════════════════════════════════════════════════════════
 // SECURE ADMIN PANEL
-// Password lives in Netlify environment variables — never here.
-// Authentication is handled by netlify/functions/admin-login.js
-// Session is proved by an HttpOnly signed cookie the browser
-// cannot read or forge.
+// Uses Netlify Identity for authentication
+// All API calls go through serverless functions
 // ═══════════════════════════════════════════════════════════
-
-// Key used to cache members in localStorage between sessions
-const MEMBERS_KEY = 'tc4c-members';
 
 // DOM Elements
 const loginScreen = document.getElementById('login-screen');
@@ -1106,11 +1101,11 @@ let activeFilter = 'all';
 let feedRunning = true;
 let feedInterval;
 
-// ─── AUTHENTICATION ────────────────────────────────────────
+// ─── AUTHENTICATION (Netlify Identity) ─────────────────────
 async function checkAuth() {
   try {
     const response = await fetch('/.netlify/functions/verify-auth', { credentials: 'include' });
-    if (!response.ok) { showLogin(); return; }          // function not deployed yet
+    if (!response.ok) { showLogin(); return; }
     const data = await response.json();
     if (data.authenticated) {
       currentUser = data.user;
@@ -1134,7 +1129,7 @@ async function login(password) {
       credentials: 'include'
     });
     if (!response.ok) {
-      showToast('Login service unavailable — deploy Netlify functions first');
+      console.error('admin-login returned', response.status);
       return false;
     }
     const data = await response.json();
@@ -1147,7 +1142,6 @@ async function login(password) {
     return false;
   } catch (err) {
     console.error('Login failed:', err);
-    showToast('Could not reach login service');
     return false;
   }
 }
@@ -1175,43 +1169,39 @@ function showApp() {
   document.getElementById('live-date').textContent = new Date().toLocaleDateString('en-KE', {
     weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
   });
-  // ── Fix: mark the default (overview) nav item as active ──
+  // Fix: no nav item was marked active after login — tabs appeared unresponsive
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  const overviewNav = document.querySelector('.nav-item[data-page="overview"]');
-  if (overviewNav) overviewNav.classList.add('active');
-
+  const defaultNav = document.querySelector('.nav-item[data-page="overview"]');
+  if (defaultNav) defaultNav.classList.add('active');
   startFeed();
   buildHeatmap();
   animateBars();
   animateSourceBars();
 }
 
+// ─── DATA LOADING ─────────────────────────────────────────
 async function loadData() {
-  let loaded = false;
   try {
     const response = await fetch('/.netlify/functions/get-members', { credentials: 'include' });
-    if (response.ok) {
-      const data = await response.json();
-      if (data.members) {
-        activeMembers = data.members;
-        localStorage.setItem(MEMBERS_KEY, JSON.stringify(activeMembers));
-        loaded = true;
-      }
+    // Fix: .json() on a 401/404/500 HTML response throws and silently
+    // leaves activeMembers=[] — always check response.ok first
+    if (!response.ok) {
+      const msg = response.status === 401 ? 'Session expired — please log in again' : `get-members error (${response.status})`;
+      showToast(msg);
+      console.error('loadData:', msg);
+      return;
     }
-  } catch (err) { /* function not yet deployed */ }
-
-  if (!loaded) {
-    try {
-      const stored = localStorage.getItem(MEMBERS_KEY);
-      activeMembers = stored ? JSON.parse(stored) : [];
-    } catch (e) {
-      activeMembers = [];
+    const data = await response.json();
+    if (data.members) {
+      activeMembers = data.members;
+      updateStats();
+      renderMembers();
+      renderNewMembers();
     }
+  } catch (err) {
+    console.error('Failed to load members:', err);
+    showToast('Failed to load member data');
   }
-
-  updateStats();
-  renderMembers();
-  renderNewMembers();
 }
 
 async function deleteMember(memberId) {
@@ -1222,6 +1212,10 @@ async function deleteMember(memberId) {
       body: JSON.stringify({ memberId }),
       credentials: 'include'
     });
+    if (!response.ok) {
+      showToast(`Delete failed (${response.status})`);
+      return false;
+    }
     const data = await response.json();
     if (data.success) {
       loadData();
@@ -1232,14 +1226,9 @@ async function deleteMember(memberId) {
       return false;
     }
   } catch (err) {
-    // Fallback: remove from localStorage directly
-    activeMembers = activeMembers.filter(m => m.id !== memberId);
-    localStorage.setItem(MEMBERS_KEY, JSON.stringify(activeMembers));
-    updateStats();
-    renderMembers();
-    renderNewMembers();
-    showToast('Member removed');
-    return true;
+    console.error('Delete failed:', err);
+    showToast('Error deleting member');
+    return false;
   }
 }
 
@@ -1351,10 +1340,21 @@ function renderMembers() {
 function renderNewMembers() {
   const container = document.getElementById('new-members-list');
   if (!container) return;
-  const recent = activeMembers.slice(0, 5);
+
+  // Fix: slice(0,5) on an unsorted array returns the oldest members
+  // (storage insertion order). Sort by ISO date descending first.
+  const recent = [...activeMembers]
+    .sort((a, b) => new Date(b.joinedISO || b.joined) - new Date(a.joinedISO || a.joined))
+    .slice(0, 5);
+
+  if (recent.length === 0) {
+    container.innerHTML = '<div style="padding:1.25rem;font-size:0.72rem;color:var(--text3);text-align:center;">No members yet</div>';
+    return;
+  }
+
   container.innerHTML = recent.map(m => `
     <div class="activity-item">
-      <div class="m-avatar" style="background:rgba(201,168,76,0.15); width:28px;height:28px;font-size:0.6rem;">${(m.name || 'U').substring(0,2)}</div>
+      <div class="m-avatar" style="background:rgba(201,168,76,0.15); width:28px;height:28px;font-size:0.6rem;">${(m.name || 'U').substring(0,2).toUpperCase()}</div>
       <div style="flex:1">
         <div style="font-size:0.73rem; color:var(--text); font-weight:500">${escapeHtml(m.name)}</div>
         <div style="font-size:0.62rem; color:var(--text3)">${escapeHtml(m.loc || 'Unknown')}</div>

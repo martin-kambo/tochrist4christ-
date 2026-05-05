@@ -1,68 +1,87 @@
+// netlify/functions/delete-member.js
+//
+// Deletes a member from Netlify Blobs by their UUID.
+// Protected — requires a valid admin session cookie.
+
+const { getStore } = require('@netlify/blobs');
 const crypto = require('crypto');
 
-const SECRET    = process.env.ADMIN_SESSION_SECRET || 'change-this-secret';
-const API_TOKEN = process.env.NETLIFY_API_TOKEN;
+function parseCookies(cookieHeader = '') {
+  return Object.fromEntries(
+    cookieHeader.split(';').map((c) => {
+      const [k, ...v] = c.trim().split('=');
+      return [k, v.join('=')];
+    })
+  );
+}
 
-function verifyToken(token) {
+function verifySession(event) {
+  const SESSION_SECRET = process.env.SESSION_SECRET;
+  if (!SESSION_SECRET) return false;
+  const cookies = parseCookies(event.headers.cookie);
+  const token = cookies['admin_session'];
+  if (!token) return false;
   try {
-    const [data, sig] = token.split('.');
-    if (!data || !sig) return null;
-    const expectedSig = crypto.createHmac('sha256', SECRET).update(data).digest('base64url');
-    if (sig !== expectedSig) return null;
-    const payload = JSON.parse(Buffer.from(data, 'base64url').toString());
-    if (Date.now() - payload.iat > 8 * 60 * 60 * 1000) return null;
-    return payload;
-  } catch { return null; }
-}
-
-function getTokenFromCookie(cookieHeader) {
-  if (!cookieHeader) return null;
-  const cookies = cookieHeader.split(';').map(c => c.trim());
-  for (const c of cookies) {
-    const [name, ...rest] = c.split('=');
-    if (name.trim() === 'tc4c_admin') return rest.join('=');
+    const [payload, sig] = token.split('.');
+    if (!payload || !sig) return false;
+    const expectedSig = crypto
+      .createHmac('sha256', SESSION_SECRET)
+      .update(payload)
+      .digest('base64url');
+    const sigBuf = Buffer.from(sig);
+    const expBuf = Buffer.from(expectedSig);
+    if (sigBuf.length !== expBuf.length) return false;
+    if (!crypto.timingSafeEqual(sigBuf, expBuf)) return false;
+    const data = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
+    return data.exp && data.exp > Date.now();
+  } catch {
+    return false;
   }
-  return null;
 }
 
-exports.handler = async function (event) {
+exports.handler = async (event) => {
   if (event.httpMethod !== 'DELETE') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
-  const token = getTokenFromCookie(event.headers.cookie);
-  if (!verifyToken(token)) {
-    return { statusCode: 401, body: JSON.stringify({ error: 'Unauthorized' }) };
+  if (!verifySession(event)) {
+    return {
+      statusCode: 401,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: 'Unauthorized' }),
+    };
   }
 
-  let body;
-  try { body = JSON.parse(event.body); }
-  catch { return { statusCode: 400, body: JSON.stringify({ error: 'Invalid JSON' }) }; }
+  let memberId;
+  try {
+    ({ memberId } = JSON.parse(event.body || '{}'));
+  } catch {
+    return { statusCode: 400, body: JSON.stringify({ success: false, error: 'Bad request' }) };
+  }
 
-  const { memberId } = body;
   if (!memberId) {
-    return { statusCode: 400, body: JSON.stringify({ error: 'memberId required' }) };
+    return {
+      statusCode: 400,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ success: false, error: 'memberId required' }),
+    };
   }
 
   try {
-    const response = await fetch(
-      `https://api.netlify.com/api/v1/submissions/${memberId}`,
-      {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${API_TOKEN}` },
-      }
-    );
-
-    if (!response.ok && response.status !== 204) {
-      return { statusCode: 502, body: JSON.stringify({ error: 'Failed to delete from Netlify' }) };
-    }
+    const store = getStore('members');
+    await store.delete(memberId);
 
     return {
       statusCode: 200,
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ success: true }),
     };
   } catch (err) {
     console.error('delete-member error:', err);
-    return { statusCode: 500, body: JSON.stringify({ error: 'Internal server error' }) };
+    return {
+      statusCode: 500,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ success: false, error: 'Failed to delete member' }),
+    };
   }
 };
