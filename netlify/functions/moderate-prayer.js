@@ -1,36 +1,17 @@
 // netlify/functions/moderate-prayer.js
+//
+// REMOVED — This function is dead code.
+// submit-prayer.js already performs server-side moderation with a more
+// complete blocked-words list. This older, shorter version is redundant
+// and was never called by anything in production.
+//
+// Returning 410 Gone so any accidental call surfaces a clear error
+// rather than silently approving prayers through stale logic.
 
-exports.handler = async (event) => {
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
-  }
-  
-  try {
-    const { name, text, category, anonymous } = JSON.parse(event.body);
-    
-    const blockedWords = ['spam', 'scam', 'casino', 'viagra', 'porn', 'xxx', 'hack', 'crack'];
-    const lowerText = text.toLowerCase();
-    
-    for (const word of blockedWords) {
-      if (lowerText.includes(word)) {
-        return {
-          statusCode: 200,
-          body: JSON.stringify({ 
-            approved: false, 
-            reason: 'Your prayer contains inappropriate content.' 
-          })
-        };
-      }
-    }
-    
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ approved: true, reason: null })
-    };
-  } catch (error) {
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ approved: true, reason: null })
-    };
-  }
-};
+exports.handler = async () => ({
+  statusCode: 410,
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    error: 'This endpoint has been removed. Moderation is handled inside submit-prayer.',
+  }),
+});

@@ -703,11 +703,16 @@
 
     // ── Step 4: Send welcome email (non-critical) ─────────────
     try {
-      await fetch('/.netlify/functions/send-welcome-email', {
+      const emailRes = await fetch('/.netlify/functions/send-welcome-email', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ to_email: email, to_name: firstName, firstName, lastName }),
       });
+      if (!emailRes.ok) {
+        // fetch() resolves without throwing on 4xx/5xx — check explicitly
+        const errBody = await emailRes.text().catch(() => '');
+        console.error('Welcome email failed:', emailRes.status, errBody);
+      }
     } catch (err) {
       console.error('Welcome email error (non-critical):', err);
     }

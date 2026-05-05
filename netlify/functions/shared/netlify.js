@@ -37,3 +37,11 @@ async function deleteNetlifySubmission(token, submissionId) {
 }
 
 module.exports = { getNetlifySubmissions, deleteNetlifySubmission };
+
+// This file is a shared utility, not a callable Netlify function.
+// The handler below prevents Netlify from crashing when it attempts
+// to deploy every .js in the functions folder as an invokable endpoint.
+exports.handler = async () => ({
+  statusCode: 404,
+  body: JSON.stringify({ error: 'Not a callable endpoint.' }),
+});

@@ -656,10 +656,20 @@
 </footer>
 
 <script>
-// SECURE PRAYER WALL - No API keys exposed, XSS protected
+// PRAYER WALL — calls real serverless functions, shared across all visitors
+
+const API = {
+  get:     '/.netlify/functions/get-prayers',
+  submit:  '/.netlify/functions/submit-prayer',
+  pray:    '/.netlify/functions/pray-for',
+  answer:  '/.netlify/functions/mark-answered',
+  delete:  '/.netlify/functions/delete-prayer',
+};
 
 let allPrayers = [];
 let currentFilter = 'all';
+
+// ── Helpers ───────────────────────────────────────────────────────────────
 
 function escapeHtml(str) {
   if (!str) return '';
@@ -669,59 +679,6 @@ function escapeHtml(str) {
     if (m === '>') return '&gt;';
     return m;
   });
-}
-
-function getSeedPrayers() {
-  return [
-    {
-      id: 'seed-1',
-      name: 'Grace N.',
-      category: 'healing',
-      text: 'Please pray for my mother who is recovering from surgery.',
-      prayCount: 14,
-      answered: false,
-      anonymous: false,
-      timestamp: Date.now() - 86400000 * 2,
-    },
-    {
-      id: 'seed-2',
-      name: 'Anonymous',
-      category: 'guidance',
-      text: 'I am at a crossroads in my career and need God\'s direction.',
-      prayCount: 9,
-      answered: false,
-      anonymous: true,
-      timestamp: Date.now() - 86400000,
-    },
-    {
-      id: 'seed-3',
-      name: 'David M.',
-      category: 'gratitude',
-      text: 'Praise God! After months of prayer, I finally got the job!',
-      prayCount: 22,
-      answered: true,
-      anonymous: false,
-      timestamp: Date.now() - 3600000 * 5,
-    }
-  ];
-}
-
-function loadPrayersFromStorage() {
-  try {
-    const saved = localStorage.getItem('tc4c_prayers');
-    if (saved) {
-      allPrayers = JSON.parse(saved);
-    } else {
-      allPrayers = getSeedPrayers();
-    }
-  } catch(e) {
-    allPrayers = getSeedPrayers();
-  }
-  renderPrayers();
-}
-
-function savePrayersToStorage() {
-  localStorage.setItem('tc4c_prayers', JSON.stringify(allPrayers));
 }
 
 function timeAgo(ts) {
@@ -743,17 +700,39 @@ function categoryLabel(cat) {
   return map[cat] || cat;
 }
 
+// Track which prayers this browser has already clicked "I'll Pray" on.
+// This is intentionally localStorage — it's purely a UI hint, not data.
 function getPrayedIds() {
   try { return JSON.parse(localStorage.getItem('prayed_ids') || '[]'); } catch { return []; }
 }
-
 function addPrayedId(id) {
   const ids = getPrayedIds();
-  if (!ids.includes(id)) {
-    ids.push(id);
-    localStorage.setItem('prayed_ids', JSON.stringify(ids));
-  }
+  if (!ids.includes(id)) { ids.push(id); localStorage.setItem('prayed_ids', JSON.stringify(ids)); }
 }
+
+// ── Fetch prayers from server ─────────────────────────────────────────────
+
+async function loadPrayers() {
+  const list = document.getElementById('prayer-list');
+  list.innerHTML = '<div class="loading-wall"><span class="loading-cross">✝</span>Loading prayers...</div>';
+
+  try {
+    const res = await fetch(API.get);
+    if (!res.ok) throw new Error('Server returned ' + res.status);
+    const data = await res.json();
+    // Normalise: the function may return { prayers: [...] } or a bare array
+    allPrayers = Array.isArray(data) ? data : (data.prayers || []);
+  } catch (err) {
+    console.error('get-prayers failed:', err);
+    allPrayers = [];
+    list.innerHTML = '<div class="empty-wall"><span class="cross">✝</span>Could not load prayers. Please refresh and try again.</div>';
+    return;
+  }
+
+  renderPrayers();
+}
+
+// ── Render ────────────────────────────────────────────────────────────────
 
 function renderPrayers() {
   const list = document.getElementById('prayer-list');
@@ -765,12 +744,12 @@ function renderPrayers() {
     prayers = prayers.filter(p => p.category === currentFilter);
   }
 
-  const total = allPrayers.length;
-  const totalPrayed = allPrayers.reduce((s, p) => s + p.prayCount, 0);
-  const answered = allPrayers.filter(p => p.answered).length;
-  
-  document.getElementById('stat-total').textContent = total;
-  document.getElementById('stat-prayed').textContent = totalPrayed;
+  const total       = allPrayers.length;
+  const totalPrayed = allPrayers.reduce((s, p) => s + (p.prayCount || 0), 0);
+  const answered    = allPrayers.filter(p => p.answered).length;
+
+  document.getElementById('stat-total').textContent   = total;
+  document.getElementById('stat-prayed').textContent  = totalPrayed;
   document.getElementById('stat-answered').textContent = answered;
 
   if (!prayers.length) {
@@ -779,31 +758,31 @@ function renderPrayers() {
   }
 
   list.innerHTML = '';
-  
-  prayers.forEach(prayer => {
+
+  prayers.forEach(function(prayer) {
     const card = document.createElement('div');
     card.className = 'prayer-card';
-    
+
     if (prayer.answered) {
       const badge = document.createElement('span');
       badge.className = 'answered-badge';
       badge.textContent = '✓ Answered';
       card.appendChild(badge);
     }
-    
+
     const categoryP = document.createElement('p');
     categoryP.className = 'prayer-category';
     categoryP.textContent = categoryLabel(prayer.category);
     card.appendChild(categoryP);
-    
+
     const textP = document.createElement('p');
     textP.className = 'prayer-text';
     textP.textContent = '"' + prayer.text + '"';
     card.appendChild(textP);
-    
+
     const metaDiv = document.createElement('div');
     metaDiv.className = 'prayer-meta';
-    
+
     const whoDiv = document.createElement('div');
     const whoP = document.createElement('p');
     whoP.className = 'prayer-who';
@@ -812,41 +791,63 @@ function renderPrayers() {
     nameSpan.textContent = prayer.anonymous ? 'Anonymous' : prayer.name;
     whoP.appendChild(nameSpan);
     whoDiv.appendChild(whoP);
-    
+
     const ageP = document.createElement('p');
     ageP.className = 'prayer-age';
     ageP.textContent = timeAgo(prayer.timestamp);
     whoDiv.appendChild(ageP);
-    
-    const prayBtn = document.createElement('button');
+
     const hasPrayed = getPrayedIds().includes(prayer.id);
+    const prayBtn = document.createElement('button');
     prayBtn.className = 'pray-btn' + (hasPrayed ? ' prayed' : '');
-    prayBtn.innerHTML = '🙏 ' + (hasPrayed ? 'Prayed' : 'I\'ll Pray') + ' <span class="pray-count">' + prayer.prayCount + '</span>';
+    prayBtn.innerHTML = '🙏 ' + (hasPrayed ? 'Prayed' : "I'll Pray") +
+      ' <span class="pray-count">' + (prayer.prayCount || 0) + '</span>';
     prayBtn.onclick = function() { prayFor(prayer.id, prayBtn); };
-    
+
     metaDiv.appendChild(whoDiv);
     metaDiv.appendChild(prayBtn);
     card.appendChild(metaDiv);
-    
+
     list.appendChild(card);
   });
 }
 
+// ── pray-for ──────────────────────────────────────────────────────────────
+
 async function prayFor(id, btn) {
   if (getPrayedIds().includes(id)) return;
+
+  // Optimistic UI: update immediately
   addPrayedId(id);
-  
   const prayer = allPrayers.find(p => p.id === id);
   if (prayer) {
-    prayer.prayCount++;
-    savePrayersToStorage();
+    prayer.prayCount = (prayer.prayCount || 0) + 1;
     renderPrayers();
+  }
+
+  try {
+    const res = await fetch(API.pray, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ id }),
+    });
+    if (!res.ok) {
+      console.error('pray-for returned', res.status);
+      // Server count is authoritative — reload to stay in sync
+      loadPrayers();
+    }
+  } catch (err) {
+    console.error('pray-for error:', err);
+    // Network failure — reload to restore real count
+    loadPrayers();
   }
 }
 
+// ── submit-prayer ─────────────────────────────────────────────────────────
+
 function setFilter(filter, btn) {
   currentFilter = filter;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
   if (btn) btn.classList.add('active');
   renderPrayers();
 }
@@ -860,21 +861,18 @@ function showFeedback(type, msg) {
   el.className = 'submit-feedback ' + type;
   el.textContent = msg;
   el.style.display = 'block';
-  setTimeout(function() {
-    el.style.display = 'none';
-  }, 5000);
+  setTimeout(function() { el.style.display = 'none'; }, 5000);
 }
 
 async function submitPrayer() {
-  const name = document.getElementById('pr-name').value.trim();
-  const text = document.getElementById('pr-text').value.trim();
+  const name     = document.getElementById('pr-name').value.trim();
+  const text     = document.getElementById('pr-text').value.trim();
   const category = document.getElementById('pr-category').value;
-  const anon = document.getElementById('pr-anon').checked;
-  const btn = document.getElementById('submit-btn');
+  const anon     = document.getElementById('pr-anon').checked;
+  const btn      = document.getElementById('submit-btn');
   const modIndicator = document.getElementById('mod-indicator');
-  const feedback = document.getElementById('submit-feedback');
 
-  feedback.style.display = 'none';
+  document.getElementById('submit-feedback').style.display = 'none';
 
   if (!name) {
     showFeedback('error', 'Please enter your name (or type "Anonymous").');
@@ -889,74 +887,60 @@ async function submitPrayer() {
   btn.textContent = 'Reviewing...';
   modIndicator.classList.add('show');
 
-  // Simple client-side moderation (for demo purposes)
-  let approved = true;
-  let reason = '';
-  const blockedWords = ['spam', 'scam', 'casino', 'viagra', 'porn', 'xxx', 'hack', 'crack'];
-  const lowerText = text.toLowerCase();
-  
-  for (const word of blockedWords) {
-    if (lowerText.includes(word)) {
-      approved = false;
-      reason = 'Your prayer contains inappropriate content.';
-      break;
+  try {
+    const res = await fetch(API.submit, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ name, text, category, anonymous: anon }),
+    });
+
+    modIndicator.classList.remove('show');
+
+    if (!res.ok) {
+      // 4xx = moderation rejection or validation error; surface the message
+      const body = await res.json().catch(() => ({}));
+      showFeedback('error', body.reason || body.error || 'Your prayer request could not be posted. Please revise and try again.');
+      btn.disabled = false;
+      btn.textContent = '🙏 Submit Prayer Request';
+      return;
     }
-  }
 
-  modIndicator.classList.remove('show');
+    // Success — refresh the wall from the server so everyone sees the new prayer
+    await loadPrayers();
 
-  if (!approved) {
+    document.getElementById('pr-name').value     = '';
+    document.getElementById('pr-text').value     = '';
+    document.getElementById('pr-category').value = 'general';
+    document.getElementById('pr-anon').checked   = false;
+    document.getElementById('char-num').textContent = '0';
+
     btn.disabled = false;
     btn.textContent = '🙏 Submit Prayer Request';
-    showFeedback('error', reason || 'Your prayer request could not be posted. Please revise and try again.');
-    return;
+    showFeedback('success', '✝ Your prayer has been added to the wall. The community is standing with you.');
+
+  } catch (err) {
+    modIndicator.classList.remove('show');
+    console.error('submit-prayer error:', err);
+    showFeedback('error', 'Could not connect to the server. Please check your internet and try again.');
+    btn.disabled = false;
+    btn.textContent = '🙏 Submit Prayer Request';
   }
-
-  const newPrayer = {
-    id: 'p-' + Date.now(),
-    name: anon ? 'Anonymous' : escapeHtml(name),
-    category: category,
-    text: escapeHtml(text),
-    prayCount: 0,
-    answered: false,
-    anonymous: anon,
-    timestamp: Date.now(),
-  };
-
-  allPrayers.unshift(newPrayer);
-  savePrayersToStorage();
-  renderPrayers();
-
-  document.getElementById('pr-name').value = '';
-  document.getElementById('pr-text').value = '';
-  document.getElementById('pr-category').value = 'general';
-  document.getElementById('pr-anon').checked = false;
-  document.getElementById('char-num').textContent = '0';
-  
-  btn.disabled = false;
-  btn.textContent = '🙏 Submit Prayer Request';
-
-  showFeedback('success', '✝ Your prayer has been added to the wall. The community is standing with you.');
 }
 
+// ── Init ──────────────────────────────────────────────────────────────────
+
 document.addEventListener('DOMContentLoaded', function() {
-  loadPrayersFromStorage();
-  
+  // Load all prayers from the shared backend
+  loadPrayers();
+
   const charInput = document.getElementById('pr-text');
-  if (charInput) {
-    charInput.addEventListener('input', function() { updateCharCount(this); });
-  }
-  
+  if (charInput) charInput.addEventListener('input', function() { updateCharCount(this); });
+
   const submitBtn = document.getElementById('submit-btn');
-  if (submitBtn) {
-    submitBtn.addEventListener('click', submitPrayer);
-  }
-  
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  filterBtns.forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      setFilter(this.dataset.filter, this);
-    });
+  if (submitBtn) submitBtn.addEventListener('click', submitPrayer);
+
+  document.querySelectorAll('.filter-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() { setFilter(this.dataset.filter, this); });
   });
 });
 </script>
