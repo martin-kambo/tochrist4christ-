@@ -1,0 +1,12 @@
+{
+  "name": "tochristforchrist-functions",
+  "version": "1.0.0",
+  "description": "Netlify serverless functions for tochristforchrist.org",
+  "private": true,
+  "dependencies": {
+    "@netlify/blobs": "^8.1.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
