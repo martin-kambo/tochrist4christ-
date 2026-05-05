@@ -79,10 +79,6 @@ exports.handler = async (event) => {
       'Content-Type': 'application/json',
       'Set-Cookie': `admin_session=${token}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=86400`,
     },
-    // FIXED: Return user name and email for UI display
-    body: JSON.stringify({ 
-      success: true, 
-      user: { role: 'admin', name: 'Martin', email: 'admin@tochristforchrist.org' } 
-    }),
+    body: JSON.stringify({ success: true, user: { role: 'admin' } }),
   };
 };

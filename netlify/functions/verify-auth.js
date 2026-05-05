@@ -68,8 +68,7 @@ exports.handler = async (event) => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       authenticated: !!user,
-      // FIXED: Return user name and email for UI display
-      user: user ? { role: 'admin', name: 'Martin', email: 'admin@tochristforchrist.org' } : null,
+      user: user ? { role: 'admin' } : null,
     }),
   };
 };
