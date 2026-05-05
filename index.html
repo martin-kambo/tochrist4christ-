@@ -701,17 +701,19 @@
     const userObj = { firstName, lastName, email, location, joinedAt: new Date().toISOString() };
     localStorage.setItem(USER_KEY, JSON.stringify(userObj));
 
-    // ── Step 4: Send welcome email (non-critical) ─────────────
+    // ── Step 4: Send welcome email ────────────────────────────
     try {
       const emailRes = await fetch('/.netlify/functions/send-welcome-email', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ to_email: email, to_name: firstName, firstName, lastName }),
       });
+      // Bug fix: fetch() resolves even on 4xx/5xx — must check response.ok
+      // or a failed Resend call (wrong API key, domain not verified, rate limit)
+      // swallows silently and the member never receives their welcome email
       if (!emailRes.ok) {
-        // fetch() resolves without throwing on 4xx/5xx — check explicitly
-        const errBody = await emailRes.text().catch(() => '');
-        console.error('Welcome email failed:', emailRes.status, errBody);
+        const errText = await emailRes.text().catch(() => 'unknown');
+        console.error(`send-welcome-email failed [${emailRes.status}]:`, errText);
       }
     } catch (err) {
       console.error('Welcome email error (non-critical):', err);

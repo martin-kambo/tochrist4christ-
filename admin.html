@@ -935,12 +935,19 @@ canvas { display: block; }
   <div id="page-prayers" class="page fade-in">
     <div class="dash-grid">
       <div class="panel">
-        <div class="panel-head"><span class="panel-title">Prayer Requests — Pending</span></div>
-        <div class="panel-body" id="pending-prayers"></div>
+        <div class="panel-head">
+          <span class="panel-title">Prayer Requests — Pending</span>
+          <button onclick="loadAdminPrayers()" style="font-family:'Montserrat',sans-serif;font-size:0.62rem;background:none;border:1px solid var(--border);border-radius:2px;padding:0.3rem 0.7rem;color:var(--text3);cursor:pointer;">↺ Refresh</button>
+        </div>
+        <div class="panel-body" id="pending-prayers">
+          <div style="padding:1rem;font-size:0.72rem;color:var(--text3);text-align:center;">Click the Prayers tab to load</div>
+        </div>
       </div>
       <div class="panel">
         <div class="panel-head"><span class="panel-title">Answered Prayers 🙏</span></div>
-        <div class="panel-body" id="answered-prayers"></div>
+        <div class="panel-body" id="answered-prayers">
+          <div style="padding:1rem;font-size:0.72rem;color:var(--text3);text-align:center;">Click the Prayers tab to load</div>
+        </div>
       </div>
     </div>
   </div>
@@ -1282,6 +1289,101 @@ async function exportMembersCSV() {
   }
 }
 
+// ─── PRAYER WALL ADMIN ────────────────────────────────────
+let adminPrayers = [];
+
+async function loadAdminPrayers() {
+  const pendingEl  = document.getElementById('pending-prayers');
+  const answeredEl = document.getElementById('answered-prayers');
+  if (pendingEl)  pendingEl.innerHTML  = '<div style="padding:1rem;font-size:0.72rem;color:var(--text3);">Loading...</div>';
+  if (answeredEl) answeredEl.innerHTML = '<div style="padding:1rem;font-size:0.72rem;color:var(--text3);">Loading...</div>';
+
+  try {
+    const res = await fetch('/.netlify/functions/get-prayers');
+    if (!res.ok) { showToast('Could not load prayers (' + res.status + ')'); return; }
+    const data = await res.json();
+    adminPrayers = data.prayers || [];
+    renderAdminPrayers();
+  } catch (err) {
+    console.error('loadAdminPrayers:', err);
+    showToast('Failed to load prayer requests');
+  }
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/[&<>"']/g, m =>
+    ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#x27;' }[m])
+  );
+}
+
+function renderAdminPrayers() {
+  const pendingEl  = document.getElementById('pending-prayers');
+  const answeredEl = document.getElementById('answered-prayers');
+  if (!pendingEl || !answeredEl) return;
+
+  const catMap = { general:'General', healing:'Healing', guidance:'Guidance',
+                   family:'Family', provision:'Provision', salvation:'Salvation', gratitude:'Praise' };
+  const timeAgo = ts => {
+    const d = Math.floor((Date.now()-ts)/86400000);
+    return d === 0 ? 'Today' : d === 1 ? 'Yesterday' : d + ' days ago';
+  };
+  const empty = msg => `<div style="padding:1.25rem;font-size:0.72rem;color:var(--text3);text-align:center;">${msg}</div>`;
+  const card  = p => `
+    <div style="padding:1rem;border-bottom:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;">
+        <span style="font-size:0.72rem;font-weight:600;color:var(--text);">${escapeHtml(p.name)}
+          <em style="font-weight:normal;color:var(--text3);"> · ${catMap[p.category]||'General'}</em>
+        </span>
+        <span style="font-size:0.62rem;color:var(--text3);">${timeAgo(p.timestamp)} · 🙏 ${p.prayCount||0}</span>
+      </div>
+      <p style="font-size:0.8rem;color:var(--text2);margin:0 0 0.6rem;font-style:italic;">"${escapeHtml(p.text)}"</p>
+      <div style="display:flex;gap:0.5rem;">
+        ${!p.answered
+          ? `<button class="pray-btn" data-mark="${escapeHtml(p.id)}" style="font-size:0.65rem;">✓ Mark Answered</button>`
+          : `<span style="font-size:0.65rem;color:var(--gold);">✓ Answered ${p.answeredAt ? '· ' + new Date(p.answeredAt).toLocaleDateString('en-KE') : ''}</span>`}
+        <button class="pray-btn" data-delete="${escapeHtml(p.id)}" style="font-size:0.65rem;color:#f87171;">✕ Delete</button>
+      </div>
+    </div>`;
+
+  const pending  = adminPrayers.filter(p => !p.answered);
+  const answered = adminPrayers.filter(p =>  p.answered);
+
+  pendingEl.innerHTML  = pending.length  ? pending.map(card).join('')  : empty('No pending prayer requests');
+  answeredEl.innerHTML = answered.length ? answered.map(card).join('') : empty('No answered prayers yet');
+
+  pendingEl.querySelectorAll('[data-mark]').forEach(btn =>
+    btn.addEventListener('click', () => markPrayerAnswered(btn.dataset.mark)));
+  [...pendingEl.querySelectorAll('[data-delete]'),
+   ...answeredEl.querySelectorAll('[data-delete]')].forEach(btn =>
+    btn.addEventListener('click', () => deletePrayer(btn.dataset.delete)));
+}
+
+async function markPrayerAnswered(prayerId) {
+  try {
+    const res = await fetch('/.netlify/functions/mark-answered', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prayerId }), credentials: 'include'
+    });
+    if (!res.ok) { showToast('Could not mark answered (' + res.status + ')'); return; }
+    showToast('Prayer marked as answered 🙏');
+    await loadAdminPrayers();
+  } catch (err) { console.error(err); showToast('Error updating prayer'); }
+}
+
+async function deletePrayer(prayerId) {
+  if (!confirm('Delete this prayer request? This cannot be undone.')) return;
+  try {
+    const res = await fetch('/.netlify/functions/delete-prayer', {
+      method: 'DELETE', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prayerId }), credentials: 'include'
+    });
+    if (!res.ok) { showToast('Could not delete prayer (' + res.status + ')'); return; }
+    showToast('Prayer deleted');
+    await loadAdminPrayers();
+  } catch (err) { console.error(err); showToast('Error deleting prayer'); }
+}
+
 // ─── UI RENDERING ─────────────────────────────────────────
 function updateStats() {
   document.getElementById('s-members').textContent = activeMembers.length;
@@ -1609,6 +1711,7 @@ document.querySelectorAll('.nav-item').forEach(item => {
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     item.classList.add('active');
     setTimeout(() => { animateBars(); animateSourceBars(); }, 100);
+    if (page === 'prayers') loadAdminPrayers();
   });
 });
 
