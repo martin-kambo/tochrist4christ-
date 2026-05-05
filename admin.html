@@ -736,7 +736,7 @@ canvas { display: block; }
       <div class="admin-avatar">M</div>
       <div>
         <div class="admin-name">Martin</div>
-        <div class="admin-email">admin@tochrist4christ.org</div>
+        <div class="admin-email">admin@tochristforchrist.org</div>
       </div>
     </div>
   </div>
@@ -753,7 +753,7 @@ canvas { display: block; }
   </header>
 
   <div id="nl-banner" class="nl-banner">
-    <span>✅ Secure admin access via Netlify Identity</span>
+    <span>🔒 Secure admin access · tochristforchrist.org</span>
     <button id="logout-btn" class="logout-btn">Sign Out</button>
   </div>
 
@@ -1019,7 +1019,7 @@ canvas { display: block; }
       <div class="panel-head"><span class="panel-title">Ministry Settings</span></div>
       <div class="panel-body">
         <div class="modal-row"><label>Ministry Name</label><input class="modal-input" value="To Christ 4 Christ"></div>
-        <div class="modal-row"><label>Your Email</label><input class="modal-input" value="admin@tochrist4christ.org"></div>
+        <div class="modal-row"><label>Your Email</label><input class="modal-input" value="admin@tochristforchrist.org"></div>
         <button id="save-settings" class="export-btn">Save Settings</button>
       </div>
     </div>
@@ -1240,6 +1240,12 @@ async function sendEncouragementEmail(memberId, subject, message) {
       body: JSON.stringify({ memberId, subject, message }),
       credentials: 'include'
     });
+    // Bug fix: without response.ok check, a 404/500 HTML body crashes .json()
+    if (!response.ok) {
+      console.error('send-email returned', response.status);
+      showToast(`Email failed (${response.status}) — check RESEND_API_KEY is set`);
+      return false;
+    }
     const data = await response.json();
     if (data.success) {
       showToast('Email sent successfully');
@@ -1258,11 +1264,16 @@ async function sendEncouragementEmail(memberId, subject, message) {
 async function exportMembersCSV() {
   try {
     const response = await fetch('/.netlify/functions/export-members', { credentials: 'include' });
+    // Bug fix: calling .blob() on a 401/500 HTML response produces a corrupt file
+    if (!response.ok) {
+      showToast(`Export failed (${response.status}) — please log in again`);
+      return;
+    }
     const blob = await response.blob();
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'to-christ-4christ-members.csv';
+    a.download = `tochristforchrist-members-${new Date().toISOString().slice(0,10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   } catch (err) {
