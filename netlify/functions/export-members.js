@@ -1,11 +1,16 @@
 // netlify/functions/export-members.js
-//
-// Returns all members as a downloadable CSV file.
-// Called by the admin dashboard "Export CSV" button.
-// Protected — requires a valid admin session cookie.
 
 const { getStore } = require('@netlify/blobs');
 const crypto = require('crypto');
+
+function blobsStore(name) {
+  const opts = { name };
+  if (process.env.NETLIFY_SITE_ID && process.env.NETLIFY_BLOBS_TOKEN) {
+    opts.siteID = process.env.NETLIFY_SITE_ID;
+    opts.token  = process.env.NETLIFY_BLOBS_TOKEN;
+  }
+  return getStore(opts);
+}
 
 function parseCookies(cookieHeader = '') {
   return Object.fromEntries(
@@ -17,29 +22,25 @@ function parseCookies(cookieHeader = '') {
 }
 
 function verifySession(event) {
-  const SESSION_SECRET = process.env.SESSION_SECRET;
-  if (!SESSION_SECRET) return false;
-  const cookies = parseCookies(event.headers.cookie);
-  const token   = cookies['admin_session'];
+  const SECRET = process.env.SESSION_SECRET;
+  if (!SECRET) return false;
+  const token = parseCookies(event.headers.cookie)['admin_session'];
   if (!token) return false;
   try {
     const [payload, sig] = token.split('.');
     if (!payload || !sig) return false;
-    const expectedSig = crypto.createHmac('sha256', SESSION_SECRET).update(payload).digest('base64url');
-    const sigBuf = Buffer.from(sig);
-    const expBuf = Buffer.from(expectedSig);
-    if (sigBuf.length !== expBuf.length) return false;
-    if (!crypto.timingSafeEqual(sigBuf, expBuf)) return false;
+    const expected = crypto.createHmac('sha256', SECRET).update(payload).digest('base64url');
+    const sb = Buffer.from(sig), eb = Buffer.from(expected);
+    if (sb.length !== eb.length) return false;
+    if (!crypto.timingSafeEqual(sb, eb)) return false;
     const data = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
     return data.exp && data.exp > Date.now();
   } catch { return false; }
 }
 
-// Safely escape a value for CSV
 function csvCell(val) {
   if (val === null || val === undefined) return '';
   const str = String(val);
-  // Wrap in quotes if it contains commas, quotes, or newlines
   if (str.includes(',') || str.includes('"') || str.includes('\n')) {
     return '"' + str.replace(/"/g, '""') + '"';
   }
@@ -47,24 +48,16 @@ function csvCell(val) {
 }
 
 exports.handler = async (event) => {
-  if (event.httpMethod !== 'GET') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
-  }
-
-  if (!verifySession(event)) {
-    return {
-      statusCode: 401,
-      body: JSON.stringify({ error: 'Unauthorized' }),
-    };
-  }
+  if (event.httpMethod !== 'GET') return { statusCode: 405, body: 'Method Not Allowed' };
+  if (!verifySession(event)) return { statusCode: 401, body: JSON.stringify({ error: 'Unauthorized' }) };
 
   try {
-    const store       = getStore('members');
-    const { blobs }   = await store.list();
-    const members     = await Promise.all(
+    const store = blobsStore('members');
+    const { blobs } = await store.list();
+    const members = await Promise.all(
       blobs.map(async ({ key }) => {
-        const m = await store.get(key, { type: 'json' });
-        return m;
+        try { return await store.get(key, { type: 'json' }); }
+        catch { return null; }
       })
     );
 
@@ -72,36 +65,23 @@ exports.handler = async (event) => {
       .filter(Boolean)
       .sort((a, b) => new Date(a.joinedISO || a.joined) - new Date(b.joinedISO || b.joined));
 
-    // CSV header row
-    const headers = ['Name', 'Email', 'Phone', 'Location', 'Source', 'Faith Stage', 'Joined', 'Status', 'Progress (%)'];
-    const rows    = valid.map(m => [
-      csvCell(m.name),
-      csvCell(m.email),
-      csvCell(m.phone),
-      csvCell(m.loc),
-      csvCell(m.source),
-      csvCell(m.faithStage),
-      csvCell(m.joined),
-      csvCell(m.status),
-      csvCell(m.progress || 0),
+    const headers = ['Name','Email','Phone','Location','Source','Faith Stage','Joined','Status','Progress (%)'];
+    const rows = valid.map(m => [
+      csvCell(m.name), csvCell(m.email), csvCell(m.phone),
+      csvCell(m.loc), csvCell(m.source), csvCell(m.faithStage),
+      csvCell(m.joined), csvCell(m.status), csvCell(m.progress || 0),
     ].join(','));
 
-    const csv      = [headers.join(','), ...rows].join('\r\n');
+    const csv = [headers.join(','), ...rows].join('\r\n');
     const filename = `tc4c-members-${new Date().toISOString().slice(0, 10)}.csv`;
 
     return {
       statusCode: 200,
-      headers: {
-        'Content-Type':        'text/csv',
-        'Content-Disposition': `attachment; filename="${filename}"`,
-      },
+      headers: { 'Content-Type': 'text/csv', 'Content-Disposition': `attachment; filename="${filename}"` },
       body: csv,
     };
   } catch (err) {
-    console.error('export-members error:', err);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'Failed to export members' }),
-    };
+    console.error('export-members error:', err.message, err.stack);
+    return { statusCode: 500, body: JSON.stringify({ error: err.message || 'Failed to export members' }) };
   }
 };

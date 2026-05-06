@@ -72,7 +72,9 @@ exports.handler = async (event) => {
   // Look up member from Blobs
   let member;
   try {
-    const store = getStore('members');
+    const storeOpts = { name: 'members' };
+    if (process.env.NETLIFY_SITE_ID && process.env.NETLIFY_BLOBS_TOKEN) { storeOpts.siteID = process.env.NETLIFY_SITE_ID; storeOpts.token = process.env.NETLIFY_BLOBS_TOKEN; }
+    const store = getStore(storeOpts);
     member = await store.get(memberId, { type: 'json' });
   } catch (err) {
     console.error('Failed to fetch member for email:', err);
