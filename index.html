@@ -3,243 +3,611 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>To Christ 4 Christ | A Discipleship Journey</title>
-
-<!-- SEO -->
-<meta name="description" content="A free, structured discipleship course rooted in Scripture. Six modules. Built for community. Walk deeper, stand rooted, rise higher — at your own pace.">
-<meta name="keywords" content="discipleship, Christian course, Bible study, faith journey, Nairobi, Kenya, free course">
+<title>To Christ 4 Christ | Discipleship for Young Africans</title>
+<meta name="description" content="A free, structured discipleship journey for young Africans who want real spiritual growth — with community, not just content. 6 modules. Start today.">
+<meta name="keywords" content="discipleship, Christian course, Bible study, faith journey, Nairobi, Kenya, Nigeria, Ghana, Uganda, free course Africa">
 <meta name="author" content="To Christ 4 Christ">
 <link rel="canonical" href="https://tochristforchrist.org/">
-
-<!-- Open Graph (Facebook, WhatsApp, LinkedIn) -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://tochristforchrist.org/">
-<meta property="og:title" content="To Christ 4 Christ | A Discipleship Journey">
-<meta property="og:description" content="A free, structured discipleship course. Six modules. Built for community. Walk deeper, stand rooted, rise higher.">
+<meta property="og:title" content="To Christ 4 Christ | Discipleship for Young Africans">
+<meta property="og:description" content="Free discipleship course. 6 modules. Real community. Made for young Africans ready to grow for real.">
 <meta property="og:image" content="https://tochristforchrist.org/logo.webp">
 <meta property="og:locale" content="en_KE">
-
-<!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="To Christ 4 Christ | A Discipleship Journey">
-<meta name="twitter:description" content="A free, structured discipleship course. Six modules. Built for community.">
+<meta name="twitter:title" content="To Christ 4 Christ | Discipleship for Young Africans">
+<meta name="twitter:description" content="Free discipleship course. 6 modules. Real community. Start today.">
 <meta name="twitter:image" content="https://tochristforchrist.org/logo.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --green-deep: #1B3A2E; --green-mid: #2D5A40; --green-light: #4A8C60;
-    --gold: #C9A84C; --gold-light: #E8C96A; --ivory: #F5EFE0;
-    --ivory-dark: #EDE5CC; --brown: #2C1A0E; --brown-light: #7A5230;
-    --cream: #FFFDF5; --text-body: #3C2A1A; --text-muted: #7A6A50;
-  }
-  html { scroll-behavior: smooth; }
-  body { font-family: 'Crimson Text', Georgia, serif; background: var(--cream); color: var(--text-body); font-size: 18px; line-height: 1.7; overflow-x: hidden; }
-  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: var(--green-deep); padding: 0.75rem 1.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(201,168,76,0.3); }
-  .nav-logo { font-family: 'Playfair Display', serif; color: var(--gold); font-size: 1.1rem; letter-spacing: 0.05em; text-decoration: none; }
-  .nav-links { display: flex; gap: 1.5rem; }
-  .nav-links a { font-family: 'Montserrat', sans-serif; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ivory); text-decoration: none; opacity: 0.8; transition: opacity 0.2s; }
-  .nav-links a:hover { opacity: 1; color: var(--gold-light); }
-  .hero { min-height: 100vh; background: var(--green-deep); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 7rem 1.5rem 4rem; position: relative; overflow: hidden; }
-  .hero::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle at 20% 80%, rgba(201,168,76,0.06) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(74,140,96,0.08) 0%, transparent 50%); pointer-events: none; }
-  .hero::after { content: '✝'; position: absolute; font-size: 28rem; color: rgba(201,168,76,0.03); top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; line-height: 1; }
-  .hero-eyebrow { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.25rem; opacity: 0; animation: fadeUp 0.8s 0.2s forwards; }
-  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.4rem, 7vw, 4.5rem); color: var(--ivory); line-height: 1.15; max-width: 700px; margin-bottom: 1rem; opacity: 0; animation: fadeUp 0.8s 0.4s forwards; }
-  .hero h1 em { color: var(--gold); font-style: italic; }
-  .hero-verse { font-family: 'Crimson Text', serif; font-style: italic; font-size: 1.15rem; color: rgba(245,239,224,0.7); max-width: 460px; margin-bottom: 0.4rem; opacity: 0; animation: fadeUp 0.8s 0.6s forwards; min-height: 2.5rem; transition: opacity 0.5s; }
-  .hero-ref { font-family: 'Montserrat', sans-serif; font-size: 0.72rem; font-weight: 400; letter-spacing: 0.12em; color: var(--gold); opacity: 0; animation: fadeUp 0.8s 0.7s forwards; margin-bottom: 2.5rem; }
-  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; opacity: 0; animation: fadeUp 0.8s 0.9s forwards; }
-  .btn-primary { display: inline-block; background: var(--gold); color: var(--brown); font-family: 'Montserrat', sans-serif; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.9rem 2.2rem; text-decoration: none; border-radius: 2px; transition: background 0.2s, transform 0.15s; }
-  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
-  .btn-ghost { display: inline-block; border: 1px solid rgba(201,168,76,0.5); color: var(--ivory); font-family: 'Montserrat', sans-serif; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.9rem 2.2rem; text-decoration: none; border-radius: 2px; transition: border-color 0.2s, background 0.2s; }
-  .btn-ghost:hover { border-color: var(--gold); background: rgba(201,168,76,0.08); }
-  .scroll-hint { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.4rem; opacity: 0; animation: fadeIn 1s 1.5s forwards; }
-  .scroll-hint span { font-family: 'Montserrat', sans-serif; font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(201,168,76,0.5); }
-  .scroll-arrow { width: 1px; height: 36px; background: linear-gradient(to bottom, rgba(201,168,76,0.6), transparent); animation: scrollPulse 2s ease-in-out infinite; }
-  section { padding: 5rem 1.5rem; }
-  .container { max-width: 780px; margin: 0 auto; }
-  .section-label { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase; color: var(--green-light); margin-bottom: 0.75rem; }
-  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 2.8rem); line-height: 1.2; color: var(--green-deep); margin-bottom: 1.25rem; }
-  .section-title em { color: var(--gold); font-style: italic; }
-  .divider { width: 48px; height: 2px; background: var(--gold); margin: 1.5rem 0; }
-  .about { background: var(--cream); }
-  .about-grid { display: grid; grid-template-columns: 1fr; gap: 3rem; margin-top: 3rem; }
-  @media(min-width: 640px) { .about-grid { grid-template-columns: 1fr 1fr; } }
-  .about-card { border-left: 2px solid var(--gold); padding-left: 1.25rem; }
-  .about-card h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--green-deep); margin-bottom: 0.5rem; }
-  .about-card p { color: var(--text-muted); font-size: 1rem; }
-  .verse-strip { background: var(--green-deep); padding: 3.5rem 1.5rem; text-align: center; }
-  .verse-strip blockquote { font-family: 'Playfair Display', serif; font-size: clamp(1.2rem, 3vw, 1.7rem); font-style: italic; color: var(--ivory); max-width: 640px; margin: 0 auto 0.75rem; line-height: 1.5; }
-  .verse-strip cite { font-family: 'Montserrat', sans-serif; font-size: 0.72rem; letter-spacing: 0.15em; color: var(--gold); font-style: normal; }
-  .modules { background: var(--ivory); }
-  .module-list { margin-top: 2.5rem; display: flex; flex-direction: column; gap: 1rem; }
-  .module-item { background: var(--cream); border: 1px solid var(--ivory-dark); border-radius: 2px; overflow: hidden; transition: border-color 0.2s; }
-  .module-item:hover { border-color: var(--gold); }
-  .module-header { display: flex; align-items: center; gap: 1rem; padding: 1.1rem 1.25rem; cursor: pointer; user-select: none; }
-  .module-num { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--gold); font-style: italic; min-width: 2rem; line-height: 1; }
-  .module-info { flex: 1; }
-  .module-info h3 { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--green-deep); }
-  .module-info small { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; letter-spacing: 0.1em; color: var(--text-muted); }
-  .module-toggle { width: 20px; height: 20px; border: 1px solid var(--ivory-dark); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s, border-color 0.2s; flex-shrink: 0; }
-  .module-item.open .module-toggle { background: var(--gold); border-color: var(--gold); }
-  .module-toggle::after { content: '+'; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; color: var(--text-muted); line-height: 1; }
-  .module-item.open .module-toggle::after { content: '−'; color: var(--brown); }
-  .module-body { display: none; padding: 0 1.25rem 1.25rem 1.25rem; border-top: 1px solid var(--ivory-dark); }
-  .module-item.open .module-body { display: block; }
-  .module-body p { font-size: 0.98rem; color: var(--text-muted); margin-top: 0.75rem; }
-  .module-lessons { list-style: none; margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.4rem; }
-  .module-lessons li { font-family: 'Montserrat', sans-serif; font-size: 0.78rem; color: var(--text-body); display: flex; align-items: center; gap: 0.6rem; cursor: pointer; transition: color 0.2s; padding: 0.3rem 0; }
-  .module-lessons li::before { content: '◆'; font-size: 0.4rem; color: var(--gold); flex-shrink: 0; transition: color 0.2s; }
-  .module-lessons li.completed { color: var(--text-muted); text-decoration: line-through; opacity: 0.6; }
-  .module-lessons li.completed::before { content: '✓'; color: var(--green-light); font-size: 0.6rem; }
-  .lesson-check-hint { font-family: 'Montserrat', sans-serif; font-size: 0.62rem; letter-spacing: 0.08em; color: var(--gold); opacity: 0.6; margin-top: 0.6rem; display: block; }
-  .module-resource { margin-top: 1.1rem; padding: 0.85rem 1rem; background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.25); border-left: 3px solid var(--gold); border-radius: 2px; display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
-  .module-resource .res-label { font-family: 'Montserrat', sans-serif; font-size: 0.62rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--brown-light); white-space: nowrap; flex-shrink: 0; }
-  .module-resource .res-links { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-  .res-btn { display: inline-flex; align-items: center; gap: 0.35rem; font-family: 'Montserrat', sans-serif; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.08em; color: var(--green-mid); text-decoration: none; border: 1px solid rgba(45,90,64,0.3); border-radius: 2px; padding: 0.3rem 0.7rem; transition: background 0.2s, border-color 0.2s; white-space: nowrap; }
-  .res-btn:hover { background: rgba(45,90,64,0.06); border-color: var(--green-mid); }
-  .res-btn::before { content: '↓'; font-size: 0.7rem; }
-  .signup { background: var(--green-deep); position: relative; overflow: hidden; }
-  .signup::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 70% 50%, rgba(201,168,76,0.05) 0%, transparent 60%); pointer-events: none; }
-  .signup .section-title { color: var(--ivory); }
-  .signup .section-label { color: var(--gold-light); }
-  .signup p { color: rgba(245,239,224,0.7); font-size: 1.05rem; margin-bottom: 2rem; }
-  .form-card { background: rgba(255,253,245,0.04); border: 1px solid rgba(201,168,76,0.2); border-radius: 4px; padding: 2rem; margin-top: 2rem; }
-  .form-row { margin-bottom: 1.25rem; }
-  .form-row label { display: block; font-family: 'Montserrat', sans-serif; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
-  .form-row input, .form-row select, .form-row textarea { width: 100%; background: rgba(255,253,245,0.06); border: 1px solid rgba(201,168,76,0.25); border-radius: 2px; padding: 0.75rem 1rem; font-family: 'Crimson Text', serif; font-size: 1rem; color: var(--ivory); outline: none; transition: border-color 0.2s; }
-  .form-row input::placeholder { color: rgba(245,239,224,0.35); }
-  .form-row input:focus, .form-row select:focus { border-color: var(--gold); }
-  .form-row select { color: var(--ivory); }
-  .form-row select option { background: var(--green-deep); }
-  .form-grid { display: grid; grid-template-columns: 1fr; gap: 0 1.25rem; }
-  @media(min-width: 500px) { .form-grid { grid-template-columns: 1fr 1fr; } }
-  .form-submit { width: 100%; background: var(--gold); color: var(--brown); font-family: 'Montserrat', sans-serif; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; padding: 1rem; border: none; border-radius: 2px; cursor: pointer; margin-top: 0.5rem; transition: background 0.2s, transform 0.15s; }
-  .form-submit:hover { background: var(--gold-light); transform: translateY(-1px); }
-  .form-privacy { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; letter-spacing: 0.05em; color: rgba(245,239,224,0.4); text-align: center; margin-top: 1rem; }
-  .form-privacy a { color: var(--gold-light); text-decoration: underline; text-underline-offset: 2px; }
-  .consent-row { display: flex; align-items: flex-start; gap: 0.65rem; margin-bottom: 1.1rem; padding: 0.85rem 1rem; background: rgba(255,253,245,0.04); border: 1px solid rgba(201,168,76,0.18); border-radius: 2px; }
-  .consent-row input[type="checkbox"] { accent-color: var(--gold); width: 15px; height: 15px; flex-shrink: 0; margin-top: 0.2rem; cursor: pointer; }
-  .consent-row label { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; letter-spacing: 0.04em; color: rgba(245,239,224,0.55); line-height: 1.6; cursor: pointer; }
-  .consent-row label a { color: var(--gold-light); text-decoration: underline; text-underline-offset: 2px; }
-  .success-msg { display: none; text-align: center; padding: 2rem; color: var(--ivory); }
-  .success-msg .checkmark { font-size: 2.5rem; color: var(--gold); margin-bottom: 1rem; display: block; }
-  .success-msg h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 0.5rem; }
-  .community { background: var(--cream); }
-  .pillars { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-top: 2.5rem; }
-  @media(min-width: 560px) { .pillars { grid-template-columns: 1fr 1fr; } }
-  .pillar { background: var(--ivory); border: 1px solid var(--ivory-dark); padding: 1.5rem; border-radius: 2px; }
-  .pillar-icon { font-size: 1.6rem; margin-bottom: 0.75rem; display: block; filter: sepia(0.5); }
-  .pillar h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--green-deep); margin-bottom: 0.4rem; }
-  .pillar p { font-size: 0.95rem; color: var(--text-muted); }
-  .stats-strip { background: var(--ivory-dark); padding: 3rem 1.5rem; }
-  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; max-width: 500px; margin: 0 auto; text-align: center; }
-  .stat-num { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--green-deep); display: block; }
-  .stat-label { font-family: 'Montserrat', sans-serif; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
-  footer { background: var(--brown); color: rgba(245,239,224,0.6); padding: 3rem 1.5rem 2rem; text-align: center; }
-  footer .footer-logo { font-family: 'Playfair Display', serif; color: var(--gold); font-size: 1.3rem; margin-bottom: 0.5rem; }
-  footer p { font-size: 0.88rem; line-height: 1.6; max-width: 400px; margin: 0 auto 1.5rem; }
-  footer .footer-links { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 2rem; }
-  footer .footer-links a { font-family: 'Montserrat', sans-serif; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(245,239,224,0.5); text-decoration: none; transition: color 0.2s; }
-  footer .footer-links a:hover { color: var(--gold); }
-  footer .copy { font-family: 'Montserrat', sans-serif; font-size: 0.62rem; letter-spacing: 0.05em; color: rgba(245,239,224,0.25); border-top: 1px solid rgba(245,239,224,0.08); padding-top: 1.5rem; }
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  @keyframes scrollPulse { 0%, 100% { transform: scaleY(1); opacity: 0.6; } 50% { transform: scaleY(0.6); opacity: 0.3; } }
-  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
-  .reveal.visible { opacity: 1; transform: none; }
-  .reveal-delay-1 { transition-delay: 0.1s; }
-  .reveal-delay-2 { transition-delay: 0.2s; }
-  .reveal-delay-3 { transition-delay: 0.3s; }
-  .nav-toggle { display: none; flex-direction: column; gap: 4px; cursor: pointer; padding: 4px; }
-  .nav-toggle span { display: block; width: 20px; height: 1.5px; background: var(--ivory); transition: transform 0.2s; }
-  @media(max-width: 500px) { .nav-links { display: none; } .nav-toggle { display: flex; } }
-  .progress-tracker { background: var(--green-deep); padding: 2.5rem 1.5rem; display: none; }
-  .progress-tracker.visible { display: block; }
-  .tracker-card { background: rgba(255,253,245,0.05); border: 1px solid rgba(201,168,76,0.25); border-radius: 6px; padding: 1.75rem; max-width: 600px; margin: 0 auto; }
-  .tracker-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.5rem; }
-  .tracker-name { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--ivory); }
-  .tracker-pct { font-family: 'Montserrat', sans-serif; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em; color: var(--gold); }
-  .tracker-bar-wrap { background: rgba(255,253,245,0.08); border-radius: 3px; height: 6px; margin-bottom: 1.25rem; overflow: hidden; }
-  .tracker-bar-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-light)); border-radius: 3px; transition: width 0.8s ease; width: 0%; }
-  .tracker-modules { display: flex; flex-direction: column; gap: 0.6rem; }
-  .tracker-mod-row { display: flex; align-items: center; gap: 0.75rem; }
-  .tracker-mod-name { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; color: rgba(245,239,224,0.6); flex: 1; }
-  .tracker-mod-bar-wrap { width: 100px; height: 3px; background: rgba(255,253,245,0.08); border-radius: 2px; overflow: hidden; }
-  .tracker-mod-bar { height: 100%; background: var(--gold); border-radius: 2px; transition: width 0.8s ease; }
-  .tracker-mod-count { font-family: 'Montserrat', sans-serif; font-size: 0.6rem; color: rgba(245,239,224,0.4); min-width: 32px; text-align: right; }
-  .tracker-badge-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1.25rem; padding-top: 1.1rem; border-top: 1px solid rgba(201,168,76,0.1); }
-  .tracker-reset { font-family: 'Montserrat', sans-serif; font-size: 0.6rem; letter-spacing: 0.1em; color: rgba(245,239,224,0.25); margin-top: 1rem; text-align: right; cursor: pointer; transition: color 0.2s; }
-  .tracker-reset:hover { color: rgba(245,239,224,0.5); }
-  .progress-preview { background: var(--green-deep); padding: 2.5rem 1.5rem; }
-  .progress-card { background: rgba(255,253,245,0.05); border: 1px solid rgba(201,168,76,0.2); border-radius: 4px; padding: 1.5rem; max-width: 500px; margin: 0 auto; }
-  .progress-card h4 { font-family: 'Montserrat', sans-serif; font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
-  .progress-card .name { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--ivory); margin-bottom: 1rem; }
-  .progress-bar-wrap { background: rgba(255,253,245,0.08); border-radius: 2px; height: 4px; margin-bottom: 0.4rem; overflow: hidden; }
-  .progress-bar-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width 1.5s ease; width: 0; }
-  .progress-meta { display: flex; justify-content: space-between; font-family: 'Montserrat', sans-serif; font-size: 0.65rem; letter-spacing: 0.1em; color: rgba(245,239,224,0.5); margin-bottom: 1rem; }
-  .badge-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-  .badge { font-family: 'Montserrat', sans-serif; font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; background: rgba(201,168,76,0.12); border: 1px solid rgba(201,168,76,0.3); color: var(--gold-light); padding: 0.2rem 0.6rem; border-radius: 2px; }
-  .badge.earned { background: rgba(201,168,76,0.25); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --green-deep: #1B3A2E; --green-mid: #2D5A40; --green-light: #4A8C60;
+  --gold: #C9A84C; --gold-light: #E8C96A; --ivory: #F5EFE0;
+  --ivory-dark: #EDE5CC; --brown: #2C1A0E; --brown-light: #7A5230;
+  --cream: #FFFDF5; --text-body: #3C2A1A; --text-muted: #7A6A50;
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'Crimson Text', Georgia, serif; background: var(--cream); color: var(--text-body); font-size: 18px; line-height: 1.7; overflow-x: hidden; }
+
+/* ── NAV ─────────────────────────────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(27,58,46,0.97); backdrop-filter: blur(14px);
+  padding: 0.65rem 1.5rem;
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 1px solid rgba(201,168,76,0.2);
+  transition: padding 0.3s;
+}
+nav.scrolled { padding: 0.45rem 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+.nav-logo-wrap { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
+.nav-logo-img {
+  width: 36px; height: 36px; object-fit: contain; border-radius: 50%;
+  background: transparent;
+  /* mix-blend-mode removes white bg on supported browsers */
+  mix-blend-mode: lighten;
+  filter: brightness(1.1) contrast(1.05);
+}
+.nav-logo-text { font-family: 'Playfair Display', serif; color: var(--gold); font-size: 1rem; letter-spacing: 0.04em; }
+.nav-links { display: flex; gap: 1.25rem; align-items: center; }
+.nav-links a { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ivory); text-decoration: none; opacity: 0.75; transition: opacity 0.2s, color 0.2s; white-space: nowrap; min-height: 44px; display: flex; align-items: center; }
+.nav-links a:hover { opacity: 1; color: var(--gold-light); }
+.nav-links a.nav-cta { opacity: 1; color: var(--gold); border: 1px solid rgba(201,168,76,0.4); padding: 0.35rem 1rem; border-radius: 2px; transition: background 0.2s, border-color 0.2s; }
+.nav-links a.nav-cta:hover { background: rgba(201,168,76,0.12); border-color: var(--gold); }
+.nav-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; min-height: 44px; min-width: 44px; justify-content: center; align-items: center; }
+.nav-toggle span { display: block; width: 22px; height: 1.5px; background: var(--ivory); transition: transform 0.25s, opacity 0.25s; }
+.nav-toggle.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { opacity: 0; }
+.nav-toggle.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* ── FLOATING CTA ────────────────────────────────────────── */
+.floating-cta {
+  position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 150;
+  background: var(--gold); color: var(--brown);
+  font-family: 'Montserrat', sans-serif; font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 0.75rem 1.4rem; border-radius: 30px; text-decoration: none;
+  box-shadow: 0 6px 24px rgba(201,168,76,0.45);
+  transform: translateY(80px); opacity: 0;
+  transition: transform 0.4s ease, opacity 0.4s ease, background 0.2s;
+  pointer-events: none;
+}
+.floating-cta.show { transform: translateY(0); opacity: 1; pointer-events: auto; }
+.floating-cta:hover { background: var(--gold-light); }
+
+/* ── HERO ────────────────────────────────────────────────── */
+.hero {
+  min-height: 100vh;
+  background: var(--green-deep);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 7rem 1.5rem 5rem;
+  position: relative; overflow: hidden;
+}
+/* Animated gradient bg */
+.hero-bg {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 55% at 15% 85%, rgba(201,168,76,0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 55% 65% at 85% 15%, rgba(74,140,96,0.1) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 50% at 50% 50%, rgba(201,168,76,0.03) 0%, transparent 70%);
+  animation: heroShift 12s ease-in-out infinite alternate;
+}
+.hero-cross-bg {
+  position: absolute; font-size: 30rem; color: rgba(201,168,76,0.04);
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+  pointer-events: none; line-height: 1; user-select: none;
+  animation: crossPulse 10s ease-in-out infinite;
+}
+.hero-content { position: relative; z-index: 1; max-width: 680px; }
+.hero-logo {
+  width: 90px; height: 90px; object-fit: contain;
+  border-radius: 50%;
+  mix-blend-mode: lighten; filter: brightness(1.05);
+  margin-bottom: 1.25rem;
+  opacity: 0; animation: fadeUp 0.7s 0.1s forwards;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 20px; padding: 0.35rem 1rem;
+  font-family: 'Montserrat', sans-serif; font-size: 0.62rem; font-weight: 600;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold);
+  margin-bottom: 1.25rem;
+  opacity: 0; animation: fadeUp 0.7s 0.2s forwards;
+}
+.hero-badge-dot { width: 6px; height: 6px; background: var(--gold); border-radius: 50%; animation: dotPulse 1.8s ease-in-out infinite; flex-shrink: 0; }
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 6.5vw, 4rem);
+  color: var(--ivory); line-height: 1.12; margin-bottom: 1.1rem;
+  opacity: 0; animation: fadeUp 0.7s 0.35s forwards;
+}
+.hero h1 em { color: var(--gold); font-style: italic; display: block; }
+.hero-sub {
+  font-family: 'Crimson Text', serif; font-size: 1.15rem; font-style: italic;
+  color: rgba(245,239,224,0.65); max-width: 500px; margin: 0 auto 1.5rem;
+  line-height: 1.6;
+  opacity: 0; animation: fadeUp 0.7s 0.5s forwards;
+}
+/* Testimonial quote replacing rotating verses */
+.hero-quote {
+  margin: 0 auto 2rem; max-width: 420px; padding: 1rem 1.25rem;
+  background: rgba(255,253,245,0.05); border-left: 2px solid var(--gold);
+  text-align: left;
+  opacity: 0; animation: fadeUp 0.7s 0.62s forwards;
+}
+.hero-quote p { font-family: 'Crimson Text', serif; font-style: italic; font-size: 1rem; color: rgba(245,239,224,0.7); line-height: 1.6; margin-bottom: 0.35rem; }
+.hero-quote cite { font-family: 'Montserrat', sans-serif; font-size: 0.62rem; letter-spacing: 0.1em; color: var(--gold); font-style: normal; }
+.hero-actions {
+  display: flex; gap: 0.85rem; flex-wrap: wrap; justify-content: center;
+  margin-bottom: 1.75rem;
+  opacity: 0; animation: fadeUp 0.7s 0.75s forwards;
+}
+/* Buttons with cursor glow on hover */
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: var(--gold); color: var(--brown);
+  font-family: 'Montserrat', sans-serif; font-size: 0.78rem; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 0.95rem 2rem; text-decoration: none; border-radius: 2px;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 4px 18px rgba(201,168,76,0.3);
+  min-height: 44px;
+  position: relative;
+}
+.btn-primary::after { content: ''; position: absolute; inset: -4px; border-radius: 4px; box-shadow: 0 0 0 0 rgba(201,168,76,0); transition: box-shadow 0.3s; }
+.btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(201,168,76,0.4); }
+.btn-primary:hover::after { box-shadow: 0 0 16px 2px rgba(201,168,76,0.2); }
+.btn-primary svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.5; transition: transform 0.2s; flex-shrink: 0; }
+.btn-primary:hover svg { transform: translateX(3px); }
+.btn-ghost {
+  display: inline-flex; align-items: center;
+  border: 1px solid rgba(201,168,76,0.4); color: rgba(245,239,224,0.8);
+  font-family: 'Montserrat', sans-serif; font-size: 0.78rem; font-weight: 500;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 0.95rem 1.8rem; text-decoration: none; border-radius: 2px;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+  min-height: 44px;
+}
+.btn-ghost:hover { border-color: var(--gold); background: rgba(201,168,76,0.08); color: var(--ivory); }
+/* Social proof */
+.hero-proof {
+  display: flex; align-items: center; justify-content: center; gap: 0.85rem;
+  opacity: 0; animation: fadeUp 0.7s 0.88s forwards;
+}
+.proof-avatars { display: flex; }
+.proof-avatars span {
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 2px solid var(--green-deep); background: var(--green-mid);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.72rem; color: var(--gold); font-family: 'Montserrat', sans-serif;
+  font-weight: 600; margin-left: -9px;
+}
+.proof-avatars span:first-child { margin-left: 0; }
+.proof-text { font-family: 'Montserrat', sans-serif; font-size: 0.66rem; letter-spacing: 0.05em; color: rgba(245,239,224,0.5); }
+.proof-text strong { color: var(--gold-light); }
+.scroll-hint { position: absolute; bottom: 1.75rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.4rem; opacity: 0; animation: fadeIn 1s 1.6s forwards; }
+.scroll-hint span { font-family: 'Montserrat', sans-serif; font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(201,168,76,0.4); }
+.scroll-arrow { width: 1px; height: 32px; background: linear-gradient(to bottom, rgba(201,168,76,0.5), transparent); animation: scrollPulse 2s ease-in-out infinite; }
+
+/* ── STRUGGLE ────────────────────────────────────────────── */
+.struggle { background: var(--cream); padding: 5rem 1.5rem; }
+.struggle-grid { display: grid; grid-template-columns: 1fr; gap: 1px; background: var(--ivory-dark); border: 1px solid var(--ivory-dark); border-radius: 3px; overflow: hidden; margin-top: 2.5rem; }
+@media(min-width: 600px) { .struggle-grid { grid-template-columns: 1fr 1fr; } }
+@media(min-width: 840px) { .struggle-grid { grid-template-columns: 1fr 1fr 1fr; } }
+.struggle-item { background: var(--cream); padding: 1.75rem; transition: background 0.2s; }
+.struggle-item:hover { background: var(--ivory); }
+.struggle-icon { font-size: 1.5rem; margin-bottom: 0.75rem; display: block; }
+.struggle-item h3 { font-family: 'Playfair Display', serif; font-size: 1.02rem; color: var(--green-deep); margin-bottom: 0.4rem; }
+.struggle-item p { font-size: 0.94rem; color: var(--text-muted); line-height: 1.6; }
+
+/* ── ABOUT / HOW THIS IS DIFFERENT ──────────────────────── */
+.about { background: var(--ivory); padding: 5rem 1.5rem; }
+.about-grid { display: grid; grid-template-columns: 1fr; gap: 1.75rem; margin-top: 2.5rem; }
+@media(min-width: 600px) { .about-grid { grid-template-columns: 1fr 1fr; } }
+.about-card { border-left: 2px solid var(--gold); padding-left: 1.25rem; transition: transform 0.2s; }
+.about-card:hover { transform: translateX(4px); }
+.about-card h3 { font-family: 'Playfair Display', serif; font-size: 1.08rem; color: var(--green-deep); margin-bottom: 0.4rem; }
+.about-card p { color: var(--text-muted); font-size: 0.96rem; line-height: 1.65; }
+
+/* ── VERSE STRIP ─────────────────────────────────────────── */
+.verse-strip { background: var(--green-deep); padding: 4rem 1.5rem; text-align: center; position: relative; overflow: hidden; }
+.verse-strip::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(201,168,76,0.05) 0%, transparent 70%); }
+.verse-strip blockquote { font-family: 'Playfair Display', serif; font-size: clamp(1.15rem, 3vw, 1.6rem); font-style: italic; color: var(--ivory); max-width: 620px; margin: 0 auto 0.75rem; line-height: 1.55; position: relative; z-index: 1; }
+.verse-strip cite { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; letter-spacing: 0.18em; color: var(--gold); font-style: normal; }
+
+/* ── HOW IT WORKS ────────────────────────────────────────── */
+.how { background: var(--cream); padding: 5rem 1.5rem; }
+.steps { display: grid; grid-template-columns: 1fr; gap: 2rem; margin-top: 2.5rem; }
+@media(min-width: 600px) { .steps { grid-template-columns: 1fr 1fr 1fr; } }
+.step { position: relative; padding-bottom: 0.5rem; }
+.step-num { font-family: 'Playfair Display', serif; font-size: 3.2rem; font-style: italic; color: rgba(201,168,76,0.18); line-height: 1; margin-bottom: 0.65rem; display: block; }
+.step-icon { font-size: 1.6rem; margin-bottom: 0.65rem; display: block; }
+.step h3 { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--green-deep); margin-bottom: 0.4rem; }
+.step p { font-size: 0.93rem; color: var(--text-muted); line-height: 1.65; }
+@media(min-width: 600px) {
+  .step:not(:last-child)::after { content: '→'; position: absolute; right: -1rem; top: 3.5rem; color: rgba(201,168,76,0.3); font-size: 1.4rem; }
+}
+
+/* ── MODULES ─────────────────────────────────────────────── */
+.modules { background: var(--ivory); padding: 5rem 1.5rem; }
+.module-list { margin-top: 2.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
+.module-item { background: var(--cream); border: 1px solid var(--ivory-dark); border-radius: 3px; overflow: hidden; transition: border-color 0.2s, box-shadow 0.25s, transform 0.2s; }
+.module-item:hover { border-color: rgba(201,168,76,0.5); box-shadow: 0 4px 20px rgba(201,168,76,0.1); transform: translateY(-1px); }
+.module-item.open { border-color: rgba(201,168,76,0.5); box-shadow: 0 4px 20px rgba(201,168,76,0.1); transform: translateY(0); }
+.module-header { display: flex; align-items: center; gap: 1rem; padding: 1.1rem 1.25rem; cursor: pointer; user-select: none; min-height: 44px; }
+.module-num { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--gold); font-style: italic; min-width: 1.8rem; line-height: 1; }
+.module-info { flex: 1; }
+.module-info h3 { font-family: 'Playfair Display', serif; font-size: 1.02rem; color: var(--green-deep); }
+.module-info small { font-family: 'Montserrat', sans-serif; font-size: 0.62rem; letter-spacing: 0.1em; color: var(--text-muted); }
+.module-toggle { width: 22px; height: 22px; border: 1px solid var(--ivory-dark); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s, border-color 0.2s, transform 0.3s; flex-shrink: 0; }
+.module-item.open .module-toggle { background: var(--gold); border-color: var(--gold); transform: rotate(45deg); }
+.module-toggle::after { content: '+'; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; color: var(--text-muted); line-height: 1; }
+.module-item.open .module-toggle::after { color: var(--brown); }
+.module-body { display: none; padding: 0 1.25rem 1.25rem; border-top: 1px solid var(--ivory-dark); animation: expandIn 0.22s ease; }
+.module-item.open .module-body { display: block; }
+.module-body p { font-size: 0.97rem; color: var(--text-muted); margin-top: 0.75rem; line-height: 1.65; }
+.module-lessons { list-style: none; margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.35rem; }
+.module-lessons li { font-family: 'Montserrat', sans-serif; font-size: 0.77rem; color: var(--text-body); display: flex; align-items: center; gap: 0.6rem; cursor: pointer; transition: color 0.2s, background 0.15s; padding: 0.4rem 0.6rem; border-radius: 2px; min-height: 44px; }
+.module-lessons li:hover { background: rgba(201,168,76,0.07); color: var(--green-deep); }
+.module-lessons li::before { content: '◆'; font-size: 0.4rem; color: var(--gold); flex-shrink: 0; transition: all 0.3s; }
+.module-lessons li.completed { color: var(--text-muted); opacity: 0.6; }
+.module-lessons li.completed span { text-decoration: line-through; }
+.module-lessons li.completed::before { content: '✓'; color: var(--green-light); font-size: 0.65rem; }
+.module-lessons li.just-completed::before { animation: checkBounce 0.4s ease; }
+.lesson-check-hint { font-family: 'Montserrat', sans-serif; font-size: 0.6rem; letter-spacing: 0.08em; color: var(--gold); opacity: 0.55; margin-top: 0.5rem; display: block; }
+.module-resource { margin-top: 1.1rem; padding: 0.85rem 1rem; background: rgba(201,168,76,0.05); border: 1px solid rgba(201,168,76,0.2); border-left: 3px solid var(--gold); border-radius: 2px; display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+.module-resource .res-label { font-family: 'Montserrat', sans-serif; font-size: 0.62rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--brown-light); white-space: nowrap; flex-shrink: 0; }
+.module-resource .res-links { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.res-btn { display: inline-flex; align-items: center; gap: 0.35rem; font-family: 'Montserrat', sans-serif; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.08em; color: var(--green-mid); text-decoration: none; border: 1px solid rgba(45,90,64,0.3); border-radius: 2px; padding: 0.35rem 0.75rem; transition: background 0.2s, border-color 0.2s; white-space: nowrap; min-height: 44px; align-items: center; }
+.res-btn:hover { background: rgba(45,90,64,0.06); border-color: var(--green-mid); }
+.res-btn::before { content: '↓'; font-size: 0.7rem; }
+
+/* ── PROGRESS TRACKER (signed-in) ───────────────────────── */
+.progress-tracker { background: var(--green-deep); padding: 2.5rem 1.5rem; display: none; }
+.tracker-card { background: rgba(255,253,245,0.05); border: 1px solid rgba(201,168,76,0.2); border-radius: 6px; padding: 1.75rem; max-width: 600px; margin: 0 auto; }
+.tracker-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.5rem; }
+.tracker-name { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--ivory); }
+.tracker-pct { font-family: 'Montserrat', sans-serif; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em; color: var(--gold); }
+.tracker-bar-wrap { background: rgba(255,253,245,0.08); border-radius: 3px; height: 6px; margin-bottom: 1.25rem; overflow: hidden; }
+.tracker-bar-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-light)); border-radius: 3px; transition: width 0.9s cubic-bezier(0.22,1,0.36,1); width: 0%; }
+.tracker-modules { display: flex; flex-direction: column; gap: 0.6rem; }
+.tracker-mod-row { display: flex; align-items: center; gap: 0.75rem; }
+.tracker-mod-name { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; color: rgba(245,239,224,0.6); flex: 1; }
+.tracker-mod-bar-wrap { width: 100px; height: 3px; background: rgba(255,253,245,0.08); border-radius: 2px; overflow: hidden; }
+.tracker-mod-bar { height: 100%; background: var(--gold); border-radius: 2px; transition: width 0.9s cubic-bezier(0.22,1,0.36,1); }
+.tracker-mod-count { font-family: 'Montserrat', sans-serif; font-size: 0.6rem; color: rgba(245,239,224,0.4); min-width: 32px; text-align: right; }
+.tracker-badge-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1.25rem; padding-top: 1.1rem; border-top: 1px solid rgba(201,168,76,0.1); }
+.tracker-reset { font-family: 'Montserrat', sans-serif; font-size: 0.6rem; letter-spacing: 0.1em; color: rgba(245,239,224,0.25); margin-top: 1rem; text-align: right; cursor: pointer; transition: color 0.2s; }
+.tracker-reset:hover { color: rgba(245,239,224,0.5); }
+.badge { font-family: 'Montserrat', sans-serif; font-size: 0.58rem; letter-spacing: 0.08em; text-transform: uppercase; background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.25); color: var(--gold-light); padding: 0.2rem 0.6rem; border-radius: 2px; transition: background 0.3s; }
+.badge.earned { background: rgba(201,168,76,0.28); animation: badgePop 0.4s ease; }
+
+/* ── PROGRESS PREVIEW (pre-signup) ─────────────────────── */
+.progress-preview { background: var(--green-deep); padding: 2.5rem 1.5rem; }
+.progress-card { background: rgba(255,253,245,0.05); border: 1px solid rgba(201,168,76,0.2); border-radius: 4px; padding: 1.5rem; max-width: 500px; margin: 0 auto; }
+.progress-card h4 { font-family: 'Montserrat', sans-serif; font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+.progress-card .p-name { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--ivory); margin-bottom: 1rem; }
+.progress-bar-wrap { background: rgba(255,253,245,0.08); border-radius: 2px; height: 4px; margin-bottom: 0.4rem; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width 1.5s ease; width: 0; }
+.progress-meta { display: flex; justify-content: space-between; font-family: 'Montserrat', sans-serif; font-size: 0.65rem; letter-spacing: 0.1em; color: rgba(245,239,224,0.5); margin-bottom: 1rem; }
+.badge-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+/* ── TESTIMONIALS ────────────────────────────────────────── */
+.testimonials { background: var(--cream); padding: 5rem 1.5rem; }
+.testi-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; margin-top: 2.5rem; }
+@media(min-width: 600px) { .testi-grid { grid-template-columns: 1fr 1fr; } }
+@media(min-width: 860px) { .testi-grid { grid-template-columns: 1fr 1fr 1fr; } }
+.testi-card { background: var(--ivory); border: 1px solid var(--ivory-dark); border-radius: 3px; padding: 1.5rem; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; }
+.testi-card:hover { transform: translateY(-4px); border-color: rgba(201,168,76,0.45); box-shadow: 0 10px 28px rgba(201,168,76,0.1); }
+.testi-stars { color: var(--gold); font-size: 0.75rem; letter-spacing: 0.08em; margin-bottom: 0.75rem; }
+.testi-text { font-family: 'Crimson Text', serif; font-style: italic; font-size: 1.02rem; color: var(--text-body); line-height: 1.65; margin-bottom: 1rem; }
+.testi-author { display: flex; align-items: center; gap: 0.75rem; }
+.testi-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--green-deep); display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 0.95rem; color: var(--gold); flex-shrink: 0; font-weight: 700; }
+.testi-name { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; font-weight: 600; color: var(--green-deep); }
+.testi-loc { font-family: 'Montserrat', sans-serif; font-size: 0.6rem; color: var(--text-muted); letter-spacing: 0.04em; }
+
+/* ── COMMUNITY ───────────────────────────────────────────── */
+.community { background: var(--ivory); padding: 5rem 1.5rem; }
+.pillars { display: grid; grid-template-columns: 1fr; gap: 1.25rem; margin-top: 2.5rem; }
+@media(min-width: 560px) { .pillars { grid-template-columns: 1fr 1fr; } }
+.pillar { background: var(--cream); border: 1px solid var(--ivory-dark); padding: 1.5rem; border-radius: 3px; transition: border-color 0.2s, transform 0.2s; }
+.pillar:hover { border-color: rgba(201,168,76,0.4); transform: translateY(-2px); }
+.pillar-icon { font-size: 1.5rem; margin-bottom: 0.75rem; display: block; }
+.pillar h3 { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--green-deep); margin-bottom: 0.4rem; }
+.pillar p { font-size: 0.93rem; color: var(--text-muted); line-height: 1.65; }
+
+/* ── STATS ───────────────────────────────────────────────── */
+.stats-strip { background: var(--green-deep); padding: 3.5rem 1.5rem; }
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; max-width: 480px; margin: 0 auto; text-align: center; }
+.stat-num { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--gold); display: block; font-style: italic; }
+.stat-label { font-family: 'Montserrat', sans-serif; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(245,239,224,0.45); }
+
+/* ── SIGNUP ──────────────────────────────────────────────── */
+.signup { background: var(--green-deep); position: relative; overflow: hidden; padding: 5rem 1.5rem; }
+.signup::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 75% 50%, rgba(201,168,76,0.05) 0%, transparent 60%); pointer-events: none; }
+.signup .section-title { color: var(--ivory); }
+.signup .section-label { color: var(--gold-light); }
+.signup-intro { color: rgba(245,239,224,0.65); font-size: 1.05rem; max-width: 480px; margin-bottom: 1.25rem; line-height: 1.65; }
+.signup-perks { display: flex; flex-wrap: wrap; gap: 0.65rem; margin-bottom: 0.5rem; }
+.signup-perk { display: inline-flex; align-items: center; gap: 0.4rem; font-family: 'Montserrat', sans-serif; font-size: 0.65rem; letter-spacing: 0.06em; color: rgba(245,239,224,0.55); }
+.signup-perk::before { content: '✓'; color: var(--gold); font-weight: 700; }
+/* What happens next card */
+.what-next { background: rgba(255,253,245,0.04); border: 1px solid rgba(201,168,76,0.15); border-radius: 3px; padding: 1.1rem 1.25rem; margin: 1.5rem 0; }
+.what-next p { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.65rem; }
+.what-next ul { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+.what-next li { font-family: 'Montserrat', sans-serif; font-size: 0.72rem; color: rgba(245,239,224,0.6); display: flex; align-items: flex-start; gap: 0.6rem; line-height: 1.55; }
+.what-next li::before { content: '➤'; color: var(--gold); font-size: 0.6rem; flex-shrink: 0; margin-top: 0.1rem; }
+.form-card { background: rgba(255,253,245,0.04); border: 1px solid rgba(201,168,76,0.2); border-radius: 4px; padding: 1.75rem; margin-top: 1.5rem; }
+.form-row { margin-bottom: 1.1rem; }
+.form-row label { display: block; font-family: 'Montserrat', sans-serif; font-size: 0.65rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.45rem; }
+.form-row input, .form-row select { width: 100%; background: rgba(255,253,245,0.06); border: 1px solid rgba(201,168,76,0.22); border-radius: 2px; padding: 0.8rem 1rem; font-family: 'Crimson Text', serif; font-size: 1rem; color: var(--ivory); outline: none; transition: border-color 0.2s, background 0.2s; min-height: 44px; }
+.form-row input::placeholder { color: rgba(245,239,224,0.3); }
+.form-row input:focus, .form-row select:focus { border-color: var(--gold); background: rgba(255,253,245,0.09); }
+.form-row select { color: var(--ivory); }
+.form-row select option { background: var(--green-deep); }
+.form-grid { display: grid; grid-template-columns: 1fr; gap: 0 1.25rem; }
+@media(min-width: 480px) { .form-grid { grid-template-columns: 1fr 1fr; } }
+.form-submit { width: 100%; background: var(--gold); color: var(--brown); font-family: 'Montserrat', sans-serif; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; padding: 1.05rem; border: none; border-radius: 2px; cursor: pointer; margin-top: 0.5rem; transition: background 0.2s, transform 0.15s, box-shadow 0.2s; box-shadow: 0 4px 18px rgba(201,168,76,0.2); min-height: 48px; }
+.form-submit:hover:not(:disabled) { background: var(--gold-light); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(201,168,76,0.3); }
+.form-submit:disabled { opacity: 0.6; cursor: default; }
+.form-privacy { font-family: 'Montserrat', sans-serif; font-size: 0.62rem; letter-spacing: 0.04em; color: rgba(245,239,224,0.35); text-align: center; margin-top: 1rem; line-height: 1.65; }
+.form-privacy a { color: var(--gold-light); text-decoration: underline; text-underline-offset: 2px; }
+/* Trust strip */
+.trust-strip { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; margin-top: 0.85rem; }
+.trust-item { display: inline-flex; align-items: center; gap: 0.35rem; font-family: 'Montserrat', sans-serif; font-size: 0.6rem; letter-spacing: 0.06em; color: rgba(245,239,224,0.3); }
+.trust-item::before { content: '🔒'; font-size: 0.55rem; }
+.consent-row { display: flex; align-items: flex-start; gap: 0.65rem; margin-bottom: 1.1rem; padding: 0.85rem 1rem; background: rgba(255,253,245,0.04); border: 1px solid rgba(201,168,76,0.15); border-radius: 2px; }
+.consent-row input[type="checkbox"] { accent-color: var(--gold); width: 16px; height: 16px; flex-shrink: 0; margin-top: 0.15rem; cursor: pointer; }
+.consent-row label { font-family: 'Montserrat', sans-serif; font-size: 0.63rem; letter-spacing: 0.04em; color: rgba(245,239,224,0.5); line-height: 1.65; cursor: pointer; }
+.consent-row label a { color: var(--gold-light); text-decoration: underline; text-underline-offset: 2px; }
+.success-msg { display: none; text-align: center; padding: 2.5rem 1rem; color: var(--ivory); }
+.success-cross { font-size: 2.5rem; color: var(--gold); margin-bottom: 1rem; display: block; }
+.success-msg h3 { font-family: 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 0.5rem; }
+.success-msg p { color: rgba(245,239,224,0.6); font-size: 1rem; line-height: 1.65; }
+
+/* ── FOOTER ──────────────────────────────────────────────── */
+footer { background: var(--brown); color: rgba(245,239,224,0.55); padding: 3rem 1.5rem 2rem; text-align: center; }
+.footer-logo-wrap { display: flex; align-items: center; justify-content: center; gap: 0.65rem; margin-bottom: 0.5rem; }
+.footer-logo-img { width: 40px; height: 40px; object-fit: contain; border-radius: 50%; mix-blend-mode: lighten; filter: brightness(0.95); }
+.footer-logo-text { font-family: 'Playfair Display', serif; color: var(--gold); font-size: 1.25rem; }
+footer p.footer-desc { font-size: 0.88rem; line-height: 1.65; max-width: 400px; margin: 0 auto 1.75rem; }
+.footer-links { display: flex; justify-content: center; gap: 1.25rem; flex-wrap: wrap; margin-bottom: 2rem; }
+.footer-links a { font-family: 'Montserrat', sans-serif; font-size: 0.67rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(245,239,224,0.45); text-decoration: none; transition: color 0.2s; min-height: 44px; display: inline-flex; align-items: center; }
+.footer-links a:hover { color: var(--gold); }
+.footer-links a.admin-link { opacity: 0.25; font-size: 0.58rem; }
+footer .copy { font-family: 'Montserrat', sans-serif; font-size: 0.6rem; letter-spacing: 0.05em; color: rgba(245,239,224,0.22); border-top: 1px solid rgba(245,239,224,0.07); padding-top: 1.5rem; }
+
+/* ── SHARED ──────────────────────────────────────────────── */
+section { padding: 5rem 1.5rem; }
+.container { max-width: 780px; margin: 0 auto; }
+.section-label { font-family: 'Montserrat', sans-serif; font-size: 0.62rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--green-light); margin-bottom: 0.75rem; }
+.section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.75rem, 4vw, 2.7rem); line-height: 1.2; color: var(--green-deep); margin-bottom: 1.25rem; }
+.section-title em { color: var(--gold); font-style: italic; }
+.divider { width: 40px; height: 2px; background: var(--gold); margin: 1.25rem 0; }
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* ── ANIMATIONS ──────────────────────────────────────────── */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes scrollPulse { 0%,100% { transform: scaleY(1); opacity: 0.5; } 50% { transform: scaleY(0.55); opacity: 0.2; } }
+@keyframes dotPulse { 0%,100% { opacity: 0.6; transform: scale(1); } 50% { opacity: 1; transform: scale(1.2); } }
+@keyframes crossPulse { 0%,100% { opacity: 0.04; } 50% { opacity: 0.06; } }
+@keyframes heroShift { 0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 1; } }
+@keyframes expandIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes checkBounce { 0%,100% { transform: scale(1); } 50% { transform: scale(1.6); } }
+@keyframes badgePop { 0%,100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+
+/* ── MOBILE ──────────────────────────────────────────────── */
+@media(max-width: 520px) {
+  .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--green-deep); padding: 1rem 1.5rem; border-bottom: 1px solid rgba(201,168,76,0.2); flex-direction: column; gap: 0.25rem; z-index: 199; }
+  .nav-links.open { display: flex; }
+  .nav-links a { padding: 0.65rem 0; border-bottom: 1px solid rgba(255,253,245,0.05); }
+  .nav-links a:last-child { border-bottom: none; }
+  .nav-toggle { display: flex; }
+  .hero h1 { font-size: 1.9rem; }
+  .floating-cta { bottom: 1rem; right: 1rem; padding: 0.65rem 1.1rem; font-size: 0.68rem; }
+}
 </style>
 </head>
 <body>
 
-<nav>
-  <a href="#" class="nav-logo">To Christ 4 Christ</a>
-  <div class="nav-links">
+<!-- ══ FLOATING CTA (appears after hero) ═══════════════════ -->
+<a href="#signup" class="floating-cta" id="floating-cta">Start Growing Today →</a>
+
+<!-- ══ NAV ══════════════════════════════════════════════════ -->
+<nav id="navbar">
+  <a href="#" class="nav-logo-wrap">
+    <img src="logo.webp" alt="TC4C Logo" class="nav-logo-img" loading="eager">
+    <span class="nav-logo-text">To Christ 4 Christ</span>
+  </a>
+  <div class="nav-links" id="nav-links">
+    <a href="#about">About</a>
     <a href="#course">The Course</a>
     <a href="#community">Community</a>
-    <a href="#signup">Begin</a>
+    <a href="prayer-wall.html">Prayer Wall</a>
+    <a href="#signup" class="nav-cta">Begin Free →</a>
   </div>
-  <div class="nav-toggle" onclick="this.classList.toggle('open')">
+  <div class="nav-toggle" id="nav-toggle">
     <span></span><span></span><span></span>
   </div>
 </nav>
 
+<!-- ══ HERO ══════════════════════════════════════════════════ -->
 <section class="hero" id="home">
-  <img src="logo.webp" alt="To Christ 4 Christ Logo" style="width:120px;height:120px;object-fit:contain;margin-bottom:1.5rem;border-radius:50%;opacity:0;animation:fadeUp 0.8s 0.1s forwards;" />
-  <p class="hero-eyebrow">A Discipleship Journey</p>
-  <h1>Walk Deeper.<br>Stand <em>Rooted.</em><br>Rise Higher.</h1>
-  <p class="hero-verse" id="hero-verse">Loading...</p>
-  <p class="hero-ref" id="hero-ref">—</p>
-  <div class="hero-actions">
-    <a href="#signup" class="btn-primary">Begin Your Journey</a>
-    <a href="#course" class="btn-ghost">See the Course</a>
+  <div class="hero-bg"></div>
+  <div class="hero-cross-bg">✝</div>
+  <div class="hero-content">
+    <!-- Logo with mix-blend-mode to remove white bg -->
+    <img src="logo.webp" alt="To Christ 4 Christ" class="hero-logo" loading="eager">
+
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      Free · 6 Modules · Start Today
+    </div>
+
+    <!-- UX NOTE: Headline names the pain then promises transformation -->
+    <h1>
+      You've tried to grow.<br>
+      You keep quitting.<br>
+      <em>This time is different.</em>
+    </h1>
+
+    <p class="hero-sub">
+      A free, structured discipleship journey for young Africans who want real spiritual growth — with community, not just content.
+    </p>
+
+    <!-- Real community quote replacing passive rotating verses -->
+    <div class="hero-quote">
+      <p>"I was stuck for two years. This course gave me a rhythm that actually works — and a WhatsApp group that keeps me going."</p>
+      <cite>— Mercy, Nairobi</cite>
+    </div>
+
+    <div class="hero-actions">
+      <!-- CONVERSION: CTA copy changed to outcome-based -->
+      <a href="#signup" class="btn-primary">
+        Send My First Lesson →
+        <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5-5 5M6 12h12"/></svg>
+      </a>
+      <a href="#course" class="btn-ghost">See the Course</a>
+    </div>
+
+    <!-- Social proof ribbon -->
+    <div class="hero-proof">
+      <div class="proof-avatars">
+        <span>M</span><span>D</span><span>A</span><span>G</span><span>+</span>
+      </div>
+      <p class="proof-text">Joined by <strong>believers across Nairobi, Lagos, Accra, and beyond</strong></p>
+    </div>
   </div>
+
   <div class="scroll-hint">
     <span>Scroll</span>
     <div class="scroll-arrow"></div>
   </div>
 </section>
 
-<section class="about" id="about">
+<!-- ══ STRUGGLE ══════════════════════════════════════════════ -->
+<section class="struggle" id="struggle">
   <div class="container">
-    <p class="section-label reveal">What This Is</p>
-    <h2 class="section-title reveal reveal-delay-1">Faith is not a destination.<br>It's a <em>daily walk.</em></h2>
+    <p class="section-label reveal">You're Not Alone</p>
+    <h2 class="section-title reveal reveal-delay-1">You've felt this.<br><em>We know.</em></h2>
     <div class="divider reveal reveal-delay-2"></div>
-    <p class="reveal reveal-delay-2" style="color:var(--text-muted); max-width:560px;">To Christ 4 Christ is a structured discipleship course built for anyone who has ever felt the pull of God's word but didn't know where to begin — or how to go deeper. Free. Interactive. At your own pace.</p>
-    <div class="about-grid">
-      <div class="about-card reveal reveal-delay-1"><h3>No prior theology required</h3><p>Whether you're new in faith or returning after years away — this course meets you exactly where you are.</p></div>
-      <div class="about-card reveal reveal-delay-2"><h3>Built for real life</h3><p>Short, focused lessons. Daily reflection prompts. No long lectures — just truth you can carry with you.</p></div>
-      <div class="about-card reveal reveal-delay-1"><h3>Community, not just content</h3><p>You'll be connected with others on the same journey. Growth happens in relationship, not isolation.</p></div>
-      <div class="about-card reveal reveal-delay-2"><h3>Track your growth</h3><p>See your progress, earn milestones, and revisit lessons as many times as you need. Your pace, your path.</p></div>
+    <div class="struggle-grid reveal reveal-delay-2">
+      <div class="struggle-item">
+        <span class="struggle-icon">😔</span>
+        <h3>"I read my Bible but nothing changes"</h3>
+        <p>You open it, you read it, you close it. Then wonder why your week feels exactly the same.</p>
+      </div>
+      <div class="struggle-item">
+        <span class="struggle-icon">🔄</span>
+        <h3>"I start strong but quit after two weeks"</h3>
+        <p>You've restarted your faith journey more times than you can count. The habit just won't stick.</p>
+      </div>
+      <div class="struggle-item">
+        <span class="struggle-icon">😶</span>
+        <h3>"I don't have a mentor or community"</h3>
+        <p>Your friends don't really get it. Church feels surface-level. You're doing this alone — and it's hard.</p>
+      </div>
+      <div class="struggle-item">
+        <span class="struggle-icon">🤔</span>
+        <h3>"Faith feels like rules, not relationship"</h3>
+        <p>Somewhere along the way, faith became a checklist. You want the real thing — but you don't know how to get there.</p>
+      </div>
+      <div class="struggle-item">
+        <span class="struggle-icon">🎯</span>
+        <h3>"I don't know where to begin"</h3>
+        <p>There's YouTube, podcasts, devotionals. None of it is structured. None of it is personal. You just need a clear path.</p>
+      </div>
+      <div class="struggle-item" style="background:var(--green-deep); display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; gap:1rem;">
+        <p style="font-family:'Playfair Display',serif; font-style:italic; font-size:1.05rem; color:var(--ivory); line-height:1.6;">This course was built for exactly where you are.</p>
+        <a href="#signup" class="btn-primary" style="font-size:0.7rem; padding:0.75rem 1.5rem;">
+          Start Free Today
+          <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5-5 5M6 12h12"/></svg>
+        </a>
+      </div>
     </div>
   </div>
 </section>
 
+<!-- ══ ABOUT / HOW THIS IS DIFFERENT ═════════════════════════ -->
+<section class="about" id="about">
+  <div class="container">
+    <p class="section-label reveal">How This Is Different</p>
+    <h2 class="section-title reveal reveal-delay-1">Not another devotional.<br>A <em>real journey.</em></h2>
+    <div class="divider reveal reveal-delay-2"></div>
+    <p class="reveal reveal-delay-2" style="color:var(--text-muted); max-width:540px; margin-bottom:2.25rem; font-size:0.98rem;">To Christ 4 Christ is structured, free, and built around community. Here's what that actually means for you:</p>
+    <div class="about-grid">
+      <div class="about-card reveal reveal-delay-1">
+        <h3>No Bible degree? No problem.</h3>
+        <p>We start from zero. Whether you're brand new or returning after years away — this course meets you exactly where you are. No jargon, no assumptions.</p>
+      </div>
+      <div class="about-card reveal reveal-delay-2">
+        <h3>Short lessons you can actually finish.</h3>
+        <p>Even after a long day of work or uni. Each lesson is focused, practical, and takes less time than scrolling your phone for 15 minutes.</p>
+      </div>
+      <div class="about-card reveal reveal-delay-1">
+        <h3>A WhatsApp community that keeps you going.</h3>
+        <p>Young Africans who are on the same path. No judgment. No performance. Just iron sharpening iron — people who get it.</p>
+      </div>
+      <div class="about-card reveal reveal-delay-2">
+        <h3>Watch your progress. Earn badges. Don't break the streak.</h3>
+        <p>Your personal dashboard tracks every lesson you complete. See exactly how far you've come — and what's next.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ VERSE STRIP ════════════════════════════════════════════ -->
 <div class="verse-strip">
   <blockquote>"Like a tree planted by streams of water, which yields its fruit in season and whose leaf does not wither — whatever they do prospers."</blockquote>
-  <cite>Psalm 1:3</cite>
+  <cite>— Psalm 1:3</cite>
 </div>
 
+<!-- ══ HOW IT WORKS ═══════════════════════════════════════════ -->
+<section class="how" id="how">
+  <div class="container">
+    <p class="section-label reveal">Simple to Start</p>
+    <h2 class="section-title reveal reveal-delay-1">Three steps.<br><em>One decision.</em></h2>
+    <div class="divider reveal reveal-delay-2"></div>
+    <div class="steps">
+      <div class="step reveal reveal-delay-1">
+        <span class="step-num">01</span>
+        <span class="step-icon">✍️</span>
+        <h3>Sign up — 30 seconds, free</h3>
+        <p>Just your name and email. No payment, no credit card, no catch. You're in immediately.</p>
+      </div>
+      <div class="step reveal reveal-delay-2">
+        <span class="step-num">02</span>
+        <span class="step-icon">📩</span>
+        <h3>Get your first lesson — instantly</h3>
+        <p>Module 1 lands in your inbox within 2 minutes. Open it, read it, complete your first lesson today.</p>
+      </div>
+      <div class="step reveal reveal-delay-3">
+        <span class="step-num">03</span>
+        <span class="step-icon">🌍</span>
+        <h3>Grow with community — at your own pace</h3>
+        <p>Join a WhatsApp group of believers on the same path. Track progress. Go deeper, together.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MODULES ════════════════════════════════════════════════ -->
 <section class="modules" id="course">
   <div class="container">
     <p class="section-label reveal">The Course</p>
     <h2 class="section-title reveal reveal-delay-1">Six modules.<br><em>One transformation.</em></h2>
     <div class="divider reveal reveal-delay-2"></div>
-    <p class="reveal reveal-delay-2" style="color:var(--text-muted); margin-bottom:0.5rem;">Each module builds on the last. Complete them in order or revisit any lesson at any time.</p>
+    <p class="reveal reveal-delay-2" style="color:var(--text-muted); margin-bottom:0.5rem; font-size:0.97rem;">Each module builds on the last. Complete them in order — or revisit any lesson at any time.</p>
     <div class="module-list reveal">
       <div class="module-item open">
         <div class="module-header" onclick="toggleModule(this)">
@@ -250,11 +618,11 @@
         <div class="module-body">
           <p>Before we can follow Jesus, we must know who He is. This module opens with the character of God as revealed in Scripture — His holiness, love, justice, and mercy. <em>Key scriptures: Genesis 1:1; John 1:1–14; Isaiah 6:1–8; Romans 5:8.</em></p>
           <ul class="module-lessons" data-module="1">
-            <li data-lid="1-1">In the Beginning — The God Who Was There Before Everything</li>
-            <li data-lid="1-2">The Names of God: Yahweh, Elohim, El Shaddai</li>
-            <li data-lid="1-3">Holy, Holy, Holy — Understanding God's Character Through Isaiah's Vision</li>
-            <li data-lid="1-4">The God Who Pursues: Grace, Redemption, and Why the Cross Changes Everything</li>
-            <li data-lid="1-5">The Trinity — One God, Three Persons: A Grounded, Simple Explanation</li>
+            <li data-lid="1-1"><span>In the Beginning — The God Who Was There Before Everything</span></li>
+            <li data-lid="1-2"><span>The Names of God: Yahweh, Elohim, El Shaddai</span></li>
+            <li data-lid="1-3"><span>Holy, Holy, Holy — Understanding God's Character Through Isaiah's Vision</span></li>
+            <li data-lid="1-4"><span>The God Who Pursues: Grace, Redemption, and Why the Cross Changes Everything</span></li>
+            <li data-lid="1-5"><span>The Trinity — One God, Three Persons: A Grounded, Simple Explanation</span></li>
           </ul>
           <span class="lesson-check-hint">✦ Click a lesson to mark it complete</span>
           <div class="module-resource">
@@ -273,29 +641,31 @@
           <div class="module-toggle"></div>
         </div>
         <div class="module-body">
+          <p>The Bible isn't a rulebook — it's a love letter, a history, and a living word. Learn how to read it in a way that actually changes you. <em>Key scriptures: 2 Timothy 3:16–17; Psalm 119:105; Hebrews 4:12.</em></p>
           <ul class="module-lessons" data-module="2">
-            <li data-lid="2-1">Overview of the 66 Books</li>
-            <li data-lid="2-2">Old Covenant, New Covenant</li>
-            <li data-lid="2-3">How to Study a Passage</li>
-            <li data-lid="2-4">Lectio Divina</li>
-            <li data-lid="2-5">Building a Daily Scripture Habit</li>
+            <li data-lid="2-1"><span>Overview of the 66 Books</span></li>
+            <li data-lid="2-2"><span>Old Covenant, New Covenant</span></li>
+            <li data-lid="2-3"><span>How to Study a Passage</span></li>
+            <li data-lid="2-4"><span>Lectio Divina — Reading Scripture Slowly</span></li>
+            <li data-lid="2-5"><span>Building a Daily Scripture Habit</span></li>
           </ul>
+          <span class="lesson-check-hint">✦ Click a lesson to mark it complete</span>
         </div>
       </div>
       <div class="module-item">
         <div class="module-header" onclick="toggleModule(this)">
           <span class="module-num">3</span>
-          <div class="module-info"><h3>Prayer — Conversations With the Living God</h3><small>4 Lessons · 2 Weeks · Intermediate</small></div>
+          <div class="module-info"><h3>Prayer — Conversations With the Living God</h3><small>5 Lessons · 2 Weeks · Intermediate</small></div>
           <div class="module-toggle"></div>
         </div>
         <div class="module-body">
           <p>Most people know they should pray more. This module rebuilds prayer from the ground up — not as obligation, but as a genuine conversation with a God who actually listens. <em>Key scriptures: Matthew 6:5–13; Luke 18:1–8; Philippians 4:6–7.</em></p>
           <ul class="module-lessons" data-module="3">
-            <li data-lid="3-1">Why Prayer Feels Hard — And the Real Reason We Avoid It</li>
-            <li data-lid="3-2">The Lord's Prayer as a Daily Framework</li>
-            <li data-lid="3-3">ACTS: Adoration, Confession, Thanksgiving, Supplication</li>
-            <li data-lid="3-4">Praying Through the Psalms</li>
-            <li data-lid="3-5">Keeping a Prayer Journal</li>
+            <li data-lid="3-1"><span>Why Prayer Feels Hard — And the Real Reason We Avoid It</span></li>
+            <li data-lid="3-2"><span>The Lord's Prayer as a Daily Framework</span></li>
+            <li data-lid="3-3"><span>ACTS: Adoration, Confession, Thanksgiving, Supplication</span></li>
+            <li data-lid="3-4"><span>Praying Through the Psalms</span></li>
+            <li data-lid="3-5"><span>Keeping a Prayer Journal</span></li>
           </ul>
           <span class="lesson-check-hint">✦ Click a lesson to mark it complete</span>
           <div class="module-resource">
@@ -315,11 +685,11 @@
         <div class="module-body">
           <p>Scripture tells a radically different story about who you are. <em>Key scriptures: Ephesians 1:3–14; Romans 8:14–17; 2 Corinthians 5:17; Galatians 2:20.</em></p>
           <ul class="module-lessons" data-module="4">
-            <li data-lid="4-1">Loved, Chosen, Adopted — Your New Identity in Ephesians 1</li>
-            <li data-lid="4-2">Breaking the Power of Shame</li>
-            <li data-lid="4-3">When Your Identity Clashes With Your Culture</li>
-            <li data-lid="4-4">Calling vs Career — Your God-Given Purpose</li>
-            <li data-lid="4-5">Writing Your Identity Statement</li>
+            <li data-lid="4-1"><span>Loved, Chosen, Adopted — Your New Identity in Ephesians 1</span></li>
+            <li data-lid="4-2"><span>Breaking the Power of Shame</span></li>
+            <li data-lid="4-3"><span>When Your Identity Clashes With Your Culture</span></li>
+            <li data-lid="4-4"><span>Calling vs Career — Your God-Given Purpose</span></li>
+            <li data-lid="4-5"><span>Writing Your Identity Statement</span></li>
           </ul>
           <span class="lesson-check-hint">✦ Click a lesson to mark it complete</span>
           <div class="module-resource">
@@ -333,17 +703,17 @@
       <div class="module-item">
         <div class="module-header" onclick="toggleModule(this)">
           <span class="module-num">5</span>
-          <div class="module-info"><h3>Community — Iron Sharpens Iron</h3><small>4 Lessons · 2 Weeks · Applied</small></div>
+          <div class="module-info"><h3>Community — Iron Sharpens Iron</h3><small>5 Lessons · 2 Weeks · Applied</small></div>
           <div class="module-toggle"></div>
         </div>
         <div class="module-body">
           <p>The Christian life was never designed to be a solo journey. <em>Key scriptures: Acts 2:42–47; Proverbs 27:17; Hebrews 10:24–25; Galatians 6:2.</em></p>
           <ul class="module-lessons" data-module="5">
-            <li data-lid="5-1">The Early Church Blueprint — Acts 2:42–47</li>
-            <li data-lid="5-2">Finding a Mentor and Being One</li>
-            <li data-lid="5-3">Navigating Conflict in Christian Relationships</li>
-            <li data-lid="5-4">Accountability Without Shame</li>
-            <li data-lid="5-5">Building Your Personal Advisory Circle</li>
+            <li data-lid="5-1"><span>The Early Church Blueprint — Acts 2:42–47</span></li>
+            <li data-lid="5-2"><span>Finding a Mentor and Being One</span></li>
+            <li data-lid="5-3"><span>Navigating Conflict in Christian Relationships</span></li>
+            <li data-lid="5-4"><span>Accountability Without Shame</span></li>
+            <li data-lid="5-5"><span>Building Your Personal Advisory Circle</span></li>
           </ul>
           <span class="lesson-check-hint">✦ Click a lesson to mark it complete</span>
           <div class="module-resource">
@@ -361,13 +731,13 @@
           <div class="module-toggle"></div>
         </div>
         <div class="module-body">
-          <p>The Great Commission was given to every disciple. <em>Key scriptures: Matthew 28:18–20; Acts 1:8; 1 Peter 3:15; 2 Timothy 2:2.</em></p>
+          <p>The Great Commission was given to every disciple — including you. <em>Key scriptures: Matthew 28:18–20; Acts 1:8; 1 Peter 3:15; 2 Timothy 2:2.</em></p>
           <ul class="module-lessons" data-module="6">
-            <li data-lid="6-1">Understanding the Great Commission for Today</li>
-            <li data-lid="6-2">Your Sphere of Influence</li>
-            <li data-lid="6-3">Sharing Your Faith Without Scripts or Pressure</li>
-            <li data-lid="6-4">How to Lead a Small Discipleship Group</li>
-            <li data-lid="6-5">Graduation: Your Personal Mission Statement</li>
+            <li data-lid="6-1"><span>Understanding the Great Commission for Today</span></li>
+            <li data-lid="6-2"><span>Your Sphere of Influence</span></li>
+            <li data-lid="6-3"><span>Sharing Your Faith Without Scripts or Pressure</span></li>
+            <li data-lid="6-4"><span>How to Lead a Small Discipleship Group</span></li>
+            <li data-lid="6-5"><span>Graduation: Your Personal Mission Statement</span></li>
           </ul>
           <span class="lesson-check-hint">✦ Click a lesson to mark it complete</span>
           <div class="module-resource">
@@ -382,10 +752,11 @@
   </div>
 </section>
 
+<!-- ══ PROGRESS TRACKER (signed-in users) ═════════════════════ -->
 <div class="progress-tracker" id="progress-tracker">
   <div class="container">
     <p class="section-label" style="color:var(--gold-light); margin-bottom:0.25rem;">Your Dashboard</p>
-    <p style="color:rgba(245,239,224,0.5); font-size:0.88rem; margin-bottom:1.25rem;">Click any lesson below to mark it complete. Your progress saves automatically.</p>
+    <p style="color:rgba(245,239,224,0.45); font-size:0.88rem; margin-bottom:1.25rem;">Click any lesson to mark it complete. Progress saves automatically.</p>
     <div class="tracker-card">
       <div class="tracker-header">
         <span class="tracker-name" id="tracker-name">Welcome</span>
@@ -399,13 +770,14 @@
   </div>
 </div>
 
+<!-- ══ PROGRESS PREVIEW (pre-signup) ══════════════════════════ -->
 <div class="progress-preview" id="progress-preview-cta">
   <div class="container">
     <p class="section-label" style="color:var(--gold-light); margin-bottom:0.5rem;">Your Dashboard</p>
-    <p style="color:rgba(245,239,224,0.6); font-size:0.95rem; margin-bottom:1.5rem; max-width:400px;">Sign up to unlock your personal progress tracker.</p>
+    <p style="color:rgba(245,239,224,0.55); font-size:0.95rem; margin-bottom:1.5rem; max-width:400px;">Sign up to unlock your personal progress tracker.</p>
     <div class="progress-card" id="progress-demo">
       <h4>My Progress</h4>
-      <p class="name">Your name here — <em style="font-style:italic;color:var(--gold);font-size:0.85rem;">sign up to begin</em></p>
+      <p class="p-name">Your name here — <em style="font-style:italic;color:var(--gold);font-size:0.85rem;">sign up to begin</em></p>
       <div class="progress-bar-wrap"><div class="progress-bar-fill" id="demo-bar"></div></div>
       <div class="progress-meta"><span>Module — of 6</span><span>0% complete</span></div>
       <div class="badge-row">
@@ -416,20 +788,58 @@
   </div>
 </div>
 
-<section class="community" id="community">
+<!-- ══ TESTIMONIALS ══════════════════════════════════════════ -->
+<section class="testimonials" id="testimonials">
   <div class="container">
-    <p class="section-label reveal">Community</p>
-    <h2 class="section-title reveal reveal-delay-1">You are not walking <em>alone.</em></h2>
+    <p class="section-label reveal">Real Stories</p>
+    <h2 class="section-title reveal reveal-delay-1">Believers like you.<br><em>Growing for real.</em></h2>
     <div class="divider reveal reveal-delay-2"></div>
-    <div class="pillars">
-      <div class="pillar reveal reveal-delay-1"><span class="pillar-icon">📖</span><h3>Weekly Verse</h3><p>Every Monday, the whole community meditates on the same scripture passage together.</p></div>
-      <div class="pillar reveal reveal-delay-2"><span class="pillar-icon">🙏</span><h3>Prayer Requests</h3><p>Share openly or anonymously. Every request is prayed over by members of the community.</p></div>
-      <div class="pillar reveal reveal-delay-1"><span class="pillar-icon">💬</span><h3>Discussion Rooms</h3><p>Each module has a dedicated discussion thread. Ask questions, share insights, be heard.</p></div>
-      <div class="pillar reveal reveal-delay-2"><span class="pillar-icon">🌍</span><h3>Local Chapters</h3><p>Connect with other disciples in your area for in-person fellowship and accountability.</p></div>
+    <div class="testi-grid">
+      <div class="testi-card reveal reveal-delay-1">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"I was stuck for two years. This course gave me a rhythm that actually works. The prayer module especially — rebuilt my whole relationship with God."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">M</div>
+          <div><p class="testi-name">Mercy W.</p><p class="testi-loc">Nairobi, Kenya</p></div>
+        </div>
+      </div>
+      <div class="testi-card reveal reveal-delay-2">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"The WhatsApp group alone changed my walk. I'm not alone anymore. We push each other — no judgment, just real accountability."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">D</div>
+          <div><p class="testi-name">David O.</p><p class="testi-loc">Lagos, Nigeria</p></div>
+        </div>
+      </div>
+      <div class="testi-card reveal reveal-delay-3">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"I kept thinking faith had to be complicated. Module 4 on identity completely changed how I see myself. I can't believe it's free."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">A</div>
+          <div><p class="testi-name">Amara K.</p><p class="testi-loc">Accra, Ghana</p></div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
+<!-- ══ COMMUNITY ═════════════════════════════════════════════ -->
+<section class="community" id="community">
+  <div class="container">
+    <p class="section-label reveal">Community Promise</p>
+    <h2 class="section-title reveal reveal-delay-1">You are not walking<br><em>alone.</em></h2>
+    <div class="divider reveal reveal-delay-2"></div>
+    <p class="reveal reveal-delay-2" style="color:var(--text-muted); max-width:520px; margin-bottom:0; font-size:0.97rem;">Every member is part of a real, active community — not just a mailing list.</p>
+    <div class="pillars">
+      <div class="pillar reveal reveal-delay-1"><span class="pillar-icon">📱</span><h3>Weekly Scripture — on your phone every Monday</h3><p>The whole community meditates on the same passage together. You're never out of sync with your brothers and sisters.</p></div>
+      <div class="pillar reveal reveal-delay-2"><span class="pillar-icon">🙏</span><h3>Share struggles anonymously. Get prayed for within 24 hours.</h3><p>The Prayer Wall is real. Real people, real prayers, real community standing with you.</p></div>
+      <div class="pillar reveal reveal-delay-1"><span class="pillar-icon">💬</span><h3>Module-based group chats. Ask anything.</h3><p>Each module has a dedicated WhatsApp thread. No one is too far ahead or behind to encourage you.</p></div>
+      <div class="pillar reveal reveal-delay-2"><span class="pillar-icon">🌍</span><h3>Find or start a local group in your city</h3><p>In-person fellowship matters. Connect with believers near you — Nairobi, Lagos, Kampala, Cape Town, Accra, and beyond.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ STATS ═══════════════════════════════════════════════════ -->
 <div class="stats-strip reveal">
   <div class="stats-grid">
     <div><span class="stat-num" id="count-modules">0</span><span class="stat-label">Modules</span></div>
@@ -438,24 +848,47 @@
   </div>
 </div>
 
+<!-- ══ SIGNUP ══════════════════════════════════════════════════ -->
 <section class="signup" id="signup">
   <div class="container">
-    <p class="section-label">Begin Today</p>
-    <h2 class="section-title">Your journey starts<br>with one <em>step.</em></h2>
-    <p>Fill in your details below. No payment required. No spam — ever.</p>
+    <p class="section-label">Start Today — It's Free</p>
+    <!-- CONVERSION: New urgency-based headline -->
+    <h2 class="section-title">Your first lesson is<br><em>60 seconds away.</em></h2>
+    <p class="signup-intro">No payment. No spam. No long form. Just your name and email — and Module 1 lands in your inbox immediately.</p>
+
+    <!-- What happens next — reduces post-signup anxiety -->
+    <div class="what-next">
+      <p>What happens after you sign up</p>
+      <ul>
+        <li>You get a welcome email with Module 1 delivered within 2 minutes</li>
+        <li>You're added to the private community WhatsApp group</li>
+        <li>Your personal progress tracker is unlocked immediately</li>
+      </ul>
+    </div>
+
+    <div class="signup-perks">
+      <span class="signup-perk">Completely free</span>
+      <span class="signup-perk">No credit card</span>
+      <span class="signup-perk">Unsubscribe anytime</span>
+    </div>
+
     <div class="form-card" id="form-wrap">
       <form id="join-form" name="signup" data-netlify="true" data-netlify-honeypot="bot-field" onsubmit="handleSubmit(event)">
         <input type="hidden" name="form-name" value="signup">
         <p style="display:none;"><label>Don't fill this out: <input name="bot-field"></label></p>
+
+        <!-- CONVERSION: Simplified form — just name + email + optional WhatsApp -->
         <div class="form-grid">
-          <div class="form-row"><label for="fname">First Name</label><input type="text" id="fname" name="firstName" placeholder="Your first name" required></div>
-          <div class="form-row"><label for="lname">Last Name</label><input type="text" id="lname" name="lastName" placeholder="Your last name" required></div>
+          <div class="form-row"><label for="fname">First Name</label><input type="text" id="fname" name="firstName" placeholder="Your first name" required autocomplete="given-name"></div>
+          <div class="form-row"><label for="lname">Last Name</label><input type="text" id="lname" name="lastName" placeholder="Your last name" required autocomplete="family-name"></div>
         </div>
-        <div class="form-row"><label for="email">Email Address</label><input type="email" id="email" name="email" placeholder="you@example.com" required></div>
-        <div class="form-row"><label for="phone">WhatsApp Number (Optional)</label><input type="tel" id="phone" name="phone" placeholder="+254 700 000 000"></div>
-        <div class="form-row"><label for="location">Your Area / Neighbourhood</label><input type="text" id="location" name="location" placeholder="e.g. Westlands, Nairobi"></div>
+        <div class="form-row"><label for="email">Email Address</label><input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email"></div>
+        <div class="form-row"><label for="phone">WhatsApp Number <span style="opacity:0.5;font-size:0.85em;">(optional — for community group)</span></label><input type="tel" id="phone" name="phone" placeholder="+254 700 000 000" autocomplete="tel"></div>
+
+        <!-- Secondary fields collapsed visually as optional extras -->
+        <div class="form-row"><label for="location">Your City / Area <span style="opacity:0.5;font-size:0.85em;">(optional)</span></label><input type="text" id="location" name="location" placeholder="e.g. Westlands, Nairobi"></div>
         <div class="form-row">
-          <label for="faith">Where are you in your faith journey?</label>
+          <label for="faith">Where are you in your faith journey? <span style="opacity:0.5;font-size:0.85em;">(optional)</span></label>
           <select id="faith" name="faithStage">
             <option value="">— Select one —</option>
             <option value="new">Just beginning — new believer</option>
@@ -465,7 +898,7 @@
           </select>
         </div>
         <div class="form-row">
-          <label for="how">How did you hear about us?</label>
+          <label for="how">How did you hear about us? <span style="opacity:0.5;font-size:0.85em;">(optional)</span></label>
           <select id="how" name="source">
             <option value="">— Select one —</option>
             <option value="qr">Scanned a QR code poster</option>
@@ -475,284 +908,317 @@
             <option value="other">Other</option>
           </select>
         </div>
+
         <div class="consent-row">
           <input type="checkbox" id="age-consent" name="ageConsent" required>
           <label for="age-consent">I confirm I am <strong style="color:rgba(245,239,224,0.75);">18 years of age or older</strong> and agree to the <a href="privacy-policy.html" target="_blank">Privacy Policy</a>. I consent to To Christ 4 Christ storing my details and sending discipleship emails. I can unsubscribe at any time.</label>
         </div>
-        <button type="submit" class="form-submit">Begin My Journey &rarr;</button>
-        <p class="form-privacy">We never sell or share your data. <a href="privacy-policy.html" target="_blank">Privacy Policy</a> &middot; Kenya Data Protection Act, 2019.</p>
+
+        <!-- CONVERSION: CTA wording changed to outcome-based -->
+        <button type="submit" class="form-submit" id="submit-btn">Send My First Lesson →</button>
+
+        <div class="trust-strip">
+          <span class="trust-item">No spam, ever</span>
+          <span class="trust-item">Unsubscribe anytime</span>
+          <span class="trust-item">Kenya DPA compliant</span>
+        </div>
+        <p class="form-privacy">We never sell or share your data. <a href="privacy-policy.html" target="_blank">Privacy Policy</a> · Kenya Data Protection Act, 2019.</p>
       </form>
+
       <div class="success-msg" id="success-msg">
-        <span class="checkmark">✝</span>
-        <h3>Welcome, <span id="success-name"></span>.</h3>
-        <p style="color:rgba(245,239,224,0.7); font-size:1rem; margin-bottom:0.5rem;">You are now part of the journey.</p>
-        <p style="color:rgba(245,239,224,0.5); font-size:0.88rem;">Check your email — a personal welcome and your first lesson are on their way.</p>
+        <span class="success-cross">✝</span>
+        <h3>You're in, <span id="success-name"></span>.</h3>
+        <p style="margin-bottom:0.5rem;">Check your email — Module 1 is on its way.</p>
+        <p style="color:rgba(245,239,224,0.4); font-size:0.9rem;">Welcome to the community. You are not walking alone.</p>
       </div>
     </div>
   </div>
 </section>
 
+<!-- ══ FOOTER ═════════════════════════════════════════════════ -->
 <footer>
-  <p class="footer-logo">To Christ 4 Christ</p>
-  <p>A free discipleship course rooted in Scripture, built for community, and made for people who are ready to go deeper in their walk with God.</p>
+  <div class="footer-logo-wrap">
+    <img src="logo.webp" alt="TC4C Logo" class="footer-logo-img" loading="lazy">
+    <span class="footer-logo-text">To Christ 4 Christ</span>
+  </div>
+  <p class="footer-desc">A free discipleship course rooted in Scripture, built for community, and made for young Africans who are ready to grow for real.</p>
   <div class="footer-links">
-    <a href="#about">About</a><a href="#course">The Course</a><a href="#community">Community</a>
-    <a href="prayer-wall.html">Prayer Wall</a><a href="#signup">Begin</a>
-    <a href="privacy-policy.html">Privacy Policy</a><a href="mailto:hello@tochristforchrist.org">Contact</a>
-    <a href="/admin" style="opacity:0.3; font-size:0.58rem;">Admin</a>
+    <a href="#about">About</a>
+    <a href="#course">The Course</a>
+    <a href="#community">Community</a>
+    <a href="prayer-wall.html">Prayer Wall</a>
+    <a href="#signup">Begin</a>
+    <a href="privacy-policy.html">Privacy Policy</a>
+    <a href="mailto:hello@tochristforchrist.org">Contact</a>
+    <a href="/admin" class="admin-link">Admin</a>
   </div>
   <p class="copy">© 2026 To Christ 4 Christ · Built with faith, intention, and love.</p>
 </footer>
 
 <script>
-  const STORAGE_KEY = 'tc4c_progress';
-  const USER_KEY    = 'tc4c_user';
+// ── Constants ───────────────────────────────────────────────
+const STORAGE_KEY = 'tc4c_progress';
+const USER_KEY    = 'tc4c_user';
+const MODULES = [
+  { id: 1, name: 'Foundation', total: 5 },
+  { id: 2, name: 'The Word',   total: 5 },
+  { id: 3, name: 'Prayer',     total: 5 },
+  { id: 4, name: 'Identity',   total: 5 },
+  { id: 5, name: 'Community',  total: 5 },
+  { id: 6, name: 'Mission',    total: 5 },
+];
+const TOTAL_LESSONS = MODULES.reduce((s, m) => s + m.total, 0);
 
-  const MODULES = [
-    { id: 1, name: 'Foundation',  total: 5 },
-    { id: 2, name: 'The Word',    total: 5 },
-    { id: 3, name: 'Prayer',      total: 5 },
-    { id: 4, name: 'Identity',    total: 5 },
-    { id: 5, name: 'Community',   total: 5 },
-    { id: 6, name: 'Mission',     total: 5 },
-  ];
-  const TOTAL_LESSONS = MODULES.reduce((s, m) => s + m.total, 0);
+// ── Progress storage ────────────────────────────────────────
+function getCompleted() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { return []; } }
+function saveCompleted(arr) { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
+function getUser() { try { return JSON.parse(localStorage.getItem(USER_KEY)) || null; } catch { return null; } }
 
-  function getCompleted() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { return []; } }
-  function saveCompleted(arr) { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
-  function getUser() { try { return JSON.parse(localStorage.getItem(USER_KEY)) || null; } catch { return null; } }
-
-  function toggleLesson(lid) {
-    let completed = getCompleted();
-    const idx = completed.indexOf(lid);
-    if (idx === -1) completed.push(lid); else completed.splice(idx, 1);
-    saveCompleted(completed);
-    renderLessonStates();
-    renderTracker();
+// ── Toggle lesson complete with checkBounce animation ───────
+function toggleLesson(lid, liEl) {
+  let completed = getCompleted();
+  const idx = completed.indexOf(lid);
+  if (idx === -1) {
+    completed.push(lid);
+    // Satisfying check animation
+    liEl.classList.add('just-completed');
+    setTimeout(() => liEl.classList.remove('just-completed'), 400);
+  } else {
+    completed.splice(idx, 1);
   }
+  saveCompleted(completed);
+  renderLessonStates();
+  renderTracker();
+}
 
-  function renderLessonStates() {
-    const completed = getCompleted();
-    document.querySelectorAll('.module-lessons li[data-lid]').forEach(li => {
-      li.classList.toggle('completed', completed.includes(li.dataset.lid));
-    });
-  }
-
-  function renderTracker() {
-    const user      = getUser();
-    const completed = getCompleted();
-    const tracker   = document.getElementById('progress-tracker');
-    const preview   = document.getElementById('progress-preview-cta');
-    if (!user) { tracker && (tracker.style.display = 'none'); preview && (preview.style.display = 'block'); return; }
-    tracker && (tracker.style.display = 'block');
-    preview && (preview.style.display = 'none');
-    const nameEl = document.getElementById('tracker-name');
-    if (nameEl) nameEl.textContent = user.firstName + (user.location ? ' — ' + user.location : '');
-    const pct   = Math.round((completed.length / TOTAL_LESSONS) * 100);
-    const pctEl = document.getElementById('tracker-pct');
-    if (pctEl) pctEl.textContent = pct + '% complete';
-    const barEl = document.getElementById('tracker-bar');
-    if (barEl) setTimeout(() => { barEl.style.width = pct + '%'; }, 50);
-    const modsEl = document.getElementById('tracker-modules');
-    if (modsEl) {
-      const colors = ['','var(--gold)','#4A8C60','#5B8FC9','#9B6BC9','#C97B6B','#6BC9C9'];
-      modsEl.innerHTML = MODULES.map(m => {
-        const done = completed.filter(lid => lid.startsWith(m.id + '-')).length;
-        const mpct = Math.round((done / m.total) * 100);
-        return `<div class="tracker-mod-row"><span class="tracker-mod-name">${m.id}. ${m.name}</span><div class="tracker-mod-bar-wrap"><div class="tracker-mod-bar" style="width:${mpct}%;background:${colors[m.id]}"></div></div><span class="tracker-mod-count">${done}/${m.total}</span></div>`;
-      }).join('');
-    }
-    const badgesEl = document.getElementById('tracker-badges');
-    if (badgesEl) {
-      badgesEl.innerHTML = MODULES.map(m => {
-        const done   = completed.filter(lid => lid.startsWith(m.id + '-')).length;
-        const earned = done === m.total;
-        return `<span class="badge${earned ? ' earned' : ''}">${earned ? '✓ ' : ''}${m.name}</span>`;
-      }).join('');
-    }
-  }
-
-  function resetProgress() {
-    if (!confirm('Reset all lesson progress? This cannot be undone.')) return;
-    localStorage.removeItem(STORAGE_KEY);
-    renderLessonStates();
-    renderTracker();
-  }
-
-  function initLessonClicks() {
-    document.querySelectorAll('.module-lessons li[data-lid]').forEach(li => {
-      li.addEventListener('click', () => toggleLesson(li.dataset.lid));
-    });
-  }
-
-  const verses = [
-    { text: "Your word is a lamp to my feet and a light to my path.", ref: "Psalm 119:105" },
-    { text: "I can do all things through Christ who strengthens me.", ref: "Philippians 4:13" },
-    { text: "The Lord is my shepherd; I shall not want.", ref: "Psalm 23:1" },
-    { text: "Trust in the Lord with all your heart and lean not on your own understanding.", ref: "Proverbs 3:5" },
-    { text: "For I know the plans I have for you, declares the Lord, plans to prosper you.", ref: "Jeremiah 29:11" },
-    { text: "Be strong and courageous. Do not be afraid; do not be discouraged.", ref: "Joshua 1:9" },
-  ];
-  let vi = 0;
-  const verseEl = document.getElementById('hero-verse');
-  const refEl   = document.getElementById('hero-ref');
-  function showVerse(i) {
-    verseEl.style.opacity = 0; refEl.style.opacity = 0;
-    setTimeout(() => { verseEl.textContent = '"' + verses[i].text + '"'; refEl.textContent = '— ' + verses[i].ref; verseEl.style.opacity = 1; refEl.style.opacity = 1; }, 400);
-  }
-  showVerse(0);
-  setInterval(() => { vi = (vi + 1) % verses.length; showVerse(vi); }, 5000);
-
-  function toggleModule(header) {
-    const item   = header.parentElement;
-    const wasOpen = item.classList.contains('open');
-    document.querySelectorAll('.module-item').forEach(m => m.classList.remove('open'));
-    if (!wasOpen) item.classList.add('open');
-  }
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        if (e.target.classList.contains('stats-strip')) {
-          animateCount('count-modules', 6);
-          animateCount('count-lessons', 28);
-          animateCount('count-weeks',   12);
-        }
-      }
-    });
-  }, { threshold: 0.15 });
-  document.querySelectorAll('.reveal, .stats-strip').forEach(el => observer.observe(el));
-
-  function animateCount(id, target) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    let current = 0;
-    const step  = Math.ceil(target / 30);
-    const timer = setInterval(() => { current = Math.min(current + step, target); el.textContent = current; if (current >= target) clearInterval(timer); }, 40);
-  }
-
-  // ─── FORM SUBMIT ─────────────────────────────────────────
-  async function handleSubmit(e) {
-    e.preventDefault();
-    const btn      = document.querySelector('.form-submit');
-    const errorBox = document.getElementById('form-error');
-    if (errorBox) errorBox.style.display = 'none';
-
-    const firstName  = document.getElementById('fname').value.trim();
-    const lastName   = document.getElementById('lname')    ? document.getElementById('lname').value.trim()    : '';
-    const email      = document.getElementById('email').value.trim().toLowerCase();
-    const location   = document.getElementById('location') ? document.getElementById('location').value.trim() : '';
-    const phone      = document.getElementById('phone')    ? document.getElementById('phone').value.trim()    : '';
-    const source     = document.getElementById('how')      ? document.getElementById('how').value             : '';
-    const faithStage = document.getElementById('faith')    ? document.getElementById('faith').value           : '';
-    const ageConsent = document.getElementById('age-consent');
-
-    if (!firstName || !email)              { showError('Please fill in your name and email address.'); return; }
-    if (!isValidEmail(email))              { showError('Please enter a valid email address.'); return; }
-    if (ageConsent && !ageConsent.checked) { showError('Please confirm you are 18 or older and agree to the Privacy Policy to continue.'); return; }
-
-    btn.textContent   = 'Sending…';
-    btn.disabled      = true;
-    btn.style.opacity = '0.7';
-
-    // ── Step 1: Submit to Netlify Forms ───────────────────────
-    const formEl   = document.getElementById('join-form');
-    const formData = new FormData(formEl);
-    try {
-      await fetch('/', {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body:    new URLSearchParams(formData).toString(),
-      });
-    } catch (err) {
-      console.error('Netlify Forms error:', err);
-      showError('Could not connect. Please check your internet and try again.');
-      btn.textContent   = 'Begin My Journey →';
-      btn.disabled      = false;
-      btn.style.opacity = '1';
-      return;
-    }
-
-    // ── Step 2: Save to Netlify Blobs via add-member ──────────
-    // BUG FIX: This call was completely missing. The admin dashboard
-    // reads members from Netlify Blobs (get-members.js). Without this,
-    // every signup is permanently invisible to the admin dashboard.
-    try {
-      const res = await fetch('/.netlify/functions/add-member', {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name:       `${firstName} ${lastName}`.trim(),
-          email:      email,
-          phone:      phone,
-          loc:        location,
-          source:     source      || 'Direct',
-          faithStage: faithStage  || '',
-        }),
-      });
-      if (!res.ok) console.error('add-member returned', res.status);
-    } catch (err) {
-      // Non-critical — signup still succeeds even if Blobs write fails
-      console.error('add-member error (non-critical):', err);
-    }
-
-    // ── Step 3: Save locally for progress tracker ─────────────
-    const userObj = { firstName, lastName, email, location, joinedAt: new Date().toISOString() };
-    localStorage.setItem(USER_KEY, JSON.stringify(userObj));
-
-    // ── Step 4: Send welcome email ────────────────────────────
-    try {
-      const emailRes = await fetch('/.netlify/functions/send-welcome-email', {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ to_email: email, to_name: firstName, firstName, lastName }),
-      });
-      // Bug fix: fetch() resolves even on 4xx/5xx — must check response.ok
-      // or a failed Resend call (wrong API key, domain not verified, rate limit)
-      // swallows silently and the member never receives their welcome email
-      if (!emailRes.ok) {
-        const errText = await emailRes.text().catch(() => 'unknown');
-        console.error(`send-welcome-email failed [${emailRes.status}]:`, errText);
-      }
-    } catch (err) {
-      console.error('Welcome email error (non-critical):', err);
-    }
-
-    showSuccess(firstName);
-    renderTracker();
-  }
-
-  function showSuccess(firstName) {
-    const form    = document.getElementById('join-form');
-    const success = document.getElementById('success-msg');
-    const nameEl  = document.getElementById('success-name');
-    if (nameEl) nameEl.textContent = firstName;
-    form.style.opacity = '0'; form.style.transition = 'opacity 0.4s';
-    setTimeout(() => { form.style.display = 'none'; success.style.display = 'block'; success.style.opacity = '0'; success.style.transition = 'opacity 0.4s'; setTimeout(() => { success.style.opacity = '1'; }, 50); }, 400);
-  }
-
-  function showError(msg) {
-    let errorBox = document.getElementById('form-error');
-    if (!errorBox) {
-      errorBox = document.createElement('p');
-      errorBox.id = 'form-error';
-      errorBox.style.cssText = 'font-family:Montserrat,sans-serif;font-size:0.75rem;color:#F87171;text-align:center;margin-top:0.75rem;padding:0.6rem;background:rgba(248,113,113,0.08);border-radius:2px;border:1px solid rgba(248,113,113,0.2);';
-      document.querySelector('.form-submit').after(errorBox);
-    }
-    errorBox.textContent  = msg;
-    errorBox.style.display = 'block';
-    const btn = document.querySelector('.form-submit');
-    btn.textContent = 'Begin My Journey →'; btn.disabled = false; btn.style.opacity = '1';
-  }
-
-  function isValidEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    initLessonClicks();
-    renderLessonStates();
-    renderTracker();
+function renderLessonStates() {
+  const completed = getCompleted();
+  document.querySelectorAll('.module-lessons li[data-lid]').forEach(li => {
+    li.classList.toggle('completed', completed.includes(li.dataset.lid));
   });
+}
+
+function renderTracker() {
+  const user      = getUser();
+  const completed = getCompleted();
+  const tracker   = document.getElementById('progress-tracker');
+  const preview   = document.getElementById('progress-preview-cta');
+  if (!user) {
+    tracker && (tracker.style.display = 'none');
+    preview && (preview.style.display = 'block');
+    return;
+  }
+  tracker && (tracker.style.display = 'block');
+  preview && (preview.style.display = 'none');
+
+  const nameEl = document.getElementById('tracker-name');
+  if (nameEl) nameEl.textContent = user.firstName + (user.location ? ' — ' + user.location : '');
+
+  const pct = Math.round((completed.length / TOTAL_LESSONS) * 100);
+  const pctEl = document.getElementById('tracker-pct');
+  if (pctEl) pctEl.textContent = pct + '% complete';
+
+  const barEl = document.getElementById('tracker-bar');
+  if (barEl) setTimeout(() => { barEl.style.width = pct + '%'; }, 80);
+
+  const modsEl = document.getElementById('tracker-modules');
+  if (modsEl) {
+    const colors = ['','#C9A84C','#4A8C60','#5B8FC9','#9B6BC9','#C97B6B','#6BC9AA'];
+    modsEl.innerHTML = MODULES.map(m => {
+      const done = completed.filter(lid => lid.startsWith(m.id + '-')).length;
+      const mpct = Math.round((done / m.total) * 100);
+      return `<div class="tracker-mod-row">
+        <span class="tracker-mod-name">${m.id}. ${m.name}</span>
+        <div class="tracker-mod-bar-wrap"><div class="tracker-mod-bar" style="width:${mpct}%;background:${colors[m.id]}"></div></div>
+        <span class="tracker-mod-count">${done}/${m.total}</span>
+      </div>`;
+    }).join('');
+  }
+
+  const badgesEl = document.getElementById('tracker-badges');
+  if (badgesEl) {
+    badgesEl.innerHTML = MODULES.map(m => {
+      const done   = completed.filter(lid => lid.startsWith(m.id + '-')).length;
+      const earned = done === m.total;
+      return `<span class="badge${earned ? ' earned' : ''}">${earned ? '✓ ' : ''}${m.name}</span>`;
+    }).join('');
+  }
+}
+
+function resetProgress() {
+  if (!confirm('Reset all lesson progress? This cannot be undone.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  renderLessonStates();
+  renderTracker();
+}
+
+function initLessonClicks() {
+  document.querySelectorAll('.module-lessons li[data-lid]').forEach(li => {
+    li.addEventListener('click', () => toggleLesson(li.dataset.lid, li));
+  });
+}
+
+// ── Module accordion ────────────────────────────────────────
+function toggleModule(header) {
+  const item    = header.parentElement;
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.module-item').forEach(m => m.classList.remove('open'));
+  if (!wasOpen) item.classList.add('open');
+}
+
+// ── Scroll reveal ───────────────────────────────────────────
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      if (e.target.classList.contains('stats-strip')) {
+        animateCount('count-modules', 6);
+        animateCount('count-lessons', 28);
+        animateCount('count-weeks',   12);
+      }
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal, .stats-strip').forEach(el => revealObserver.observe(el));
+
+// Animate count up — fires only once
+const countedIds = new Set();
+function animateCount(id, target) {
+  if (countedIds.has(id)) return;
+  countedIds.add(id);
+  const el = document.getElementById(id);
+  if (!el) return;
+  let current = 0;
+  const step  = Math.ceil(target / 30);
+  const timer = setInterval(() => {
+    current = Math.min(current + step, target);
+    el.textContent = current;
+    if (current >= target) clearInterval(timer);
+  }, 40);
+}
+
+// ── Navbar scroll shrink ────────────────────────────────────
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 50);
+}, { passive: true });
+
+// ── Floating CTA — appears after hero ──────────────────────
+const floatingCta = document.getElementById('floating-cta');
+const heroSection = document.getElementById('home');
+const heroObserver = new IntersectionObserver(([e]) => {
+  floatingCta.classList.toggle('show', !e.isIntersecting);
+}, { threshold: 0.1 });
+heroObserver.observe(heroSection);
+
+// ── Mobile nav toggle ────────────────────────────────────────
+const navToggle = document.getElementById('nav-toggle');
+const navLinks  = document.getElementById('nav-links');
+navToggle.addEventListener('click', function() {
+  this.classList.toggle('open');
+  navLinks.classList.toggle('open');
+});
+// Close nav on link click
+navLinks.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
+    navToggle.classList.remove('open');
+    navLinks.classList.remove('open');
+  });
+});
+
+// ── FORM SUBMIT ─────────────────────────────────────────────
+async function handleSubmit(e) {
+  e.preventDefault();
+  const btn = document.getElementById('submit-btn');
+
+  const firstName  = document.getElementById('fname').value.trim();
+  const lastName   = document.getElementById('lname')    ? document.getElementById('lname').value.trim()    : '';
+  const email      = document.getElementById('email').value.trim().toLowerCase();
+  const location   = document.getElementById('location') ? document.getElementById('location').value.trim() : '';
+  const phone      = document.getElementById('phone')    ? document.getElementById('phone').value.trim()    : '';
+  const source     = document.getElementById('how')      ? document.getElementById('how').value             : '';
+  const faithStage = document.getElementById('faith')    ? document.getElementById('faith').value           : '';
+  const ageConsent = document.getElementById('age-consent');
+
+  if (!firstName || !email)              { showError('Please fill in your name and email address.'); return; }
+  if (!isValidEmail(email))              { showError('Please enter a valid email address.'); return; }
+  if (ageConsent && !ageConsent.checked) { showError('Please confirm you are 18+ and agree to the Privacy Policy to continue.'); return; }
+
+  btn.textContent = 'Sending your first lesson…';
+  btn.disabled    = true;
+
+  // ── Step 1: Netlify Forms ────────────────────────────────
+  const formEl   = document.getElementById('join-form');
+  const formData = new FormData(formEl);
+  try {
+    await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(formData).toString() });
+  } catch (err) {
+    console.error('Netlify Forms error:', err);
+    showError('Could not connect. Please check your internet and try again.');
+    btn.textContent = 'Send My First Lesson →'; btn.disabled = false; return;
+  }
+
+  // ── Step 2: Save to Blobs (add-member) ───────────────────
+  try {
+    const res = await fetch('/.netlify/functions/add-member', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: `${firstName} ${lastName}`.trim(), email, phone, loc: location, source: source || 'Direct', faithStage: faithStage || '' }),
+    });
+    if (!res.ok) console.error('add-member returned', res.status);
+  } catch (err) { console.error('add-member error (non-critical):', err); }
+
+  // ── Step 3: Save locally for progress tracker ────────────
+  localStorage.setItem(USER_KEY, JSON.stringify({ firstName, lastName, email, location, joinedAt: new Date().toISOString() }));
+
+  // ── Step 4: Welcome email ────────────────────────────────
+  try {
+    const emailRes = await fetch('/.netlify/functions/send-welcome-email', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ to_email: email, to_name: firstName, firstName, lastName }),
+    });
+    if (!emailRes.ok) {
+      const errText = await emailRes.text().catch(() => 'unknown');
+      console.error(`send-welcome-email failed [${emailRes.status}]:`, errText);
+    }
+  } catch (err) { console.error('Welcome email error (non-critical):', err); }
+
+  showSuccess(firstName);
+  renderTracker();
+}
+
+function showSuccess(firstName) {
+  const form    = document.getElementById('join-form');
+  const success = document.getElementById('success-msg');
+  const nameEl  = document.getElementById('success-name');
+  if (nameEl) nameEl.textContent = firstName;
+  form.style.opacity = '0'; form.style.transition = 'opacity 0.35s';
+  setTimeout(() => {
+    form.style.display = 'none';
+    success.style.display = 'block'; success.style.opacity = '0'; success.style.transition = 'opacity 0.35s';
+    setTimeout(() => { success.style.opacity = '1'; }, 40);
+  }, 350);
+}
+
+function showError(msg) {
+  let box = document.getElementById('form-error');
+  if (!box) {
+    box = document.createElement('p');
+    box.id = 'form-error';
+    box.style.cssText = 'font-family:Montserrat,sans-serif;font-size:0.75rem;color:#F87171;text-align:center;margin-top:0.75rem;padding:0.65rem;background:rgba(248,113,113,0.08);border-radius:2px;border:1px solid rgba(248,113,113,0.2);';
+    document.getElementById('submit-btn').after(box);
+  }
+  box.textContent = msg; box.style.display = 'block';
+  const btn = document.getElementById('submit-btn');
+  btn.textContent = 'Send My First Lesson →'; btn.disabled = false;
+}
+
+function isValidEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+
+document.addEventListener('DOMContentLoaded', () => {
+  initLessonClicks();
+  renderLessonStates();
+  renderTracker();
+});
 </script>
 </body>
 </html>
