@@ -1,8 +1,4 @@
 // netlify/functions/get-prayers.js
-//
-// Returns all prayer requests from Netlify Blobs.
-// Public — no auth required.
-// Always returns 200 — never breaks the prayer wall for visitors.
 
 const { getStore } = require('@netlify/blobs');
 
@@ -12,7 +8,13 @@ exports.handler = async (event) => {
   }
 
   try {
-    const store     = getStore('prayers');
+    const storeOptions = {};
+    if (process.env.NETLIFY_SITE_ID && process.env.NETLIFY_BLOBS_TOKEN) {
+      storeOptions.siteID = process.env.NETLIFY_SITE_ID;
+      storeOptions.token  = process.env.NETLIFY_BLOBS_TOKEN;
+    }
+
+    const store     = getStore({ name: 'prayers', ...storeOptions });
     const { blobs } = await store.list();
 
     if (!blobs || blobs.length === 0) {
@@ -32,7 +34,7 @@ exports.handler = async (event) => {
 
     const valid = prayers
       .filter(Boolean)
-      .map(({ ipHash, prayedIps, ...rest }) => rest) // strip internal fields
+      .map(({ ipHash, prayedIps, ...rest }) => rest)
       .sort((a, b) => b.timestamp - a.timestamp);
 
     return {
@@ -42,8 +44,7 @@ exports.handler = async (event) => {
     };
 
   } catch (err) {
-    console.error('get-prayers error:', err);
-    // Return 200 + empty array — never let this crash the prayer wall
+    console.error('get-prayers error:', err.message, err.stack);
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },

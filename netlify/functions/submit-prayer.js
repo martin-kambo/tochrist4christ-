@@ -1,13 +1,8 @@
 // netlify/functions/submit-prayer.js
-//
-// Accepts a new prayer request, runs server-side moderation,
-// and saves it to Netlify Blobs.
-// Public — no auth required (anyone can submit a prayer).
 
 const { getStore } = require('@netlify/blobs');
 const crypto = require('crypto');
 
-// Server-side blocked words — cannot be bypassed by editing browser JS
 const BLOCKED = [
   'spam','scam','casino','viagra','porn','xxx','hack','crack',
   'bitcoin','forex','invest now','click here','buy now','free money',
@@ -23,16 +18,13 @@ function moderate(text) {
 
 function escapeHtml(str) {
   return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#x27;');
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
 }
 
 const VALID_CATEGORIES = ['general','healing','guidance','family','provision','salvation','gratitude'];
 
-exports.handler = async (event) => {
+exports.handler = async (event, context) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
@@ -43,24 +35,17 @@ exports.handler = async (event) => {
 
   const { name, text, category, anonymous } = body;
 
-  // Validate
-  if (!name || !name.trim()) {
+  if (!name || !name.trim())
     return { statusCode: 400, body: JSON.stringify({ success: false, error: 'Name is required' }) };
-  }
-  if (!text || text.trim().length < 15) {
+  if (!text || text.trim().length < 15)
     return { statusCode: 400, body: JSON.stringify({ success: false, error: 'Prayer must be at least 15 characters' }) };
-  }
-  if (text.trim().length > 500) {
+  if (text.trim().length > 500)
     return { statusCode: 400, body: JSON.stringify({ success: false, error: 'Prayer must be under 500 characters' }) };
-  }
 
   const cat = VALID_CATEGORIES.includes(category) ? category : 'general';
-
-  // Server-side moderation
   const mod = moderate(text);
-  if (!mod.ok) {
+  if (!mod.ok)
     return { statusCode: 400, body: JSON.stringify({ success: false, error: mod.reason }) };
-  }
 
   const id = 'prayer-' + crypto.randomUUID();
   const prayer = {
@@ -73,14 +58,21 @@ exports.handler = async (event) => {
     anonymous: !!anonymous,
     timestamp: Date.now(),
     isoDate:   new Date().toISOString(),
-    // Store IP hash for basic rate-limiting (not exposed to frontend)
     ipHash:    crypto.createHash('sha256')
                  .update(event.headers['x-forwarded-for'] || 'unknown')
                  .digest('hex').slice(0, 16),
   };
 
   try {
-    const store = getStore('prayers');
+    // Pass siteID and token explicitly — required on some Netlify tiers
+    // where the context is not automatically injected into getStore()
+    const storeOptions = {};
+    if (process.env.NETLIFY_SITE_ID && process.env.NETLIFY_BLOBS_TOKEN) {
+      storeOptions.siteID = process.env.NETLIFY_SITE_ID;
+      storeOptions.token  = process.env.NETLIFY_BLOBS_TOKEN;
+    }
+
+    const store = getStore({ name: 'prayers', ...storeOptions });
     await store.set(id, JSON.stringify(prayer));
 
     return {
@@ -89,10 +81,11 @@ exports.handler = async (event) => {
       body: JSON.stringify({ success: true, id }),
     };
   } catch (err) {
-    console.error('submit-prayer error:', err);
+    // Log the FULL error so it appears in Netlify function logs
+    console.error('submit-prayer Blobs error:', err.message, err.stack);
     return {
       statusCode: 500,
-      body: JSON.stringify({ success: false, error: 'Could not save prayer. Please try again.' }),
+      body: JSON.stringify({ success: false, error: err.message || 'Could not save prayer. Please try again.' }),
     };
   }
 };
