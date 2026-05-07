@@ -11,6 +11,7 @@
   overflow: hidden;
   font-family: 'Crimson Text', Georgia, serif;
   width: 100%;
+  max-width: 780px; 
 }
 
 .cp-header {
