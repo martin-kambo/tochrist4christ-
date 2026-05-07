@@ -20,6 +20,7 @@
 <meta name="twitter:image" content="https://tochristforchrist.org/logo.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/community-pulse.css">
 <style>
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
@@ -837,6 +838,10 @@ section { padding: 5rem 1.5rem; }
       <div class="pillar reveal reveal-delay-1"><span class="pillar-icon">💬</span><h3>Module-based group chats. Ask anything.</h3><p>Each module has a dedicated WhatsApp thread. No one is too far ahead or behind to encourage you.</p></div>
       <div class="pillar reveal reveal-delay-2"><span class="pillar-icon">🌍</span><h3>Find or start a local group in your city</h3><p>In-person fellowship matters. Connect with believers near you — Nairobi, Lagos, Kampala, Cape Town, Accra, and beyond.</p></div>
     </div>
+    <!-- ══ COMMUNITY PULSE WIDGET ══════════════════════════════ -->
+    <div style="margin-top: 2.5rem; display: flex; justify-content: center;">
+      <div id="community-pulse"></div>
+    </div>
   </div>
 </section>
 
@@ -1182,8 +1187,9 @@ async function handleSubmit(e) {
       console.error(`send-welcome-email failed [${emailRes.status}]:`, errText);
     }
   } catch (err) { console.error('Welcome email error (non-critical):', err); }
+if (window.CommunityPulse) CommunityPulse.log('signup', firstName, location);
+showSuccess(firstName);
 
-  showSuccess(firstName);
   renderTracker();
 }
 
