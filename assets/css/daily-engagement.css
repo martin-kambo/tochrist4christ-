@@ -1,0 +1,552 @@
+/* assets/css/daily-engagement.css */
+/* Daily Engagement Engine Styles */
+
+.daily-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.daily-card {
+  background: white;
+  border: 1px solid var(--ivory-dark);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.daily-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-gold);
+}
+
+/* Streak Card */
+.streak-card {
+  background: linear-gradient(135deg, var(--green-deep) 0%, #2a4a3a 100%);
+  color: var(--ivory);
+  text-align: center;
+  padding: 1.5rem;
+}
+
+.streak-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.streak-fire {
+  font-size: 2rem;
+  animation: flameFlicker 1s ease-in-out infinite;
+}
+
+@keyframes flameFlicker {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.9; }
+}
+
+.streak-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.streak-number {
+  font-family: 'Playfair Display', serif;
+  font-size: 4rem;
+  font-style: italic;
+  color: var(--gold);
+  line-height: 1;
+  margin: 0.5rem 0;
+}
+
+.streak-days {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.streak-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.streak-day-name {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.streak-day-status {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  background: rgba(255,255,255,0.1);
+}
+
+.streak-day.completed .streak-day-status {
+  background: var(--gold);
+  color: var(--brown);
+}
+
+.streak-message {
+  font-family: 'Crimson Text', serif;
+  font-size: 0.85rem;
+  font-style: italic;
+  opacity: 0.8;
+  margin-top: 0.75rem;
+}
+
+/* Meditation Card */
+.meditation-card {
+  grid-column: span 2;
+}
+
+@media (max-width: 768px) {
+  .meditation-card {
+    grid-column: span 1;
+  }
+}
+
+.meditation-header {
+  background: var(--ivory);
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--ivory-dark);
+}
+
+.meditation-icon {
+  font-size: 1.2rem;
+}
+
+.meditation-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.meditation-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  color: var(--green-deep);
+  margin: 1rem 1.25rem 0.5rem;
+}
+
+.meditation-verse {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  color: var(--gold);
+  margin: 0 1.25rem 0.75rem;
+}
+
+.meditation-text {
+  font-family: 'Crimson Text', serif;
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--text-body);
+  margin: 0 1.25rem 1rem;
+  padding: 0 0 0 1rem;
+  border-left: 3px solid var(--gold);
+}
+
+.meditation-reflection {
+  background: var(--ivory);
+  margin: 0 1.25rem 1rem;
+  padding: 0.75rem;
+  border-radius: var(--radius-sm);
+}
+
+.meditation-reflection p {
+  font-family: 'Crimson Text', serif;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Prayer & Action Cards */
+.prayer-card, .action-card {
+  background: white;
+}
+
+.prayer-header, .action-header, .journal-header, .completion-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--ivory-dark);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.prayer-icon, .action-icon, .journal-icon, .completion-icon {
+  font-size: 1.2rem;
+}
+
+.prayer-label, .action-label, .journal-label, .completion-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.prayer-prompt, .action-text {
+  font-family: 'Crimson Text', serif;
+  font-size: 0.95rem;
+  color: var(--text-body);
+  line-height: 1.6;
+  margin: 1rem 1.25rem;
+}
+
+/* Daily Action Buttons */
+.daily-action-btn {
+  display: block;
+  width: calc(100% - 2.5rem);
+  margin: 0 1.25rem 1.25rem;
+  padding: 0.75rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--green-deep);
+  color: var(--gold);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.daily-action-btn:hover:not(:disabled) {
+  background: var(--green-mid);
+  transform: translateY(-1px);
+}
+
+.daily-action-btn.completed {
+  background: var(--green-light);
+  color: white;
+  cursor: default;
+  opacity: 0.7;
+}
+
+.daily-action-btn:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+/* Journal Card */
+.journal-card.completed-card {
+  background: rgba(74, 140, 96, 0.05);
+}
+
+.journal-input {
+  width: calc(100% - 2.5rem);
+  margin: 1rem 1.25rem;
+  padding: 0.75rem;
+  font-family: 'Crimson Text', serif;
+  font-size: 0.9rem;
+  color: var(--text-body);
+  border: 1px solid var(--ivory-dark);
+  border-radius: var(--radius-sm);
+  resize: vertical;
+  min-height: 100px;
+}
+
+.journal-input:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+
+.journal-input:disabled {
+  background: var(--ivory);
+  color: var(--text-muted);
+}
+
+.habit-check-wrapper {
+  margin: 0 1.25rem 1.25rem;
+}
+
+.habit-check-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Crimson Text', serif;
+  font-size: 0.9rem;
+  color: var(--text-body);
+  cursor: pointer;
+}
+
+.habit-checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--gold);
+}
+
+/* Completion Card */
+.completion-card.completed {
+  background: linear-gradient(135deg, rgba(74, 140, 96, 0.08) 0%, rgba(201, 168, 76, 0.05) 100%);
+  border-color: rgba(74, 140, 96, 0.3);
+}
+
+.completion-progress {
+  padding: 1rem 1.25rem;
+}
+
+.progress-steps {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.progress-step {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--ivory);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+}
+
+.progress-step.done {
+  background: var(--gold);
+  transform: scale(1.05);
+}
+
+.progress-bar {
+  height: 8px;
+  background: var(--ivory-dark);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.completion-message {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  text-align: center;
+  color: var(--green-light);
+  padding: 0.75rem 1.25rem 1.25rem;
+  margin: 0;
+  border-top: 1px solid var(--ivory-dark);
+}
+
+/* Preview State (signed out) */
+.daily-preview {
+  background: white;
+  border: 1px solid var(--ivory-dark);
+  border-radius: var(--radius-md);
+  padding: 2rem;
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.daily-preview-header {
+  margin-bottom: 1.5rem;
+}
+
+.daily-preview-header .daily-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.daily-preview-header h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: var(--green-deep);
+  margin-bottom: 0.25rem;
+}
+
+.daily-preview-header p {
+  font-family: 'Crimson Text', serif;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.daily-preview-features {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.preview-feature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.preview-feature .feature-icon {
+  font-size: 1.5rem;
+}
+
+.preview-feature span:last-child {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.daily-cta {
+  display: inline-flex;
+  margin-top: 0.5rem;
+}
+
+/* Toast Notifications */
+.daily-toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--green-deep);
+  color: var(--ivory);
+  padding: 0.75rem 1.5rem;
+  border-radius: 40px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  z-index: 1000;
+  animation: toastSlideUp 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.daily-toast-warning {
+  background: #d4a017;
+  color: var(--brown);
+}
+
+@keyframes toastSlideUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Celebration Overlay */
+.daily-celebration {
+  position: fixed;
+  bottom: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1001;
+  animation: celebrationPop 0.4s ease;
+}
+
+.celebration-content {
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+  color: var(--brown);
+  padding: 1.5rem 2rem;
+  border-radius: var(--radius-lg);
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+.celebration-content .celebration-icon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.celebration-content h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  margin-bottom: 0.25rem;
+}
+
+.celebration-content p {
+  font-family: 'Crimson Text', serif;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.celebration-content button {
+  background: var(--brown);
+  color: var(--gold);
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 30px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+@keyframes celebrationPop {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+/* Loading State */
+.daily-loading {
+  text-align: center;
+  padding: 3rem;
+  font-family: 'Crimson Text', serif;
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .daily-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .streak-number {
+    font-size: 3rem;
+  }
+  
+  .meditation-title {
+    font-size: 1.1rem;
+  }
+  
+  .daily-action-btn {
+    padding: 0.6rem;
+    font-size: 0.65rem;
+  }
+  
+  .progress-step {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+}

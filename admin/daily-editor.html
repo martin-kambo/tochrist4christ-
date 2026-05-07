@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Meditation Editor | TC4C Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Crimson Text', Georgia, serif;
+      background: #F5EFE0;
+      color: #3C2A1A;
+      padding: 2rem;
+    }
+    
+    .admin-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    
+    .admin-header {
+      background: white;
+      border-radius: 16px 16px 0 0;
+      padding: 1.5rem 2rem;
+      border-bottom: 2px solid #C9A84C;
+    }
+    
+    .admin-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      color: #1B3A2E;
+    }
+    
+    .admin-header p {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: #7A6A50;
+      margin-top: 0.25rem;
+    }
+    
+    .admin-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 0 0 16px 16px;
+    }
+    
+    .date-section {
+      background: #F5EFE0;
+      padding: 1rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+    }
+    
+    .date-nav {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .date-nav label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: #2D5A40;
+    }
+    
+    .date-nav input {
+      padding: 0.5rem;
+      font-family: 'Crimson Text', serif;
+      border: 1px solid #EDE5CC;
+      border-radius: 8px;
+    }
+    
+    .btn-small {
+      background: transparent;
+      border: 1px solid #C9A84C;
+      color: #C9A84C;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.65rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn-small:hover {
+      background: #C9A84C;
+      color: #2C1A0E;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+      display: block;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: #2D5A40;
+      margin-bottom: 0.5rem;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.75rem;
+      font-family: 'Crimson Text', serif;
+      font-size: 0.95rem;
+      border: 1px solid #EDE5CC;
+      border-radius: 8px;
+      transition: border-color 0.2s;
+    }
+    
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #C9A84C;
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    
+    .btn-primary {
+      background: #C9A84C;
+      color: #2C1A0E;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .btn-primary:hover {
+      background: #E8C96A;
+    }
+    
+    .btn-danger {
+      background: #dc2626;
+      color: white;
+    }
+    
+    .btn-danger:hover {
+      background: #b91c1c;
+    }
+    
+    .preview-section {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 2px solid #EDE5CC;
+    }
+    
+    .preview-card {
+      background: #F5EFE0;
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-top: 0.5rem;
+    }
+    
+    .preview-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: #1B3A2E;
+    }
+    
+    .preview-verse {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.7rem;
+      color: #C9A84C;
+      margin: 0.5rem 0;
+    }
+    
+    .admin-status {
+      padding: 0.75rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      display: none;
+    }
+    
+    .status-success {
+      background: rgba(74, 140, 96, 0.1);
+      color: #2D5A40;
+      border: 1px solid rgba(74, 140, 96, 0.3);
+      display: block;
+    }
+    
+    .status-error {
+      background: rgba(220, 38, 38, 0.1);
+      color: #b91c1c;
+      border: 1px solid rgba(220, 38, 38, 0.3);
+      display: block;
+    }
+    
+    .status-info {
+      background: rgba(201, 168, 76, 0.1);
+      color: #7A5230;
+      border: 1px solid rgba(201, 168, 76, 0.3);
+      display: block;
+    }
+    
+    .admin-loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid white;
+      border-top-color: #C9A84C;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .unauthorized {
+      text-align: center;
+      padding: 3rem;
+      background: white;
+      border-radius: 16px;
+    }
+    
+    @media (max-width: 640px) {
+      body { padding: 1rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .button-group { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div id="daily-admin-container" class="admin-container">
+    <div class="admin-header">
+      <h1>📖 Daily Meditation Editor</h1>
+      <p>Schedule and manage daily meditations for the entire platform</p>
+    </div>
+    
+    <div class="admin-content">
+      <div id="admin-status" class="admin-status"></div>
+      
+      <div class="date-section">
+        <div class="date-nav">
+          <label>📅 Select Date</label>
+          <input type="date" id="admin-date-picker">
+          <div id="date-nav-buttons"></div>
+        </div>
+      </div>
+      
+      <form id="meditation-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Title *</label>
+            <input type="text" id="med-title" placeholder="e.g., The Lord is My Shepherd" required>
+          </div>
+          <div class="form-group">
+            <label>Scripture Reference *</label>
+            <input type="text" id="med-verse" placeholder="e.g., Psalm 23:1" required>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>Scripture Text *</label>
+          <textarea id="med-verse-text" rows="3" placeholder="Paste the full scripture text here..." required></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label>📝 Reflection / Teaching</label>
+          <textarea id="med-reflection" rows="4" placeholder="Write a short reflection or teaching point..."></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label>🙏 Prayer Prompt</label>
+          <textarea id="med-prayer-prompt" rows="2" placeholder="What should users pray about today?"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label>⚡ Action Step</label>
+          <textarea id="med-action-step" rows="2" placeholder="One practical action to take today..."></textarea>
+        </div>
+        
+        <div class="button-group">
+          <button type="submit" id="save-meditation-btn" class="btn-primary">💾 Save Meditation</button>
+          <button type="button" id="delete-meditation-btn" class="btn-primary btn-danger">🗑️ Delete</button>
+        </div>
+      </form>
+      
+      <div class="preview-section">
+        <h3 style="font-family:'Montserrat',sans-serif;font-size:0.7rem;letter-spacing:0.1em;color:#7A6A50;">PREVIEW</h3>
+        <div class="preview-card">
+          <div class="preview-title" id="preview-title">—</div>
+          <div class="preview-verse" id="preview-verse">—</div>
+          <div id="preview-text" style="font-family:'Crimson Text',serif;font-size:0.9rem;color:#3C2A1A;margin-top:0.75rem"></div>
+          <div id="preview-reflection" style="font-family:'Crimson Text',serif;font-size:0.85rem;color:#7A6A50;font-style:italic;margin-top:0.75rem"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div id="admin-loader" class="admin-loader">
+    <div class="spinner"></div>
+  </div>
+  
+  <script src="/assets/js/daily-admin.js"></script>
+</body>
+</html>

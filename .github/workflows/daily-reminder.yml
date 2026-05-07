@@ -1,0 +1,18 @@
+name: Daily Reminder
+
+on:
+  schedule:
+    # Run at 8:00 AM UTC daily
+    - cron: '0 8 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  send-reminders:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger daily reminder function
+        run: |
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -d '{"cron":true}' \
+            https://your-site.netlify.app/.netlify/functions/send-daily-reminders
