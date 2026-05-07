@@ -85,7 +85,7 @@ nav.scrolled { padding: 0.45rem 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.3); 
   min-height: 100vh;
   background: var(--green-deep);
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  text-align: center; padding: 7rem 1.5rem 5rem;
+  text-align: center; padding: 7rem 3rem 5rem;
   position: relative; overflow: hidden;
 }
 /* Animated gradient bg */
@@ -103,11 +103,12 @@ nav.scrolled { padding: 0.45rem 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.3); 
   pointer-events: none; line-height: 1; user-select: none;
   animation: crossPulse 10s ease-in-out infinite;
 }
-.hero-content { position: relative; z-index: 1; max-width: 680px; }
+.hero-content { position: relative; z-index: 1; max-width: 860px; width: 100%; }
 .hero-logo {
-  width: 90px; height: 90px; object-fit: contain;
+  width: 80px; height: 80px; object-fit: contain;
   border-radius: 50%;
-  mix-blend-mode: lighten; filter: brightness(1.05);
+  background: transparent;
+  filter: brightness(1.1) drop-shadow(0 0 12px rgba(201,168,76,0.3));
   margin-bottom: 1.25rem;
   opacity: 0; animation: fadeUp 0.7s 0.1s forwards;
 }
@@ -385,7 +386,7 @@ footer .copy { font-family: 'Montserrat', sans-serif; font-size: 0.6rem; letter-
 
 /* ── SHARED ──────────────────────────────────────────────── */
 section { padding: 5rem 3rem; }
-.container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+.container { max-width: 960px; margin: 0 auto; padding: 0 2.5rem; }
 .section-label { font-family: 'Montserrat', sans-serif; font-size: 0.62rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--green-light); margin-bottom: 0.75rem; }
 .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.75rem, 4vw, 2.7rem); line-height: 1.2; color: var(--green-deep); margin-bottom: 1.25rem; }
 .section-title em { color: var(--gold); font-style: italic; }
