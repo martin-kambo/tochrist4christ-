@@ -1083,6 +1083,281 @@ canvas { display: block; }
 .toast.show { opacity: 1; }
 .hidden { display: none !important; }
 </style>
+<!-- 
+  Admin: Activity Moderation Panel
+  Drop this section into your existing admin dashboard HTML.
+  Requires your existing admin session cookie to be present.
+-->
+
+<section class="admin-section" id="admin-activity-feed">
+  <div class="admin-section-header">
+    <h2>Community Activity Feed</h2>
+    <button class="btn-secondary" onclick="adminPulse.refresh()">↻ Refresh</button>
+  </div>
+
+  <div id="admin-activity-stats" class="admin-stats-bar">
+    <span class="admin-stat">Loading...</span>
+  </div>
+
+  <div class="admin-filter-bar">
+    <label>
+      <span>Filter by type:</span>
+      <select id="admin-activity-filter" onchange="adminPulse.applyFilter()">
+        <option value="">All types</option>
+        <option value="signup">Signups</option>
+        <option value="module_complete">Module completions</option>
+        <option value="prayer">Prayers</option>
+        <option value="testimony">Testimonies</option>
+        <option value="streak">Streaks</option>
+      </select>
+    </label>
+    <label>
+      <input type="checkbox" id="admin-show-hidden" onchange="adminPulse.applyFilter()">
+      Show hidden items
+    </label>
+  </div>
+
+  <table class="admin-table" id="admin-activity-table">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Message</th>
+        <th>Time</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="admin-activity-tbody">
+      <tr><td colspan="5" class="admin-loading">Loading activities...</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<script>
+// Admin Activity Moderation Panel
+// Assumes admin session cookie is already set by your existing auth system.
+
+const adminPulse = (() => {
+  const TYPE_ICONS = {
+    signup: '✝', module_complete: '📖', prayer: '🙏', testimony: '✨', streak: '🔥',
+  };
+
+  let allActivities = [];
+
+  // ------------------------------------------------------------------
+  // Fetch all activities (including hidden) from get-activities
+  // We pass a large limit to get everything for admin view
+  // ------------------------------------------------------------------
+  async function loadActivities() {
+    const tbody = document.getElementById('admin-activity-tbody');
+    tbody.innerHTML = '<tr><td colspan="5" class="admin-loading">Loading...</td></tr>';
+
+    try {
+      const res = await fetch('/.netlify/functions/get-activities?limit=50&_=' + Date.now());
+      const data = await res.json();
+
+      // For admin we also need hidden items — fetch raw from Blobs via a
+      // dedicated admin endpoint (get-activities only returns non-hidden).
+      // For now we use what we have; extend get-activities with ?admin=1 if needed.
+      allActivities = data.feed || [];
+      updateStatsBar(data.stats || {});
+      applyFilter();
+    } catch (err) {
+      tbody.innerHTML = '<tr><td colspan="5" class="admin-error">Failed to load activities.</td></tr>';
+    }
+  }
+
+  function updateStatsBar(stats) {
+    const bar = document.getElementById('admin-activity-stats');
+    if (!bar) return;
+    bar.innerHTML = `
+      <span class="admin-stat">Members: <strong>${stats.members || 0}</strong></span>
+      <span class="admin-stat">Prayers: <strong>${stats.prayers || 0}</strong></span>
+      <span class="admin-stat">Completions: <strong>${stats.completions || 0}</strong></span>
+      <span class="admin-stat">Total: <strong>${stats.total || 0}</strong></span>
+    `;
+  }
+
+  function applyFilter() {
+    const typeFilter = document.getElementById('admin-activity-filter')?.value || '';
+    const showHidden = document.getElementById('admin-show-hidden')?.checked || false;
+
+    let filtered = allActivities;
+    if (typeFilter) filtered = filtered.filter(a => a.type === typeFilter);
+    if (!showHidden) filtered = filtered.filter(a => !a.hidden);
+
+    renderTable(filtered);
+  }
+
+  function renderTable(activities) {
+    const tbody = document.getElementById('admin-activity-tbody');
+    if (!tbody) return;
+
+    if (activities.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5" class="admin-empty">No activities found.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = activities.map(a => `
+      <tr class="${a.hidden ? 'admin-row-hidden' : ''}" data-id="${a.id}">
+        <td>
+          <span class="admin-type-badge admin-type-${a.type}">
+            ${TYPE_ICONS[a.type] || '?'} ${a.type}
+          </span>
+        </td>
+        <td class="admin-message-cell">${escapeHtml(a.message)}</td>
+        <td class="admin-time-cell">${escapeHtml(a.timeAgo)}</td>
+        <td>
+          <span class="admin-status ${a.hidden ? 'admin-status-hidden' : 'admin-status-visible'}">
+            ${a.hidden ? 'Hidden' : 'Visible'}
+          </span>
+        </td>
+        <td class="admin-actions-cell">
+          ${a.hidden
+            ? `<button class="admin-btn admin-btn-show" onclick="adminPulse.moderate('${a.id}', 'show')">Show</button>`
+            : `<button class="admin-btn admin-btn-hide" onclick="adminPulse.moderate('${a.id}', 'hide')">Hide</button>`
+          }
+          <button class="admin-btn admin-btn-delete" onclick="adminPulse.confirmDelete('${a.id}')">Delete</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  async function moderate(id, action) {
+    try {
+      const res = await fetch('/.netlify/functions/moderate-activity', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, action }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message || 'Done');
+        loadActivities();
+      } else {
+        showToast(data.error || 'Failed', 'error');
+      }
+    } catch (err) {
+      showToast('Network error', 'error');
+    }
+  }
+
+  function confirmDelete(id) {
+    if (confirm('Permanently delete this activity? This cannot be undone.')) {
+      moderate(id, 'delete');
+    }
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.appendChild(document.createTextNode(String(str || '')));
+    return div.innerHTML;
+  }
+
+  function showToast(msg, type = 'success') {
+    // Use your existing toast/notification system if available
+    // Fallback:
+    const existing = document.getElementById('admin-pulse-toast');
+    if (existing) existing.remove();
+    const toast = document.createElement('div');
+    toast.id = 'admin-pulse-toast';
+    toast.textContent = msg;
+    toast.style.cssText = `
+      position:fixed;bottom:24px;right:24px;padding:10px 20px;
+      background:${type === 'error' ? '#c0392b' : '#1B3A2E'};
+      color:#fff;border-radius:4px;font-size:0.8rem;z-index:9999;
+      border:1px solid ${type === 'error' ? '#e74c3c' : 'rgba(201,168,76,0.3)'};
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  }
+
+  // Init on load
+  loadActivities();
+
+  return {
+    refresh: loadActivities,
+    applyFilter,
+    moderate,
+    confirmDelete,
+  };
+})();
+</script>
+
+<style>
+/* Admin Activity Panel Styles — add to your admin CSS */
+.admin-stats-bar {
+  display: flex;
+  gap: 24px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.admin-stat { font-size: 0.8rem; color: rgba(245,239,224,0.5); }
+.admin-stat strong { color: #C9A84C; }
+
+.admin-filter-bar {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.admin-filter-bar label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: rgba(245,239,224,0.5);
+}
+.admin-filter-bar select {
+  background: #0D1117;
+  border: 1px solid rgba(201,168,76,0.2);
+  color: rgba(245,239,224,0.8);
+  padding: 4px 8px;
+  border-radius: 3px;
+  font-size: 0.8rem;
+}
+
+.admin-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.05);
+  color: rgba(245,239,224,0.6);
+  white-space: nowrap;
+}
+
+.admin-message-cell { font-size: 0.8rem; color: rgba(245,239,224,0.7); max-width: 320px; }
+.admin-time-cell    { font-size: 0.7rem; color: rgba(245,239,224,0.3); white-space: nowrap; }
+
+.admin-status { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; padding: 2px 6px; border-radius: 3px; }
+.admin-status-visible { background: rgba(80,200,120,0.1); color: #50C878; }
+.admin-status-hidden  { background: rgba(200,80,80,0.1); color: #c05050; }
+
+.admin-row-hidden td { opacity: 0.45; }
+.admin-row-hidden { background: rgba(200,80,80,0.03); }
+
+.admin-btn { font-size: 0.7rem; padding: 3px 8px; border-radius: 3px; border: 1px solid; cursor: pointer; margin-right: 4px; background: transparent; }
+.admin-btn-hide   { border-color: rgba(255,180,50,0.4);  color: rgba(255,180,50,0.8); }
+.admin-btn-show   { border-color: rgba(80,200,120,0.4);  color: rgba(80,200,120,0.8); }
+.admin-btn-delete { border-color: rgba(200,80,80,0.4);   color: rgba(200,80,80,0.8); }
+.admin-btn:hover  { background: rgba(255,255,255,0.05); }
+
+.admin-loading, .admin-empty, .admin-error {
+  text-align: center;
+  padding: 24px;
+  font-size: 0.8rem;
+  color: rgba(245,239,224,0.3);
+  font-style: italic;
+}
+</style>
 
 <script>
 // ═══════════════════════════════════════════════════════════

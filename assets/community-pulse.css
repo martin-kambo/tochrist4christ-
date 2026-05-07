@@ -1,0 +1,296 @@
+/* assets/community-pulse.css
+ *
+ * Community Pulse Widget Styles
+ * Matches the existing TC4C dark/gold aesthetic.
+ * Drop into your HTML alongside community-pulse.js
+ */
+
+/* ---------------------------------------------------------------------------
+   Widget shell
+--------------------------------------------------------------------------- */
+.cp-widget {
+  background: #161B22;
+  border: 1px solid rgba(201, 168, 76, 0.15);
+  border-radius: 6px;
+  overflow: hidden;
+  font-family: 'Georgia', serif;
+  max-width: 480px;
+  width: 100%;
+}
+
+/* ---------------------------------------------------------------------------
+   Header
+--------------------------------------------------------------------------- */
+.cp-header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cp-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: normal;
+  color: #C9A84C;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cp-subtitle {
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 0.65rem;
+  color: rgba(245, 239, 224, 0.3);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ---------------------------------------------------------------------------
+   Live pulse dot
+--------------------------------------------------------------------------- */
+.cp-live-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4CAF50;
+  box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.5);
+  animation: cp-pulse 2.5s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes cp-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.5); }
+  50%  { box-shadow: 0 0 0 6px rgba(76, 175, 80, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+}
+
+/* ---------------------------------------------------------------------------
+   Stats bar
+--------------------------------------------------------------------------- */
+.cp-stats {
+  display: flex;
+  align-items: center;
+  padding: 14px 24px;
+  background: rgba(201, 168, 76, 0.04);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  gap: 0;
+}
+
+.cp-stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.cp-stat-number {
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #C9A84C;
+  line-height: 1;
+}
+
+.cp-stat-label {
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(245, 239, 224, 0.3);
+}
+
+.cp-stat-divider {
+  width: 1px;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.cp-stats-skeleton {
+  height: 52px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.03);
+  animation: cp-shimmer 1.5s ease-in-out infinite;
+}
+
+/* ---------------------------------------------------------------------------
+   Feed list
+--------------------------------------------------------------------------- */
+.cp-feed {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 320px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201, 168, 76, 0.2) transparent;
+}
+
+.cp-feed::-webkit-scrollbar {
+  width: 3px;
+}
+
+.cp-feed::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.cp-feed::-webkit-scrollbar-thumb {
+  background: rgba(201, 168, 76, 0.2);
+  border-radius: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   Activity items
+--------------------------------------------------------------------------- */
+.cp-item {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 12px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  transition: background 0.2s ease;
+}
+
+.cp-item:last-child {
+  border-bottom: none;
+}
+
+.cp-item:hover {
+  background: rgba(201, 168, 76, 0.03);
+}
+
+/* New item animation */
+.cp-item--new {
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.cp-item--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Type-specific left accent */
+.cp-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  opacity: 0;
+}
+
+.cp-type-signup    { border-left: 2px solid rgba(201, 168, 76, 0.3); }
+.cp-type-prayer    { border-left: 2px solid rgba(100, 160, 255, 0.3); }
+.cp-type-testimony { border-left: 2px solid rgba(180, 120, 255, 0.3); }
+.cp-type-streak    { border-left: 2px solid rgba(255, 140, 50, 0.3); }
+.cp-type-module_complete { border-left: 2px solid rgba(80, 200, 120, 0.3); }
+
+.cp-icon {
+  font-size: 0.85rem;
+  flex-shrink: 0;
+  line-height: 1;
+  margin-top: 1px;
+}
+
+.cp-message {
+  flex: 1;
+  font-family: 'Georgia', serif;
+  font-size: 0.8rem;
+  color: rgba(245, 239, 224, 0.7);
+  line-height: 1.5;
+}
+
+.cp-time {
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 0.6rem;
+  color: rgba(245, 239, 224, 0.25);
+  white-space: nowrap;
+  flex-shrink: 0;
+  letter-spacing: 0.05em;
+}
+
+/* ---------------------------------------------------------------------------
+   Empty state
+--------------------------------------------------------------------------- */
+.cp-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 32px 24px;
+  text-align: center;
+}
+
+.cp-empty-icon {
+  font-size: 1.4rem;
+  color: rgba(201, 168, 76, 0.3);
+}
+
+.cp-empty span:last-child {
+  font-family: 'Georgia', serif;
+  font-size: 0.8rem;
+  color: rgba(245, 239, 224, 0.3);
+  font-style: italic;
+}
+
+/* ---------------------------------------------------------------------------
+   Loading skeleton
+--------------------------------------------------------------------------- */
+.cp-skeleton {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.cp-skeleton-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+  animation: cp-shimmer 1.5s ease-in-out infinite;
+}
+
+.cp-skeleton-text {
+  flex: 1;
+  height: 12px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.06);
+  animation: cp-shimmer 1.5s ease-in-out infinite;
+  animation-delay: 0.1s;
+}
+
+.cp-skeleton-time {
+  width: 48px;
+  height: 10px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.04);
+  animation: cp-shimmer 1.5s ease-in-out infinite;
+  animation-delay: 0.2s;
+}
+
+@keyframes cp-shimmer {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 0.8; }
+}
+
+/* ---------------------------------------------------------------------------
+   Mobile
+--------------------------------------------------------------------------- */
+@media (max-width: 480px) {
+  .cp-header   { padding: 16px 16px 12px; }
+  .cp-item     { padding: 10px 16px; }
+  .cp-stats    { padding: 12px 16px; }
+  .cp-feed     { max-height: 260px; }
+  .cp-message  { font-size: 0.75rem; }
+}
