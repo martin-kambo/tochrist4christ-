@@ -1284,9 +1284,272 @@ footer {
   .tab-btn .tab-label { display: none; }
   .tab-btn { min-width: 52px; padding: 0 0.75rem; }
 }
+
+/* ---- PHASE 1: NAV AUTH STATE ----------------------------- */
+.nav-dashboard-link {
+  display: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--gold) !important;
+  letter-spacing: 0.04em;
+  align-items: center;
+  gap: 0.3rem;
+  opacity: 1 !important;
+}
+.nav-dashboard-link::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  display: inline-block;
+  animation: navDotPulse 2.4s ease-in-out infinite;
+}
+@keyframes navDotPulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50%      { opacity:0.5; transform:scale(0.75); }
+}
+.nav-dashboard-link.visible { display: flex; }
+
+/* ---- PHASE 1: ONBOARDING OVERLAY ------------------------- */
+#onboarding-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(27,58,46,0.96);
+  backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1.5rem;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.45s ease;
+}
+#onboarding-overlay.visible { opacity:1; pointer-events:all; }
+.ob-card {
+  background: var(--cream);
+  border-radius: 20px; width: 100%; max-width: 520px;
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.4);
+  transform: translateY(24px);
+  transition: transform 0.45s cubic-bezier(0.34,1.2,0.64,1);
+}
+#onboarding-overlay.visible .ob-card { transform: translateY(0); }
+.ob-progress { display:flex; gap:6px; padding:1.5rem 2rem 0; }
+.ob-dot { height:3px; flex:1; border-radius:2px; background:var(--ivory-dark); transition:background .3s; }
+.ob-dot.done   { background: var(--gold); }
+.ob-dot.active { background: var(--green-light); }
+.ob-body {
+  padding: 1.75rem 2rem 2rem;
+  min-height: 340px;
+  display: flex; flex-direction: column;
+}
+.ob-step { display:none; flex-direction:column; flex:1; }
+.ob-step.active { display:flex; }
+.ob-icon { font-size:2.5rem; margin-bottom:1rem; line-height:1; }
+.ob-eyebrow {
+  font-family:'Montserrat',sans-serif; font-size:.62rem; font-weight:600;
+  letter-spacing:.18em; text-transform:uppercase;
+  color:var(--gold); margin-bottom:.4rem;
+}
+.ob-title {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.35rem,3.5vw,1.75rem); font-weight:700;
+  color:var(--green-deep); line-height:1.2; margin-bottom:.75rem;
+}
+.ob-title em { color:var(--green-light); font-style:italic; }
+.ob-sub {
+  font-family:'Crimson Text',Georgia,serif;
+  font-size:1.05rem; color:var(--text-muted); line-height:1.6; margin-bottom:1.5rem;
+}
+.ob-goals { display:grid; grid-template-columns:1fr 1fr; gap:.6rem; margin-bottom:1.5rem; flex:1; }
+.ob-goal-btn {
+  background:var(--ivory); border:2px solid var(--ivory-dark);
+  border-radius:12px; padding:.875rem .75rem;
+  text-align:center; cursor:pointer;
+  transition:all .2s cubic-bezier(0.34,1.2,0.64,1);
+  display:flex; flex-direction:column; gap:.35rem; align-items:center;
+  -webkit-tap-highlight-color:transparent; user-select:none;
+}
+.ob-goal-btn:hover { border-color:var(--green-light); background:rgba(74,140,96,.05); transform:translateY(-2px); }
+.ob-goal-btn.selected { border-color:var(--green-deep); background:var(--green-deep); }
+.ob-goal-btn .ob-goal-icon { font-size:1.5rem; line-height:1; transition:transform .25s; }
+.ob-goal-btn.selected .ob-goal-icon { transform:scale(1.1); }
+.ob-goal-btn .ob-goal-label {
+  font-family:'Montserrat',sans-serif; font-size:.68rem; font-weight:600;
+  letter-spacing:.04em; color:var(--green-deep); line-height:1.3; transition:color .2s;
+}
+.ob-goal-btn.selected .ob-goal-label { color:var(--ivory); }
+.ob-features { display:flex; flex-direction:column; gap:.75rem; margin-bottom:1.5rem; flex:1; }
+.ob-feature {
+  display:flex; align-items:flex-start; gap:.875rem;
+  padding:.875rem 1rem; background:var(--ivory);
+  border-radius:10px; border-left:3px solid var(--gold);
+  animation:obFeatureIn .4s ease both;
+}
+.ob-feature:nth-child(2) { animation-delay:.08s; border-left-color:var(--green-light); }
+.ob-feature:nth-child(3) { animation-delay:.16s; border-left-color:#5B8FC9; }
+@keyframes obFeatureIn { from{opacity:0;transform:translateX(-10px);} to{opacity:1;transform:none;} }
+.ob-feature-icon { font-size:1.3rem; flex-shrink:0; margin-top:1px; }
+.ob-feature-title { font-family:'Montserrat',sans-serif; font-size:.72rem; font-weight:600; color:var(--green-deep); margin-bottom:.15rem; }
+.ob-feature-desc  { font-family:'Crimson Text',Georgia,serif; font-size:.9rem; color:var(--text-muted); line-height:1.4; }
+.ob-verse {
+  background:var(--green-deep); border-radius:12px;
+  padding:1.25rem 1.5rem; margin-bottom:1.5rem;
+  flex:1; display:flex; flex-direction:column; justify-content:center;
+}
+.ob-verse-text { font-family:'Crimson Text',Georgia,serif; font-size:1.1rem; font-style:italic; color:var(--ivory); line-height:1.65; margin-bottom:.6rem; }
+.ob-verse-ref  { font-family:'Montserrat',sans-serif; font-size:.65rem; font-weight:600; letter-spacing:.15em; text-transform:uppercase; color:var(--gold); }
+.ob-cta {
+  width:100%; background:var(--green-deep); color:var(--ivory);
+  border:none; border-radius:10px; padding:.9rem 1.5rem;
+  font-family:'Montserrat',sans-serif; font-size:.75rem; font-weight:600;
+  letter-spacing:.1em; text-transform:uppercase;
+  cursor:pointer; transition:background .2s,transform .15s; margin-top:auto;
+}
+.ob-cta:hover { background:var(--green-mid); transform:translateY(-1px); }
+.ob-cta:disabled { opacity:.45; cursor:default; transform:none; }
+.ob-cta.gold { background:var(--gold); color:var(--brown); }
+.ob-cta.gold:hover { background:var(--gold-light); }
+.ob-skip {
+  background:none; border:none;
+  font-family:'Montserrat',sans-serif; font-size:.62rem; color:var(--text-muted);
+  cursor:pointer; padding:.5rem; display:block; margin:.5rem auto 0;
+  letter-spacing:.06em; text-decoration:underline; text-underline-offset:3px;
+}
+.ob-skip:hover { color:var(--text-body); }
+
+/* ---- PHASE 1: DASHBOARD FIRST-RUN BANNER ----------------- */
+#dash-welcome-banner {
+  background:linear-gradient(135deg,var(--green-deep),var(--green-mid));
+  border-radius:14px; padding:1.75rem; margin-bottom:1.5rem;
+  border-left:4px solid var(--gold);
+  display:none; position:relative; overflow:hidden;
+  transition:opacity .3s,max-height .4s,padding .4s,margin .4s;
+}
+#dash-welcome-banner::after {
+  content:'\271D'; position:absolute; right:1.5rem; top:50%; transform:translateY(-50%);
+  font-size:4rem; color:rgba(201,168,76,.08);
+  font-family:Georgia,serif; pointer-events:none;
+}
+#dash-welcome-banner.visible { display:block; }
+.dwb-eyebrow { font-family:'Montserrat',sans-serif; font-size:.62rem; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); margin-bottom:.4rem; }
+.dwb-title   { font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700; color:var(--ivory); margin-bottom:.5rem; line-height:1.25; }
+.dwb-title em { color:var(--gold-light); font-style:italic; }
+.dwb-goal    { font-family:'Crimson Text',Georgia,serif; font-size:.975rem; color:rgba(245,239,224,.75); font-style:italic; margin-bottom:1.25rem; line-height:1.5; }
+.dwb-actions { display:flex; gap:.75rem; flex-wrap:wrap; align-items:center; }
+.dwb-btn-primary {
+  background:var(--gold); color:var(--brown); border:none;
+  border-radius:8px; padding:.6rem 1.25rem;
+  font-family:'Montserrat',sans-serif; font-size:.68rem; font-weight:700;
+  letter-spacing:.1em; text-transform:uppercase; cursor:pointer;
+  transition:all .2s; text-decoration:none;
+  display:inline-flex; align-items:center; gap:.35rem;
+}
+.dwb-btn-primary:hover { background:var(--gold-light); transform:translateY(-1px); }
+.dwb-dismiss {
+  background:none; border:none;
+  font-family:'Montserrat',sans-serif; font-size:.62rem;
+  color:rgba(245,239,224,.45); cursor:pointer;
+  letter-spacing:.06em; text-decoration:underline; text-underline-offset:3px;
+}
+.dwb-dismiss:hover { color:rgba(245,239,224,.7); }
+@media (max-width:480px) { .ob-body { padding:1.25rem 1.25rem 1.5rem; } }
+
 </style>
 </head>
 <body>
+
+<!-- == PHASE 1: ONBOARDING OVERLAY ======================== -->
+<div id="onboarding-overlay" role="dialog" aria-modal="true" aria-label="Welcome to TC4C">
+  <div class="ob-card">
+    <div class="ob-progress">
+      <div class="ob-dot active" id="ob-dot-0"></div>
+      <div class="ob-dot" id="ob-dot-1"></div>
+      <div class="ob-dot" id="ob-dot-2"></div>
+    </div>
+    <div class="ob-body">
+
+      <!-- Step 1: Goal -->
+      <div class="ob-step active" id="ob-step-0">
+        <div class="ob-icon">&#9997;&#65039;</div>
+        <div class="ob-eyebrow">Step 1 of 3</div>
+        <h2 class="ob-title">What&#8217;s your main <em>focus</em> right now?</h2>
+        <p class="ob-sub">We&#8217;ll use this to personalise your journey and show you where to start.</p>
+        <div class="ob-goals">
+          <button class="ob-goal-btn" data-goal="Build a daily devotional habit" onclick="TC4COnboarding.selectGoal(this)">
+            <span class="ob-goal-icon">&#128293;</span>
+            <span class="ob-goal-label">Daily Habit</span>
+          </button>
+          <button class="ob-goal-btn" data-goal="Go deeper in prayer and the Word" onclick="TC4COnboarding.selectGoal(this)">
+            <span class="ob-goal-icon">&#128591;</span>
+            <span class="ob-goal-label">Deeper Prayer</span>
+          </button>
+          <button class="ob-goal-btn" data-goal="Understand my identity in Christ" onclick="TC4COnboarding.selectGoal(this)">
+            <span class="ob-goal-icon">&#10024;</span>
+            <span class="ob-goal-label">My Identity</span>
+          </button>
+          <button class="ob-goal-btn" data-goal="Find real Christian community" onclick="TC4COnboarding.selectGoal(this)">
+            <span class="ob-goal-icon">&#127758;</span>
+            <span class="ob-goal-label">Community</span>
+          </button>
+          <button class="ob-goal-btn" data-goal="Grow in faith and obedience" onclick="TC4COnboarding.selectGoal(this)">
+            <span class="ob-goal-icon">&#127807;</span>
+            <span class="ob-goal-label">Grow in Faith</span>
+          </button>
+          <button class="ob-goal-btn" data-goal="Serve and disciple others" onclick="TC4COnboarding.selectGoal(this)">
+            <span class="ob-goal-icon">&#128640;</span>
+            <span class="ob-goal-label">Serve Others</span>
+          </button>
+        </div>
+        <button class="ob-cta" id="ob-next-0" disabled onclick="TC4COnboarding.next(0)">Continue &#8594;</button>
+        <button class="ob-skip" onclick="TC4COnboarding.skip()">Skip for now</button>
+      </div>
+
+      <!-- Step 2: Platform tour -->
+      <div class="ob-step" id="ob-step-1">
+        <div class="ob-icon">&#128506;&#65039;</div>
+        <div class="ob-eyebrow">Step 2 of 3</div>
+        <h2 class="ob-title">Your platform is <em>ready.</em></h2>
+        <p class="ob-sub">Three places to visit every time you open TC4C:</p>
+        <div class="ob-features">
+          <div class="ob-feature">
+            <span class="ob-feature-icon">&#128202;</span>
+            <div class="ob-feature-text">
+              <div class="ob-feature-title">Dashboard</div>
+              <div class="ob-feature-desc">Track your streak, lessons, and badges. Your growth at a glance.</div>
+            </div>
+          </div>
+          <div class="ob-feature">
+            <span class="ob-feature-icon">&#128293;</span>
+            <div class="ob-feature-text">
+              <div class="ob-feature-title">Daily Growth Tab</div>
+              <div class="ob-feature-desc">A fresh verse, reflection prompt, and prayer guide. Every single day.</div>
+            </div>
+          </div>
+          <div class="ob-feature">
+            <span class="ob-feature-icon">&#127891;</span>
+            <div class="ob-feature-text">
+              <div class="ob-feature-title">Courses</div>
+              <div class="ob-feature-desc">6 modules, 28 lessons. Start Module 1 &#8212; it unlocks everything.</div>
+            </div>
+          </div>
+        </div>
+        <button class="ob-cta" onclick="TC4COnboarding.next(1)">Understood &#8594;</button>
+      </div>
+
+      <!-- Step 3: Send-off -->
+      <div class="ob-step" id="ob-step-2">
+        <div class="ob-icon">&#10013;&#65039;</div>
+        <div class="ob-eyebrow">You&#8217;re all set</div>
+        <h2 class="ob-title">Welcome to the <em>journey.</em></h2>
+        <div class="ob-verse">
+          <p class="ob-verse-text">&#8220;For I know the plans I have for you, declares the Lord &#8212; plans for welfare and not for evil, to give you a future and a hope.&#8221;</p>
+          <p class="ob-verse-ref">Jeremiah 29:11</p>
+        </div>
+        <button class="ob-cta gold" onclick="TC4COnboarding.finish()">Go to My Dashboard &#8594;</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+<!-- /PHASE 1 ONBOARDING OVERLAY -->
 
 <!-- ══ NAV ══════════════════════════════════════════════════ -->
 <nav id="navbar">
@@ -1297,7 +1560,8 @@ footer {
   <div class="nav-links" id="nav-links">
     <a href="#platform">The Platform</a>
     <a href="#community">Community</a>
-    <a href="#signup" class="nav-cta">Begin Free →</a>
+    <a id="nav-dashboard-link" class="nav-dashboard-link" href="#platform" onclick="event.preventDefault();document.getElementById('platform').scrollIntoView({behavior:'smooth'});switchTab('dashboard');">My Dashboard</a>
+    <a href="#signup" class="nav-cta" id="nav-cta-link">Begin Free →</a>
   </div>
   <button class="nav-toggle" id="nav-toggle" aria-label="Open menu">
     <span></span><span></span><span></span>
@@ -1632,6 +1896,16 @@ footer {
 
       <!-- Signed-in state (shown when user exists) -->
       <div id="dash-signedin" style="display:none">
+      <!-- PHASE 1: First-run welcome banner -->
+      <div id="dash-welcome-banner">
+        <div class="dwb-eyebrow">Welcome to TC4C</div>
+        <h3 class="dwb-title" id="dwb-title-text">You&#8217;re in. Let&#8217;s begin.</h3>
+        <p class="dwb-goal" id="dwb-goal-text">Your journey starts with one lesson.</p>
+        <div class="dwb-actions">
+          <a href="#platform" class="dwb-btn-primary" onclick="switchTab('courses')">Start Module 1 &#8594;</a>
+          <button class="dwb-dismiss" onclick="TC4COnboarding.dismissBanner()">I&#8217;ll explore on my own</button>
+        </div>
+      </div>
         <div class="panel-header">
           <h3 class="panel-title" id="dash-greeting">Your Journey</h3>
           <p class="panel-sub">Track your progress and celebrate every milestone.</p>
@@ -2598,6 +2872,7 @@ async function handleSubmit(e) {
   if (window.CommunityPulse) CommunityPulse.log('signup', firstName, location);
   showSuccess(firstName);
   renderDashboard();
+  setTimeout(() => TC4COnboarding.trigger(firstName), 700);
 }
 
 function showSuccess(firstName) {
@@ -2638,11 +2913,180 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('join-form');
   if (form) form.addEventListener('submit', handleSubmit);
 
+  // Phase 1: boot onboarding state
+  if (typeof TC4COnboarding !== 'undefined') {
+    TC4COnboarding.init();
+    TC4COnboarding.renderWelcomeBanner();
+  }
+
   // Habit checkboxes (UI only, demo)
   document.querySelectorAll('.habit-check').forEach(btn => {
     btn.addEventListener('click', () => btn.classList.toggle('done'));
   });
 });
+</script>
+<script>
+/* =========================================================
+   TC4C — PHASE 1: ONBOARDING & IDENTITY
+   Drop-in addition. Zero modifications to existing code.
+   ========================================================= */
+'use strict';
+
+const ONBOARDING_KEY  = 'tc4c_onboarded';
+const GOAL_KEY        = 'tc4c_goal';
+const BANNER_DISMISSED = 'tc4c_banner_dismissed';
+
+const TC4COnboarding = (() => {
+
+  // ── Init: called on DOMContentLoaded ──────────────────────
+  function init() {
+    updateNavAuthState();
+    // Overlay is only shown after fresh signup via trigger()
+    // Returning signed-in users see nothing new — banner is handled separately
+  }
+
+  // ── Called by handleSubmit after signup ───────────────────
+  function trigger(firstName) {
+    const overlay = document.getElementById('onboarding-overlay');
+    if (!overlay) return;
+    // Reset state
+    showStep(0);
+    document.querySelectorAll('.ob-goal-btn').forEach(b => b.classList.remove('selected'));
+    const nextBtn = document.getElementById('ob-next-0');
+    if (nextBtn) nextBtn.disabled = true;
+    // Show overlay
+    overlay.style.display = 'flex';
+    requestAnimationFrame(() => requestAnimationFrame(() => overlay.classList.add('visible')));
+    document.body.style.overflow = 'hidden';
+  }
+
+  function showStep(n) {
+    document.querySelectorAll('.ob-step').forEach((s, i) => s.classList.toggle('active', i === n));
+    document.querySelectorAll('.ob-dot').forEach((d, i) => {
+      d.classList.remove('done', 'active');
+      if (i < n)       d.classList.add('done');
+      else if (i === n) d.classList.add('active');
+    });
+  }
+
+  function selectGoal(btn) {
+    document.querySelectorAll('.ob-goal-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    const nextBtn = document.getElementById('ob-next-0');
+    if (nextBtn) nextBtn.disabled = false;
+  }
+
+  function next(fromStep) {
+    if (fromStep === 0) {
+      const selected = document.querySelector('.ob-goal-btn.selected');
+      if (selected) {
+        const goal = selected.dataset.goal;
+        localStorage.setItem(GOAL_KEY, goal);
+        // Silently patch add-member — fire and forget, never blocks UX
+        try {
+          const userRaw = localStorage.getItem('tc4c_user');
+          const user = userRaw ? JSON.parse(userRaw) : null;
+          if (user && user.email) {
+            fetch('/.netlify/functions/add-member', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: user.email, goal: goal, _patch: true })
+            }).catch(() => {});
+          }
+        } catch(e) {}
+      }
+    }
+    showStep(fromStep + 1);
+  }
+
+  function finish() {
+    _close();
+    localStorage.setItem(ONBOARDING_KEY, '1');
+    updateNavAuthState();
+    renderWelcomeBanner();
+    // Smooth scroll to dashboard tab
+    const platform = document.getElementById('platform');
+    if (platform) platform.scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => { if (typeof switchTab === 'function') switchTab('dashboard'); }, 420);
+  }
+
+  function skip() {
+    _close();
+    localStorage.setItem(ONBOARDING_KEY, '1');
+    updateNavAuthState();
+  }
+
+  function _close() {
+    const overlay = document.getElementById('onboarding-overlay');
+    if (!overlay) return;
+    overlay.classList.remove('visible');
+    document.body.style.overflow = '';
+    setTimeout(() => { overlay.style.display = 'none'; }, 450);
+  }
+
+  // ── Dashboard welcome banner ───────────────────────────────
+  function renderWelcomeBanner() {
+    const banner = document.getElementById('dash-welcome-banner');
+    if (!banner) return;
+    // Only show if: user exists, onboarded flag set, not dismissed
+    const user = (() => { try { return JSON.parse(localStorage.getItem('tc4c_user')); } catch { return null; } })();
+    if (!user) return;
+    if (!localStorage.getItem(ONBOARDING_KEY)) return;
+    if (localStorage.getItem(BANNER_DISMISSED)) return;
+
+    const titleEl = document.getElementById('dwb-title-text');
+    const goalEl  = document.getElementById('dwb-goal-text');
+    const goal    = localStorage.getItem(GOAL_KEY);
+
+    if (titleEl) {
+      titleEl.innerHTML = 'You&#8217;re in, <em>' + escapeHtmlOb(user.firstName) + '</em>. Let&#8217;s begin.';
+    }
+    if (goalEl) {
+      goalEl.textContent = goal
+        ? 'Your focus: "' + goal + '" \u2014 Module 1 is the perfect first step.'
+        : 'Start with Module 1 \u2014 it only takes a few minutes a day.';
+    }
+    banner.classList.add('visible');
+  }
+
+  function dismissBanner() {
+    const banner = document.getElementById('dash-welcome-banner');
+    if (banner) {
+      banner.style.opacity = '0';
+      banner.style.maxHeight = banner.offsetHeight + 'px';
+      requestAnimationFrame(() => {
+        banner.style.maxHeight = '0';
+        banner.style.padding   = '0';
+        banner.style.margin    = '0';
+        banner.style.overflow  = 'hidden';
+      });
+      setTimeout(() => banner.remove(), 420);
+    }
+    localStorage.setItem(BANNER_DISMISSED, '1');
+  }
+
+  // ── Nav auth state ─────────────────────────────────────────
+  function updateNavAuthState() {
+    const user    = (() => { try { return JSON.parse(localStorage.getItem('tc4c_user')); } catch { return null; } })();
+    const navLink = document.getElementById('nav-dashboard-link');
+    const navCta  = document.getElementById('nav-cta-link');
+    if (!navLink) return;
+    if (user) {
+      navLink.classList.add('visible');
+      navLink.title = 'Hi ' + (user.firstName || '') + ' \u2014 go to your dashboard';
+      if (navCta) navCta.style.display = 'none';
+    } else {
+      navLink.classList.remove('visible');
+      if (navCta) navCta.style.display = '';
+    }
+  }
+
+  function escapeHtmlOb(str) {
+    return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  return { init, trigger, selectGoal, next, finish, skip, renderWelcomeBanner, dismissBanner, updateNavAuthState };
+})();
 </script>
 <script src="/assets/community-pulse.js"></script>
 <script src="/assets/js/daily-engagement.js"></script>
