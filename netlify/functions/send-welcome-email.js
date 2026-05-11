@@ -3,15 +3,80 @@
 // Sends a welcome email to a new member via Resend (resend.com).
 // Called by index.html handleSubmit after a successful signup.
 //
-// Required Netlify environment variables:
-//   RESEND_API_KEY  — get from resend.com → API Keys
+// Now also generates a one-time magic-link token, stores it in Netlify Blobs
+// (magic-tokens store), and embeds the link in the CTA button.
+// The token expires in 7 days. magic-login.js validates and consumes it.
 //
-// Required Resend setup:
-//   1. Go to resend.com → Domains → Add Domain → tochristforchrist.org
-//   2. Add the DNS records Resend gives you in Host Pinnacle
-//   3. Wait for verification (usually 5–10 min)
-//   Then emails will send from hello@tochristforchrist.org
+// Required environment variables:
+//   RESEND_API_KEY       — from resend.com → API Keys
+//   SESSION_SECRET       — same secret used by admin-login / verify-auth
+//   NETLIFY_SITE_ID      — for Netlify Blobs access
+//   NETLIFY_BLOBS_TOKEN  — for Netlify Blobs access
+//
+// Request body:
+//   {
+//     to_email:   string,   // recipient address
+//     firstName:  string,   // required
+//     lastName:   string,   // optional
+//     faithStage: string,   // optional — defaults to "seeker"
+//   }
 
+const crypto    = require('crypto');
+const { getStore } = require('@netlify/blobs');
+
+// ---------------------------------------------------------------------------
+// Blobs: store helpers
+// ---------------------------------------------------------------------------
+function getTokenStore() {
+  const opts = { name: 'magic-tokens' };
+  if (process.env.NETLIFY_SITE_ID && process.env.NETLIFY_BLOBS_TOKEN) {
+    opts.siteID = process.env.NETLIFY_SITE_ID;
+    opts.token  = process.env.NETLIFY_BLOBS_TOKEN;
+  }
+  return getStore(opts);
+}
+
+function getMemberStore() {
+  const opts = { name: 'members' };
+  if (process.env.NETLIFY_SITE_ID && process.env.NETLIFY_BLOBS_TOKEN) {
+    opts.siteID = process.env.NETLIFY_SITE_ID;
+    opts.token  = process.env.NETLIFY_BLOBS_TOKEN;
+  }
+  return getStore(opts);
+}
+
+// ---------------------------------------------------------------------------
+// Persist member profile (email is the key)
+// ---------------------------------------------------------------------------
+async function saveMember({ email, firstName, lastName, faithStage }) {
+  const store = getMemberStore();
+  // Use a URL-safe key: base64url of lowercased email
+  const key = Buffer.from(email.toLowerCase()).toString('base64url');
+  await store.setJSON(key, {
+    email:      email.toLowerCase(),
+    firstName,
+    lastName:   lastName || '',
+    faithStage: faithStage || 'just_starting',
+    joinedAt:   new Date().toISOString(),
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Generate and persist a one-time magic token
+// ---------------------------------------------------------------------------
+async function createMagicToken({ email, firstName, lastName, faithStage }) {
+  const token = crypto.randomBytes(32).toString('hex'); // 64-char hex string
+  const exp   = Date.now() + 7 * 24 * 60 * 60 * 1000; // 7 days from now
+
+  const store = getTokenStore();
+  await store.setJSON(token, { email, firstName, lastName, faithStage, exp, source: 'welcome' });
+
+  return token;
+}
+
+// ---------------------------------------------------------------------------
+// Handler
+// ---------------------------------------------------------------------------
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
@@ -33,7 +98,7 @@ exports.handler = async (event) => {
     return { statusCode: 400, body: JSON.stringify({ success: false, error: 'Bad request' }) };
   }
 
-  const { to_email, firstName, lastName } = body;
+  const { to_email, firstName, lastName, faithStage = 'seeker' } = body;
 
   if (!to_email || !firstName) {
     return {
@@ -44,6 +109,32 @@ exports.handler = async (event) => {
 
   const fullName = `${firstName} ${lastName || ''}`.trim();
 
+  // ---------------------------------------------------------------------------
+  // Persist member profile
+  // ---------------------------------------------------------------------------
+  try {
+    await saveMember({ email: to_email, firstName, lastName, faithStage });
+  } catch (err) {
+    // Non-fatal — log and continue so the email still sends
+    console.error('Failed to persist member profile:', err);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Generate magic link
+  // ---------------------------------------------------------------------------
+  let magicLink;
+  try {
+    const token = await createMagicToken({ email: to_email, firstName, lastName, faithStage });
+    magicLink = `https://tochristforchrist.org/.netlify/functions/magic-login?token=${token}`;
+  } catch (err) {
+    console.error('Failed to create magic token:', err);
+    // Fall back to the plain course link so the email still sends
+    magicLink = 'https://tochristforchrist.org/#course';
+  }
+
+  // ---------------------------------------------------------------------------
+  // Email HTML
+  // ---------------------------------------------------------------------------
   const html = `
 <!DOCTYPE html>
 <html lang="en">
@@ -93,20 +184,26 @@ exports.handler = async (event) => {
               </table>
 
               <p style="margin:0 0 16px;font-size:1rem;color:rgba(245,239,224,0.7);line-height:1.8;">
-                Your journey begins with <strong style="color:rgba(245,239,224,0.9);">Module 1: The Foundation — Who Is God?</strong> Head back to the site, open the course, and click your first lesson.
+                Your journey begins with <strong style="color:rgba(245,239,224,0.9);">Module 1: The Foundation — Who Is God?</strong> Click the button below — you will be signed in automatically and taken straight to your course.
               </p>
 
-              <!-- CTA Button -->
+              <!-- CTA Button — magic link -->
               <table width="100%" cellpadding="0" cellspacing="0" style="margin:28px 0;">
                 <tr>
                   <td align="center">
-                    <a href="https://tochristforchrist.org/#course"
+                    <a href="${magicLink}"
                        style="display:inline-block;background:#C9A84C;color:#2C1A0E;font-family:'Helvetica',sans-serif;font-size:0.78rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;padding:14px 36px;text-decoration:none;border-radius:2px;">
                       Begin Module 1 →
                     </a>
                   </td>
                 </tr>
               </table>
+
+              <!-- Magic link note -->
+              <p style="margin:0 0 16px;font-size:0.8rem;color:rgba(245,239,224,0.35);line-height:1.7;text-align:center;">
+                This link signs you in automatically and is valid for 7 days.<br>
+                It can only be used once — keep this email until you are ready to begin.
+              </p>
 
               <p style="margin:0 0 8px;font-size:1rem;color:rgba(245,239,224,0.7);line-height:1.8;">
                 We are walking this journey with you. Reply to this email anytime — we read every message.
@@ -139,6 +236,9 @@ exports.handler = async (event) => {
 </html>
   `.trim();
 
+  // ---------------------------------------------------------------------------
+  // Send via Resend
+  // ---------------------------------------------------------------------------
   try {
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
