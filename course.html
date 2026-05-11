@@ -937,37 +937,69 @@
   // Show gate immediately (prevents flash of course content)
   gate.classList.add('visible');
 
-  try {
-    const res  = await fetch('/.netlify/functions/verify-auth', { credentials: 'include' });
-    const data = await res.json();
-
-    if (data.authenticated) {
-      // Valid session — hide gate, reveal course
-      gate.classList.add('hidden');
-      shell.classList.add('revealed');
-
-      // Persist firstName from session into localStorage for dashboard
-      if (data.user?.firstName) {
-        try {
-          const existing = JSON.parse(localStorage.getItem('tc4c_user') || '{}');
-          if (!existing.firstName) {
-            localStorage.setItem('tc4c_user', JSON.stringify({
-              ...existing,
-              firstName:  data.user.firstName,
-              faithStage: data.user.faithStage || 'just_starting',
-            }));
-          }
-        } catch {}
-      }
-    } else {
-      // No valid session — keep gate visible, course stays hidden
-      gate.classList.add('visible');
-    }
-  } catch {
-    // verify-auth unreachable (local dev, network error) — fail open
+  // ── Helper: reveal the course for an authenticated user ──────────────────
+  function revealCourse(user) {
     gate.classList.add('hidden');
     shell.classList.add('revealed');
+
+    if (!user) return;
+
+    // Admin: unlock every level regardless of lesson count
+    if (user.role === 'admin' || user.isAdmin) {
+      window.__adminMode = true;
+      try {
+        localStorage.setItem('tc4c_user', JSON.stringify({
+          firstName:  user.firstName || 'Admin',
+          faithStage: 'growing',
+          isAdmin:    true,
+        }));
+        const raw  = localStorage.getItem('tcc_course_progress');
+        const prog = raw ? JSON.parse(raw) : {};
+        if (prog.faith_stage !== 'growing') {
+          prog.faith_stage = 'growing';
+          localStorage.setItem('tcc_course_progress', JSON.stringify(prog));
+        }
+      } catch {}
+      return;
+    }
+
+    // Member: persist name + faith stage for the dashboard
+    try {
+      const existing = JSON.parse(localStorage.getItem('tc4c_user') || '{}');
+      localStorage.setItem('tc4c_user', JSON.stringify({
+        ...existing,
+        firstName:  user.firstName  || existing.firstName  || '',
+        faithStage: user.faithStage || existing.faithStage || 'just_starting',
+      }));
+    } catch {}
   }
+
+  // ── 1. Check member session (magic-link cookie) ──────────────────────────
+  try {
+    const memberRes  = await fetch('/.netlify/functions/verify-member-auth', { credentials: 'include' });
+    if (memberRes.ok) {
+      const memberData = await memberRes.json();
+      if (memberData.authenticated) {
+        revealCourse(memberData.user);
+        return;
+      }
+    }
+  } catch { /* network error — fall through to admin check */ }
+
+  // ── 2. Check admin session (admin cookie) ────────────────────────────────
+  try {
+    const adminRes  = await fetch('/.netlify/functions/verify-auth', { credentials: 'include' });
+    if (adminRes.ok) {
+      const adminData = await adminRes.json();
+      if (adminData.authenticated) {
+        revealCourse(adminData.user);
+        return;
+      }
+    }
+  } catch { /* network error — fall through */ }
+
+  // ── 3. No valid session — show teaser gate ───────────────────────────────
+  gate.classList.add('visible');
 })();
 
 /* ═══════════════════════════════════════════════════════
