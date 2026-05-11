@@ -1110,7 +1110,16 @@ const LEVEL_META = {
 function loadProgress() {
   try {
     const raw = localStorage.getItem('tcc_course_progress');
-    if (raw) return JSON.parse(raw);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      // Normalise: ensure required arrays always exist even if localStorage
+      // stored a partial object (e.g. the admin bypass only wrote faith_stage)
+      return {
+        faith_stage:       parsed.faith_stage       || 'just_starting',
+        completed:         Array.isArray(parsed.completed)         ? parsed.completed         : [],
+        dismissed_unlocks: Array.isArray(parsed.dismissed_unlocks) ? parsed.dismissed_unlocks : [],
+      };
+    }
   } catch(e) {}
   return {
     faith_stage: "just_starting",  // default — will come from user profile
