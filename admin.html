@@ -499,7 +499,7 @@ canvas { display: block; }
 
 /* ─── PAGE SECTIONS (tab system) ─── */
 .page { display: none; }
-.page.active { display: block; }
+.page.active { display: block; padding: 1.75rem; }
 
 /* ─── SCROLLBAR ─── */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
@@ -793,28 +793,16 @@ canvas { display: block; }
         </div>
         <div class="panel-body">
           <div class="module-row">
-            <div class="module-meta"><span class="module-name">1 · The Foundation</span><span class="module-count">38 / 47</span></div>
-            <div class="bar-track"><div class="bar-fill" data-w="81"></div></div>
+            <div class="module-meta"><span class="module-name">🏛️ Level 1 · Foundation</span><span class="module-count" id="ov-count-1">—</span></div>
+            <div class="bar-track"><div class="bar-fill" id="ov-bar-1" data-w="0"></div></div>
           </div>
           <div class="module-row">
-            <div class="module-meta"><span class="module-name">2 · The Word</span><span class="module-count">29 / 47</span></div>
-            <div class="bar-track"><div class="bar-fill green" data-w="62"></div></div>
+            <div class="module-meta"><span class="module-name">🌿 Level 2 · Growth</span><span class="module-count" id="ov-count-2">—</span></div>
+            <div class="bar-track"><div class="bar-fill green" id="ov-bar-2" data-w="0"></div></div>
           </div>
           <div class="module-row">
-            <div class="module-meta"><span class="module-name">3 · Prayer</span><span class="module-count">21 / 47</span></div>
-            <div class="bar-track"><div class="bar-fill blue" data-w="45"></div></div>
-          </div>
-          <div class="module-row">
-            <div class="module-meta"><span class="module-name">4 · Identity</span><span class="module-count">14 / 47</span></div>
-            <div class="bar-track"><div class="bar-fill purple" data-w="30"></div></div>
-          </div>
-          <div class="module-row">
-            <div class="module-meta"><span class="module-name">5 · Community</span><span class="module-count">8 / 47</span></div>
-            <div class="bar-track"><div class="bar-fill" style="background:#7C3AED" data-w="17"></div></div>
-          </div>
-          <div class="module-row">
-            <div class="module-meta"><span class="module-name">6 · Mission</span><span class="module-count">3 / 47</span></div>
-            <div class="bar-track"><div class="bar-fill" style="background:#EC4899" data-w="6"></div></div>
+            <div class="module-meta"><span class="module-name">🚀 Level 3 · Mission</span><span class="module-count" id="ov-count-3">—</span></div>
+            <div class="bar-track"><div class="bar-fill blue" id="ov-bar-3" data-w="0"></div></div>
           </div>
         </div>
       </div>
@@ -825,37 +813,8 @@ canvas { display: block; }
             <span class="panel-title">Signup Sources</span>
           </div>
           <div class="panel-body">
-            <div class="source-list">
-              <div class="source-item">
-                <div class="source-dot" style="background:var(--gold)"></div>
-                <span class="source-name">QR Poster — Westlands</span>
-                <div class="source-bar-wrap"><div class="source-bar" style="background:var(--gold)" data-w="78"></div></div>
-                <span class="source-pct">78%</span>
-              </div>
-              <div class="source-item">
-                <div class="source-dot" style="background:var(--green)"></div>
-                <span class="source-name">QR Poster — CBD</span>
-                <div class="source-bar-wrap"><div class="source-bar" style="background:var(--green)" data-w="55"></div></div>
-                <span class="source-pct">55%</span>
-              </div>
-              <div class="source-item">
-                <div class="source-dot" style="background:var(--blue)"></div>
-                <span class="source-name">Word of Mouth</span>
-                <div class="source-bar-wrap"><div class="source-bar" style="background:var(--blue)" data-w="30"></div></div>
-                <span class="source-pct">30%</span>
-              </div>
-              <div class="source-item">
-                <div class="source-dot" style="background:#8B5CF6"></div>
-                <span class="source-name">Church Referral</span>
-                <div class="source-bar-wrap"><div class="source-bar" style="background:#8B5CF6" data-w="18"></div></div>
-                <span class="source-pct">18%</span>
-              </div>
-              <div class="source-item">
-                <div class="source-dot" style="background:#EC4899"></div>
-                <span class="source-name">Social Media</span>
-                <div class="source-bar-wrap"><div class="source-bar" style="background:#EC4899" data-w="10"></div></div>
-                <span class="source-pct">10%</span>
-              </div>
+            <div class="source-list" id="sources-overview-list">
+              <div style="font-size:0.72rem;color:var(--text3);">Loading…</div>
             </div>
           </div>
         </div>
@@ -956,34 +915,27 @@ canvas { display: block; }
     <div class="panel" style="margin-bottom:1rem;">
       <div class="panel-head"><span class="panel-title">Course Completion by Module</span></div>
       <div class="panel-body">
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
-          <div>
-            <div class="module-row">
-              <div class="module-meta"><span class="module-name">Module 1 · The Foundation</span><span class="module-count">81% · 38 members</span></div>
-              <div class="bar-track"><div class="bar-fill" data-w="81"></div></div>
+        <div style="display:flex; flex-direction:column; gap:1.25rem;">
+          <div class="module-row">
+            <div class="module-meta">
+              <span class="module-name">🏛️ Level 1 · Foundation — Faith, Salvation &amp; Identity</span>
+              <span class="module-count" id="prog-count-1">— loading —</span>
             </div>
-            <div class="module-row">
-              <div class="module-meta"><span class="module-name">Module 2 · The Word</span><span class="module-count">62% · 29 members</span></div>
-              <div class="bar-track"><div class="bar-fill green" data-w="62"></div></div>
-            </div>
-            <div class="module-row">
-              <div class="module-meta"><span class="module-name">Module 3 · Prayer</span><span class="module-count">45% · 21 members</span></div>
-              <div class="bar-track"><div class="bar-fill blue" data-w="45"></div></div>
-            </div>
+            <div class="bar-track"><div class="bar-fill" id="prog-bar-1" data-w="0"></div></div>
           </div>
-          <div>
-            <div class="module-row">
-              <div class="module-meta"><span class="module-name">Module 4 · Identity</span><span class="module-count">30% · 14 members</span></div>
-              <div class="bar-track"><div class="bar-fill purple" data-w="30"></div></div>
+          <div class="module-row">
+            <div class="module-meta">
+              <span class="module-name">🌿 Level 2 · Growth — Healing, Relationships &amp; Stewardship</span>
+              <span class="module-count" id="prog-count-2">— loading —</span>
             </div>
-            <div class="module-row">
-              <div class="module-meta"><span class="module-name">Module 5 · Community</span><span class="module-count">17% · 8 members</span></div>
-              <div class="bar-track"><div class="bar-fill" style="background:#7C3AED" data-w="17"></div></div>
+            <div class="bar-track"><div class="bar-fill green" id="prog-bar-2" data-w="0"></div></div>
+          </div>
+          <div class="module-row">
+            <div class="module-meta">
+              <span class="module-name">🚀 Level 3 · Mission — Evangelism &amp; Discipleship</span>
+              <span class="module-count" id="prog-count-3">— loading —</span>
             </div>
-            <div class="module-row">
-              <div class="module-meta"><span class="module-name">Module 6 · Mission</span><span class="module-count">6% · 3 members</span></div>
-              <div class="bar-track"><div class="bar-fill" style="background:#EC4899" data-w="6"></div></div>
-            </div>
+            <div class="bar-track"><div class="bar-fill blue" id="prog-bar-3" data-w="0"></div></div>
           </div>
         </div>
       </div>
@@ -991,17 +943,19 @@ canvas { display: block; }
   </div>
 
   <div id="page-sources" class="page fade-in">
-    <div class="dash-grid">
+    <div class="dash-grid wide">
       <div class="panel">
-        <div class="panel-head"><span class="panel-title">Poster Performance</span></div>
+        <div class="panel-head"><span class="panel-title">Signups by Source</span></div>
         <div class="panel-body">
-          <table class="members-table">
-            <thead><tr><th>Poster Location</th><th>Scans</th><th>Signups</th><th>Conversion</th><th>Status</th></tr></thead>
-            <tbody>
-              <tr><td><strong>Westlands — Junction Mall</strong></td><td>89</td><td>24</td><td><span style="color:#4ADE80">27%</span></td><td><span class="badge active">Live</span></td></tr>
-              <tr><td><strong>CBD — Archives Road</strong></td><td>61</td><td>14</td><td><span style="color:#4ADE80">23%</span></td><td><span class="badge active">Live</span></td></tr>
-            </tbody>
-          </table>
+          <div class="source-list" id="sources-full-list">
+            <div style="font-size:0.72rem;color:var(--text3);">Loading…</div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><span class="panel-title">Source Breakdown</span></div>
+        <div class="panel-body" id="sources-stats-panel">
+          <div style="font-size:0.72rem;color:var(--text3);">Loading…</div>
         </div>
       </div>
     </div>
@@ -1384,6 +1338,15 @@ let feedRunning = true;
 let feedInterval;
 
 // ─── AUTHENTICATION (Netlify Identity) ─────────────────────
+// ─── LOCAL AUTH FALLBACK ───────────────────────────────────
+// SHA-256 of the admin password — plain text never stored here.
+const ADMIN_HASH = '8978d2f2f2d050b5c949db87698009b37f6b83adf206b6b4c1905c5d42020126';
+
+async function hashPassword(pw) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
 async function checkAuth() {
   try {
     const response = await fetch('/.netlify/functions/verify-auth', { credentials: 'include' });
@@ -1397,8 +1360,15 @@ async function checkAuth() {
       showLogin();
     }
   } catch (err) {
-    console.error('Auth check failed:', err);
-    showLogin();
+    // Netlify unreachable (e.g. local file) — fall back to local session
+    const localSession = sessionStorage.getItem('tc4c_admin_auth');
+    if (localSession === ADMIN_HASH) {
+      currentUser = { name: 'Martin' };
+      showApp();
+      loadData();
+    } else {
+      showLogin();
+    }
   }
 }
 
@@ -1423,7 +1393,15 @@ async function login(password) {
     }
     return false;
   } catch (err) {
-    console.error('Login failed:', err);
+    // Netlify unreachable — validate locally against stored hash
+    const entered = await hashPassword(password);
+    if (entered === ADMIN_HASH) {
+      sessionStorage.setItem('tc4c_admin_auth', ADMIN_HASH);
+      currentUser = { name: 'Martin' };
+      showApp();
+      loadData();
+      return true;
+    }
     return false;
   }
 }
@@ -1434,6 +1412,7 @@ async function logout() {
   } catch (err) {
     console.error('Logout request failed:', err);
   }
+  sessionStorage.removeItem('tc4c_admin_auth');
   currentUser = null;
   showLogin();
 }
@@ -1479,6 +1458,8 @@ async function loadData() {
       updateStats();
       renderMembers();
       renderNewMembers();
+      renderProgressPage();
+      renderSourcesPage();
     }
   } catch (err) {
     console.error('Failed to load members:', err);
@@ -1665,6 +1646,135 @@ function updateStats() {
   document.getElementById('s-active').textContent = activeMembers.filter(m => m.status === 'active').length;
   document.getElementById('s-completions').textContent = activeMembers.filter(m => m.status === 'completed').length;
   document.getElementById('s-scans').textContent = activeMembers.length;
+}
+
+// ─── COURSE PROGRESS (wired to real member data) ───────────
+function renderProgressPage() {
+  const total = activeMembers.length;
+
+  for (let i = 1; i <= 3; i++) {
+    // "reached level i" = members whose current module number is >= i
+    const count = total === 0 ? 0
+      : activeMembers.filter(m => (parseInt(m.module) || 1) >= i).length;
+    const pct = total === 0 ? 0 : Math.round((count / total) * 100);
+
+    // Update the full progress page bars
+    const progBar = document.getElementById(`prog-bar-${i}`);
+    const progCnt = document.getElementById(`prog-count-${i}`);
+    if (progBar) { progBar.dataset.w = pct; progBar.style.width = pct + '%'; }
+    if (progCnt) progCnt.textContent = `${pct}% · ${count} of ${total}`;
+
+    // Update the overview widget bars
+    const ovBar = document.getElementById(`ov-bar-${i}`);
+    const ovCnt = document.getElementById(`ov-count-${i}`);
+    if (ovBar) { ovBar.dataset.w = pct; ovBar.style.width = pct + '%'; }
+    if (ovCnt) ovCnt.textContent = `${count} / ${total}`;
+  }
+}
+
+// ─── SIGNUP SOURCES (wired to index.html's `how` select values) ───
+function renderSourcesPage() {
+  const total = activeMembers.length;
+
+  // Canonical source labels & colours matching index.html's <option> values
+  const SOURCE_META = [
+    { key: 'Scanned QR Code', label: 'Scanned QR Code',   color: 'var(--gold)'  },
+    { key: 'WhatsApp',        label: 'WhatsApp',           color: '#25D366'      },
+    { key: 'Twitter / X',     label: 'Twitter / X',        color: '#1D9BF0'      },
+    { key: 'Church',          label: 'Church',             color: '#8B5CF6'      },
+    { key: 'A friend',        label: 'A friend',           color: 'var(--green)' },
+    { key: 'Search / Google', label: 'Search / Google',    color: '#EA4335'      },
+    { key: 'Other',           label: 'Other / Direct',     color: 'var(--text3)' },
+  ];
+
+  // Count members per source; anything unrecognised falls into 'Other'
+  const counts = {};
+  SOURCE_META.forEach(s => { counts[s.key] = 0; });
+  activeMembers.forEach(m => {
+    const src = (m.source || '').trim();
+    if (counts[src] !== undefined) {
+      counts[src]++;
+    } else {
+      counts['Other']++;
+    }
+  });
+
+  // Build sorted rows (highest count first), skip zeros
+  const rows = SOURCE_META
+    .map(s => ({ ...s, count: counts[s.key] }))
+    .filter(s => s.count > 0)
+    .sort((a, b) => b.count - a.count);
+
+  const topCount = rows.length ? rows[0].count : 1;
+
+  // ── Overview mini-list ───────────────────────────────────
+  const ovList = document.getElementById('sources-overview-list');
+  if (ovList) {
+    if (rows.length === 0) {
+      ovList.innerHTML = '<div style="font-size:0.72rem;color:var(--text3);">No signups yet</div>';
+    } else {
+      ovList.innerHTML = rows.map(s => {
+        const barW = Math.round((s.count / topCount) * 100);
+        const pct  = total ? Math.round((s.count / total) * 100) : 0;
+        return `
+          <div class="source-item">
+            <div class="source-dot" style="background:${s.color}"></div>
+            <span class="source-name">${escapeHtml(s.label)}</span>
+            <div class="source-bar-wrap">
+              <div class="source-bar" style="background:${s.color};width:${barW}%"></div>
+            </div>
+            <span class="source-pct">${pct}%</span>
+          </div>`;
+      }).join('');
+    }
+  }
+
+  // ── Full sources page — bar list ─────────────────────────
+  const fullList = document.getElementById('sources-full-list');
+  if (fullList) {
+    if (rows.length === 0) {
+      fullList.innerHTML = '<div style="font-size:0.72rem;color:var(--text3);">No signups yet</div>';
+    } else {
+      fullList.innerHTML = rows.map(s => {
+        const barW = Math.round((s.count / topCount) * 100);
+        const pct  = total ? Math.round((s.count / total) * 100) : 0;
+        return `
+          <div class="source-item" style="margin-bottom:0.5rem;">
+            <div class="source-dot" style="background:${s.color}"></div>
+            <span class="source-name">${escapeHtml(s.label)}</span>
+            <div class="source-bar-wrap" style="width:140px;">
+              <div class="source-bar" style="background:${s.color};width:${barW}%"></div>
+            </div>
+            <span class="source-pct">${s.count} signup${s.count !== 1 ? 's' : ''} · ${pct}%</span>
+          </div>`;
+      }).join('');
+    }
+  }
+
+  // ── Full sources page — stat cards ───────────────────────
+  const statsPanel = document.getElementById('sources-stats-panel');
+  if (statsPanel) {
+    if (rows.length === 0) {
+      statsPanel.innerHTML = '<div style="font-size:0.72rem;color:var(--text3);">No data yet</div>';
+    } else {
+      statsPanel.innerHTML = `
+        <div style="display:flex;flex-direction:column;gap:0.6rem;">
+          <div style="font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);margin-bottom:0.25rem;">Total signups: ${total}</div>
+          ${rows.map(s => {
+            const pct = total ? Math.round((s.count / total) * 100) : 0;
+            return `
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:0.55rem 0.75rem;background:var(--bg4);border-radius:4px;">
+                <span style="display:flex;align-items:center;gap:0.5rem;font-size:0.73rem;color:var(--text);">
+                  <span style="width:8px;height:8px;border-radius:50%;background:${s.color};flex-shrink:0;display:inline-block;"></span>
+                  ${escapeHtml(s.label)}
+                </span>
+                <span style="font-family:'Playfair Display',serif;font-size:1.1rem;color:${s.color};">${s.count}</span>
+                <span style="font-size:0.65rem;color:var(--text3);min-width:32px;text-align:right;">${pct}%</span>
+              </div>`;
+          }).join('')}
+        </div>`;
+    }
+  }
 }
 
 function renderMembers() {
@@ -1981,20 +2091,39 @@ if (saveSettingsBtn) {
 document.querySelectorAll('.nav-item').forEach(item => {
   item.addEventListener('click', () => {
     const page = item.dataset.page;
+
+    // Switch active page with re-triggered fade-in
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById(`page-${page}`).classList.add('active');
+    const target = document.getElementById(`page-${page}`);
+    if (target) {
+      target.classList.remove('fade-in');
+      void target.offsetWidth; // force reflow so animation restarts
+      target.classList.add('fade-in', 'active');
+    }
+
+    // Switch active nav item
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     item.classList.add('active');
+
     setTimeout(() => { animateBars(); animateSourceBars(); }, 100);
-    if (page === 'prayers') loadAdminPrayers();
+    if (page === 'prayers')  loadAdminPrayers();
+    if (page === 'progress') renderProgressPage();
+    if (page === 'sources')  renderSourcesPage();
   });
 });
 
 document.querySelectorAll('.panel-action[data-page]').forEach(action => {
   action.addEventListener('click', () => {
     const page = action.dataset.page;
+
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById(`page-${page}`).classList.add('active');
+    const target = document.getElementById(`page-${page}`);
+    if (target) {
+      target.classList.remove('fade-in');
+      void target.offsetWidth;
+      target.classList.add('fade-in', 'active');
+    }
+
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     const navItem = document.querySelector(`.nav-item[data-page="${page}"]`);
     if (navItem) navItem.classList.add('active');
