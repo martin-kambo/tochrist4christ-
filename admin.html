@@ -1311,6 +1311,265 @@ const adminPulse = (() => {
   color: rgba(245,239,224,0.3);
   font-style: italic;
 }
+
+/* ═══════════════════════════════════════════════════════════
+   VISUAL UPGRADE LAYER — purely presentational
+   No JS, ids, classes, or markup are touched.
+   ═══════════════════════════════════════════════════════════ */
+:root {
+  --bg:        #0A0E16;
+  --bg2:       #11161F;
+  --bg3:       #181F2B;
+  --bg4:       #222B3A;
+  --gold:      #E5C46A;
+  --gold-2:    #F2D98A;
+  --gold-deep: #B8902F;
+  --gold-dim:    rgba(229,196,106,0.10);
+  --gold-border: rgba(229,196,106,0.22);
+  --violet:    #8B5CF6;
+  --cyan:      #38BDF8;
+  --green:     #34D399;
+  --red:       #F87171;
+  --blue:      #60A5FA;
+  --text:      #ECE6D6;
+  --text2:     #A39B89;
+  --text3:     #5C5648;
+  --border:    rgba(255,255,255,0.05);
+  --border2:   rgba(255,255,255,0.10);
+  --grad-gold: linear-gradient(135deg, var(--gold-2), var(--gold) 55%, var(--gold-deep));
+  --grad-aurora: radial-gradient(60% 40% at 0% 0%, rgba(139,92,246,0.10), transparent 60%),
+                 radial-gradient(50% 40% at 100% 0%, rgba(56,189,248,0.08), transparent 60%);
+  --shadow-soft: 0 1px 0 rgba(255,255,255,0.04) inset, 0 8px 24px -12px rgba(0,0,0,0.6);
+  --shadow-lift: 0 1px 0 rgba(255,255,255,0.06) inset, 0 18px 50px -20px rgba(0,0,0,0.7), 0 0 0 1px rgba(229,196,106,0.18);
+}
+
+/* Body atmosphere — subtle aurora wash */
+body {
+  background:
+    radial-gradient(900px 500px at 12% -10%, rgba(139,92,246,0.10), transparent 60%),
+    radial-gradient(700px 400px at 100% 0%, rgba(56,189,248,0.07), transparent 60%),
+    var(--bg);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Sidebar — glassy panel */
+.sidebar {
+  background: linear-gradient(180deg, rgba(17,22,31,0.92), rgba(10,14,22,0.92));
+  border-right: 1px solid var(--border2);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  box-shadow: 1px 0 0 rgba(255,255,255,0.02), 14px 0 30px -20px rgba(0,0,0,0.7);
+}
+.sidebar-logo .brand {
+  background-image: var(--grad-gold);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.01em;
+}
+.nav-item {
+  border-radius: 0 999px 999px 0;
+  margin-right: 0.5rem;
+}
+.nav-item:hover {
+  background: linear-gradient(90deg, rgba(255,255,255,0.04), transparent);
+  color: var(--text);
+}
+.nav-item.active {
+  background: linear-gradient(90deg, rgba(229,196,106,0.18), rgba(229,196,106,0.02));
+  border-left: 2px solid transparent;
+  border-image: linear-gradient(180deg, var(--gold-2), var(--gold-deep)) 1;
+  color: var(--gold-2);
+  box-shadow: inset 0 0 0 1px rgba(229,196,106,0.06);
+}
+.nav-badge {
+  background: var(--grad-gold);
+  color: #1a1000;
+  box-shadow: 0 4px 14px -4px rgba(229,196,106,0.5);
+}
+.admin-avatar {
+  background: radial-gradient(circle at 30% 30%, rgba(229,196,106,0.4), rgba(229,196,106,0.05) 70%);
+  border-color: var(--gold-border);
+  box-shadow: 0 0 0 1px rgba(229,196,106,0.15), 0 6px 16px -8px rgba(229,196,106,0.4);
+}
+
+/* Topbar — sticky frosted */
+.topbar {
+  background: linear-gradient(180deg, rgba(17,22,31,0.85), rgba(17,22,31,0.6));
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  border-bottom: 1px solid var(--border2);
+}
+.topbar-title em {
+  background-image: var(--grad-gold);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.notif-btn {
+  border-radius: 8px;
+  background: rgba(255,255,255,0.02);
+  transition: all 0.2s ease;
+}
+.notif-btn:hover {
+  background: rgba(229,196,106,0.08);
+  color: var(--gold-2);
+  border-color: var(--gold-border);
+  transform: translateY(-1px);
+}
+.notif-dot {
+  background: var(--gold-2);
+  box-shadow: 0 0 10px rgba(229,196,106,0.8);
+}
+
+/* Stat cards — premium glass with glow */
+.stat-card {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0)) ,
+    linear-gradient(180deg, rgba(24,31,43,0.85), rgba(17,22,31,0.85));
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.25s cubic-bezier(.2,.8,.2,1), border-color 0.25s, box-shadow 0.25s;
+}
+.stat-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(229,196,106,0.35);
+  box-shadow: var(--shadow-lift);
+}
+.stat-card::before {
+  height: 3px;
+  border-radius: 12px 12px 0 0;
+  opacity: 0.95;
+}
+.stat-card.gold::before  { background: linear-gradient(90deg, var(--gold-2), var(--gold-deep)); }
+.stat-card.green::before { background: linear-gradient(90deg, #6EE7B7, #10B981); }
+.stat-card.blue::before  { background: linear-gradient(90deg, #93C5FD, #3B82F6); }
+.stat-card.red::before   { background: linear-gradient(90deg, #C4B5FD, #8B5CF6); }
+.stat-num {
+  font-size: 2.15rem;
+  background-image: linear-gradient(180deg, #FFFFFF, #B8B0A0);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.01em;
+}
+.stat-icon { opacity: 0.22; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4)); }
+.stat-sub .up   { color: #4ADE80; text-shadow: 0 0 12px rgba(74,222,128,0.3); }
+.stat-sub .down { color: #F87171; text-shadow: 0 0 12px rgba(248,113,113,0.3); }
+
+/* Panels — subtle gradient surface */
+.panel {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0)),
+    rgba(17,22,31,0.85);
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  box-shadow: var(--shadow-soft);
+  transition: border-color 0.2s;
+}
+.panel:hover { border-color: rgba(255,255,255,0.14); }
+.panel-head {
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(255,255,255,0.015), transparent);
+}
+.panel-title {
+  color: var(--text2);
+  background-image: linear-gradient(90deg, var(--text), var(--text2));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.panel-action {
+  color: var(--gold-2);
+  border-bottom: 1px dashed rgba(229,196,106,0.25);
+  padding-bottom: 1px;
+}
+
+/* Progress bars — gradient + glow */
+.bar-track {
+  background: rgba(255,255,255,0.05);
+  height: 6px;
+  border-radius: 999px;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.4);
+}
+.bar-fill {
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--gold-2), var(--gold-deep));
+  box-shadow: 0 0 12px rgba(229,196,106,0.4);
+}
+.bar-fill.green  { background: linear-gradient(90deg, #6EE7B7, #10B981); box-shadow: 0 0 12px rgba(16,185,129,0.4); }
+.bar-fill.blue   { background: linear-gradient(90deg, #93C5FD, #3B82F6); box-shadow: 0 0 12px rgba(59,130,246,0.4); }
+.bar-fill.purple { background: linear-gradient(90deg, #C4B5FD, #8B5CF6); box-shadow: 0 0 12px rgba(139,92,246,0.4); }
+
+.source-bar-wrap { background: rgba(255,255,255,0.05); height: 5px; border-radius: 999px; }
+.source-bar { border-radius: 999px; }
+.source-dot { box-shadow: 0 0 8px currentColor; }
+
+/* Buttons */
+.admin-btn {
+  border-radius: 6px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: all 0.18s ease;
+}
+.admin-btn:hover {
+  background: rgba(255,255,255,0.06);
+  transform: translateY(-1px);
+}
+.admin-btn-hide   { background: rgba(255,180,50,0.06); }
+.admin-btn-show   { background: rgba(80,200,120,0.06); }
+.admin-btn-delete { background: rgba(200,80,80,0.06); }
+
+/* Inputs / selects — refined focus */
+input, select, textarea {
+  transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: rgba(229,196,106,0.5) !important;
+  box-shadow: 0 0 0 3px rgba(229,196,106,0.12);
+  background: rgba(255,255,255,0.03);
+}
+
+/* Scrollbars */
+* { scrollbar-width: thin; scrollbar-color: rgba(229,196,106,0.25) transparent; }
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(229,196,106,0.35), rgba(229,196,106,0.15));
+  border-radius: 999px;
+}
+*::-webkit-scrollbar-thumb:hover { background: rgba(229,196,106,0.5); }
+*::-webkit-scrollbar-track { background: transparent; }
+
+/* Selection */
+::selection { background: rgba(229,196,106,0.35); color: #fff; }
+
+/* Tables (if any in admin sections) */
+table { border-collapse: separate; border-spacing: 0; }
+thead th {
+  background: rgba(255,255,255,0.02);
+  border-bottom: 1px solid var(--border2) !important;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.62rem;
+  color: var(--text3);
+}
+tbody tr { transition: background 0.15s; }
+tbody tr:hover { background: rgba(229,196,106,0.04); }
+
+/* Subtle reveal on cards entering viewport (purely CSS, no JS hooks) */
+@keyframes adminFadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.stat-card, .panel { animation: adminFadeUp 0.55s cubic-bezier(.2,.8,.2,1) both; }
+.stat-card:nth-child(2), .dash-grid > *:nth-child(2) { animation-delay: 0.06s; }
+.stat-card:nth-child(3) { animation-delay: 0.12s; }
+.stat-card:nth-child(4) { animation-delay: 0.18s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .stat-card, .panel { animation: none; }
+  * { transition-duration: 0.01ms !important; }
+}
 </style>
 
 <script>
