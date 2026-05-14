@@ -41,7 +41,7 @@
  *   progress:*   (SCAN) → lessonsCompleted, streak, lastActivityDate, faithStage
  */
 
-const { cmd, pipeline } = require('./_redis');
+const { cmd, pipeline } = require('./redis');
 
 const TOTAL_LESSONS   = 48;
 const MODULE_LESSONS  = 16;        // all three modules have 16 lessons each

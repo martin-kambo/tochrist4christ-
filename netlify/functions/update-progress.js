@@ -31,7 +31,7 @@
  * - If lastActivityDate is older / absent → reset streak to 1
  */
 
-const { cmd } = require('./_redis');
+const { cmd } = require('./redis');
 
 const TOTAL_LESSONS = 48;
 
