@@ -23,7 +23,7 @@
  *   session:<email>     written by verify-magic-link (if present)
  */
 
-const { pipeline } = require('./redis');
+const { pipeline } = require('./_redis');
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'DELETE') {
