@@ -39,7 +39,7 @@
  *   member:<email>     written by add-member (contains faithStage)
  */
 
-const { cmd, pipeline } = require('./_redis');
+const { cmd, pipeline } = require('./redis');
 
 const TOTAL_LESSONS = 48;
 
