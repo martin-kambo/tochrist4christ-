@@ -168,7 +168,7 @@ exports.handler = async (event) => {
                 Welcome. We are genuinely glad you are here.
               </p>
               <p style="margin:0 0 16px;font-size:1rem;color:rgba(245,239,224,0.7);line-height:1.8;">
-                You have taken your first step into a structured discipleship journey — six modules built to take you from the foundations of faith all the way to living on mission. Everything is free. Everything is yours. Work at your own pace.
+                You have taken your first step into a structured discipleship journey — three modules built to take you from the foundations of faith all the way to living on mission. Everything is free. Everything is yours. Work at your own pace.
               </p>
 
               <!-- Verse block -->
@@ -209,7 +209,7 @@ exports.handler = async (event) => {
                 We are walking this journey with you. Reply to this email anytime — we read every message.
               </p>
               <p style="margin:0;font-size:1rem;color:rgba(245,239,224,0.7);line-height:1.8;">
-                In His grace,<br>
+                With love,<br>
                 <strong style="color:rgba(245,239,224,0.9);">The To Christ 4 Christ Team</strong>
               </p>
             </td>

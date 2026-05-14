@@ -640,6 +640,7 @@ body {
   padding: 1px;
   background: linear-gradient(135deg, rgba(103,232,249,0.6), rgba(34,211,238,0.05) 35%, rgba(139,92,246,0.4) 70%, rgba(103,232,249,0.5));
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor; mask-composite: exclude;
   pointer-events: none;
 }
@@ -908,6 +909,7 @@ body > * { position: relative; z-index: 1; }
   content: ''; position: absolute; inset: -1px; border-radius: inherit; padding: 1px;
   background: linear-gradient(135deg, rgba(34,211,238,0.0), rgba(139,92,246,0.45), rgba(34,211,238,0.0));
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor; mask-composite: exclude;
   opacity: 0; transition: opacity 0.35s; pointer-events: none;
 }
@@ -1157,6 +1159,95 @@ section::after, .pillars::after, .signup::after {
   }
 }
 
+/* ── Course-gate toast ────────────────────────────────────── */
+#course-gate-toast {
+  position: fixed;
+  bottom: 1.75rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(1rem);
+  z-index: 8888;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(9, 14, 35, 0.92);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(34, 211, 238, 0.28);
+  border-radius: var(--radius-lg);
+  padding: 0.85rem 1.1rem 0.85rem 1.2rem;
+  max-width: min(460px, calc(100vw - 2rem));
+  width: max-content;
+  box-shadow: 0 24px 64px -16px rgba(2, 6, 23, 0.7), 0 0 0 1px rgba(34, 211, 238, 0.06);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.34,1.56,0.64,1);
+}
+#course-gate-toast.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+.cgt-icon {
+  font-size: 1.35rem;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.cgt-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+.cgt-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ivory);
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+}
+.cgt-sub {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  letter-spacing: 0.01em;
+}
+.cgt-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  margin-left: auto;
+  padding-left: 0.5rem;
+}
+.cgt-btn-primary {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 0.42rem 0.9rem;
+  border-radius: 999px;
+  background: var(--gold);
+  color: var(--green-deep);
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+.cgt-btn-primary:hover { opacity: 0.85; }
+.cgt-btn-dismiss {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.42rem 0.5rem;
+  white-space: nowrap;
+  transition: color 0.15s;
+}
+.cgt-btn-dismiss:hover { color: var(--ivory); }
 </style>
 </head>
 <body>
@@ -1168,7 +1259,7 @@ section::after, .pillars::after, .signup::after {
     <img src="logo.webp" alt="To Christ 4 Christ logo" class="nav-logo-img">
     <span class="nav-logo-stack">
       <span class="nav-logo-text">To Christ 4 Christ</span>
-      <span class="nav-logo-tag">Discipleship · Africa</span>
+      <span class="nav-logo-tag">Discipleship · Africa & beyond</span>
     </span>
   </a>
 </nav>
@@ -1188,28 +1279,29 @@ section::after, .pillars::after, .signup::after {
   <div class="hero-left">
     <div class="hero-badge" aria-label="Free forever">
       <span class="hero-badge-dot" aria-hidden="true"></span>
-      Free Forever · No Catch
+      Free programme · No Catch . just Faith 
     </div>
     <h1 id="hero-heading">
       Discipleship for<br>
-      <em>young Africans.</em>
+      <em>young Believers.</em>
     </h1>
     <p class="hero-sub">
       3 modules. 48 lessons. Real accountability.<br>
-      Built for young believers who are done going in circles.
+      Built for young believers who are done going in circles.<br>
+      Hungry for real growth. Ready to go deeper with Christ.
     </p>
     <div class="hero-actions">
       <a href="#signup" class="btn-primary">
         Start Free Today
         <svg viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5-5 5M6 12h12"/></svg>
       </a>
-      <a href="course.html" class="btn-ghost">See the Course</a>
+      <a href="#pillars" class="btn-ghost" data-course-gate>See the Course</a>
     </div>
     <div class="hero-proof" aria-label="Social proof">
       <div class="proof-avatars" aria-hidden="true">
         <span>M</span><span>D</span><span>A</span><span>K</span><span>T</span>
       </div>
-      <p class="proof-text"><strong>Join believers</strong> across Africa growing together</p>
+      <p class="proof-text"><strong>Join believers</strong> across the globe growing together</p>
     </div>
   </div>
 
@@ -1224,7 +1316,7 @@ section::after, .pillars::after, .signup::after {
       </div>
       <div class="mockup-body">
         <p class="mockup-greeting">Welcome back</p>
-        <p class="mockup-user" id="mockup-name">Mercy Wanjiru 👋</p>
+        <p class="mockup-user" id="mockup-name">Martin Kambo 👋</p>
         <div class="mockup-metrics">
           <div class="mockup-metric">
             <span class="mockup-metric-num">🔥7</span>
@@ -1264,13 +1356,13 @@ section::after, .pillars::after, .signup::after {
   </div>
 
   <div class="scroll-hint" aria-hidden="true">
-    <span>Scroll</span>
+    <span>Scroll 4 more</span>
     <div class="scroll-mouse"></div>
   </div>
 </section>
 
 <!-- ══ PILLARS ════════════════════════════════════════════════ -->
-<section class="pillars reveal" id="pillars" aria-labelledby="pillars-heading">
+<section class="pillars reveal" id="pillars" aria-labelledby="pillars-heading" tabindex="-1">
   <div class="pillars-header">
     <span class="section-label">What You Get</span>
     <h2 class="section-title" id="pillars-heading">Everything you need to<br><em>grow for real.</em></h2>
@@ -1278,7 +1370,7 @@ section::after, .pillars::after, .signup::after {
   </div>
   <div class="pillars-grid">
 
-    <a href="course.html" class="pillar-card linked reveal reveal-delay-1">
+    <a href="#pillars" class="pillar-card linked reveal reveal-delay-1" data-course-gate>
       <span class="pillar-icon-wrap"><span class="pillar-icon">📚</span></span>
       <h3 class="pillar-title">Structured Discipleship</h3>
       <p class="pillar-desc">Three modules — Foundation, Growth, and Mission — delivered straight to your inbox. Each lesson builds on the last over 12 weeks.</p>
@@ -1364,7 +1456,7 @@ section::after, .pillars::after, .signup::after {
         <p class="signup-perk">Personal progress tracker and badges</p>
         <p class="signup-perk">WhatsApp community with believers in your city</p>
         <p class="signup-perk">Free study materials from trusted teachers</p>
-        <p class="signup-perk">No cost. No catch. Ever.</p>
+        <p class="signup-perk">No cost. just discipline. dedication.</p>
       </div>
       <div class="what-next reveal reveal-delay-3">
         <p>What happens after you sign up</p>
@@ -1456,9 +1548,9 @@ section::after, .pillars::after, .signup::after {
     <img src="logo.webp" alt="TC4C Logo" class="footer-logo-img" loading="lazy">
     <span class="footer-logo-text">To Christ 4 Christ</span>
   </a>
-  <p class="footer-desc">A free discipleship platform rooted in Scripture, built for community, and made for young Africans who are ready to grow for real.</p>
+  <p class="footer-desc">A free discipleship platform rooted in Scripture, built for community, and made for young Believers who are ready to grow for real.</p>
   <nav class="footer-links" aria-label="Footer navigation">
-    <a href="course.html">The Course</a>
+    <a href="#pillars" data-course-gate>The Course</a>
     <a href="prayer-wall.html">Prayer Wall</a>
     <a href="#signup">Begin</a>
     <a href="privacy-policy.html">Privacy Policy</a>
@@ -1605,7 +1697,85 @@ function showError(msg) {
 
 function isValidEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
 
-// ── Personalise mockup if user already signed up ───────────
+// ── Course-gate interceptor ─────────────────────────────────
+// Every link/button with [data-course-gate] goes here first.
+// Authenticated users pass straight through to course.html.
+// Unauthenticated users are scrolled to the module cards and
+// shown a lightweight toast nudging them to sign up.
+(function initCourseGate() {
+  // ── Session check (same logic as DOMContentLoaded below) ──
+  function hasValidSession() {
+    try {
+      const s = JSON.parse(localStorage.getItem('tc4c_session') || 'null');
+      return !!(s?.expiresAt && new Date(s.expiresAt) > new Date());
+    } catch { return false; }
+  }
+
+  // ── Toast plumbing ─────────────────────────────────────────
+  const toast      = document.getElementById('course-gate-toast');
+  const dismissBtn = document.getElementById('cgt-dismiss-btn');
+  const signupBtn  = document.getElementById('cgt-signup-btn');
+  let toastTimer   = null;
+
+  function showToast() {
+    if (!toast) return;
+    clearTimeout(toastTimer);
+    toast.classList.add('visible');
+    // Auto-hide after 9 s so it doesn't linger forever
+    toastTimer = setTimeout(hideToast, 9000);
+  }
+
+  function hideToast() {
+    if (!toast) return;
+    toast.classList.remove('visible');
+    clearTimeout(toastTimer);
+  }
+
+  if (dismissBtn) dismissBtn.addEventListener('click', hideToast);
+
+  // Clicking "Join Free" hides the toast then lets the #signup anchor scroll
+  if (signupBtn) {
+    signupBtn.addEventListener('click', () => {
+      hideToast();
+      // Small delay so the toast fade-out doesn't fight the scroll
+      setTimeout(() => {
+        const el = document.getElementById('signup');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 180);
+    });
+  }
+
+  // ── Gate handler ───────────────────────────────────────────
+  function handleGatedClick(e) {
+    if (hasValidSession()) {
+      // Authenticated — navigate to the real course page
+      e.preventDefault();
+      window.location.href = 'course.html';
+      return;
+    }
+
+    // Not authenticated — block navigation to course.html,
+    // scroll to the module-overview cards, show the toast.
+    e.preventDefault();
+    const pillars = document.getElementById('pillars');
+    if (pillars) {
+      pillars.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Briefly focus the section so screen-reader users get context
+      pillars.focus({ preventScroll: true });
+    }
+    // Slight delay so the scroll settles before the toast pops
+    setTimeout(showToast, 350);
+  }
+
+  // Attach to every gated element — runs after DOM is ready.
+  // Using capture=false so click handlers on child elements still fire.
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('[data-course-gate]').forEach(el => {
+      el.addEventListener('click', handleGatedClick);
+    });
+  });
+})();
+
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('join-form');
   if (form) form.addEventListener('submit', handleSubmit);
@@ -1619,5 +1789,18 @@ document.addEventListener('DOMContentLoaded', () => {
   } catch (e) { /* silent */ }
 });
 </script>
+<!-- ── Course-gate toast (injected by JS when needed) ──────── -->
+<div id="course-gate-toast" role="status" aria-live="polite" aria-atomic="true">
+  <span class="cgt-icon" aria-hidden="true">📖</span>
+  <div class="cgt-body">
+    <span class="cgt-title">Course access requires an account</span>
+    <span class="cgt-sub">Sign up free — takes 60 seconds.</span>
+  </div>
+  <div class="cgt-actions">
+    <a href="#signup" class="cgt-btn-primary" id="cgt-signup-btn">Join Free</a>
+    <button type="button" class="cgt-btn-dismiss" id="cgt-dismiss-btn" aria-label="Dismiss">Maybe later</button>
+  </div>
+</div>
+
 </body>
 </html>

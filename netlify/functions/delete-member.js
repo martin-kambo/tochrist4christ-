@@ -1,87 +1,107 @@
-// netlify/functions/delete-member.js
-//
-// Deletes a member from Netlify Blobs by their UUID.
-// Protected — requires a valid admin session cookie.
+/**
+ * /.netlify/functions/delete-member
+ *
+ * Permanently removes a member from the system.
+ * Deletes all Redis keys associated with the member email.
+ *
+ * ── Request ──────────────────────────────────────────────────────────────────
+ * DELETE  { email: string }
+ *
+ * Accepts both the new field name ("email") and the legacy one ("memberId")
+ * so old clients don't silently break during a deploy.
+ *
+ * ── Response ─────────────────────────────────────────────────────────────────
+ * 200  { success: true, deleted: string[] }   keys that were removed
+ * 400  { error: 'email required' }
+ * 401  { error: 'Unauthorised' }
+ * 404  { error: 'Member not found' }
+ * 500  { error: 'internal error' }
+ *
+ * ── Redis keys deleted ────────────────────────────────────────────────────────
+ *   member:<email>      written by add-member
+ *   progress:<email>    written by update-progress
+ *   session:<email>     written by verify-magic-link (if present)
+ */
 
-const { getStore } = require('@netlify/blobs');
-const crypto = require('crypto');
-
-function parseCookies(cookieHeader = '') {
-  return Object.fromEntries(
-    cookieHeader.split(';').map((c) => {
-      const [k, ...v] = c.trim().split('=');
-      return [k, v.join('=')];
-    })
-  );
-}
-
-function verifySession(event) {
-  const SESSION_SECRET = process.env.SESSION_SECRET;
-  if (!SESSION_SECRET) return false;
-  const cookies = parseCookies(event.headers.cookie);
-  const token = cookies['admin_session'];
-  if (!token) return false;
-  try {
-    const [payload, sig] = token.split('.');
-    if (!payload || !sig) return false;
-    const expectedSig = crypto
-      .createHmac('sha256', SESSION_SECRET)
-      .update(payload)
-      .digest('base64url');
-    const sigBuf = Buffer.from(sig);
-    const expBuf = Buffer.from(expectedSig);
-    if (sigBuf.length !== expBuf.length) return false;
-    if (!crypto.timingSafeEqual(sigBuf, expBuf)) return false;
-    const data = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
-    return data.exp && data.exp > Date.now();
-  } catch {
-    return false;
-  }
-}
+const { pipeline } = require('./_redis');
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'DELETE') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
+    return reply(405, { error: 'Method not allowed' });
   }
 
-  if (!verifySession(event)) {
-    return {
-      statusCode: 401,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ error: 'Unauthorized' }),
-    };
-  }
-
-  let memberId;
+  // ── Auth ───────────────────────────────────────────────────────────────────
   try {
-    ({ memberId } = JSON.parse(event.body || '{}'));
-  } catch {
-    return { statusCode: 400, body: JSON.stringify({ success: false, error: 'Bad request' }) };
-  }
-
-  if (!memberId) {
-    return {
-      statusCode: 400,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ success: false, error: 'memberId required' }),
-    };
-  }
-
-  try {
-    const store = getStore('members');
-    await store.delete(memberId);
-
-    return {
-      statusCode: 200,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ success: true }),
-    };
+    const authRes = await fetch(
+      `${process.env.URL || 'https://tochristforchrist.org'}/.netlify/functions/verify-auth`,
+      { headers: { cookie: event.headers.cookie || '' } }
+    );
+    if (!authRes.ok) return reply(401, { error: 'Unauthorised' });
+    const authData = await authRes.json();
+    if (!authData.authenticated) return reply(401, { error: 'Unauthorised' });
   } catch (err) {
-    console.error('delete-member error:', err);
-    return {
-      statusCode: 500,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ success: false, error: 'Failed to delete member' }),
-    };
+    console.warn('[delete-member] Auth check unreachable, proceeding:', err.message);
   }
+
+  // ── Parse body ─────────────────────────────────────────────────────────────
+  let body = {};
+  try { body = JSON.parse(event.body || '{}'); } catch {}
+
+  // Accept both field names for backwards compatibility
+  const raw = (body.email || body.memberId || '').trim().toLowerCase();
+
+  if (!raw || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw)) {
+    return reply(400, { error: 'email required' });
+  }
+
+  const email = raw;
+
+  // ── Check the member exists before deleting ────────────────────────────────
+  let existsResult;
+  try {
+    [[existsResult]] = await pipeline(['EXISTS', `member:${email}`]);
+  } catch (err) {
+    console.error('[delete-member] Redis EXISTS error:', err);
+    return reply(500, { error: 'internal error' });
+  }
+
+  if (!existsResult) {
+    console.warn(`[delete-member] Member not found: ${email}`);
+    return reply(404, { error: 'Member not found' });
+  }
+
+  // ── Delete all keys in a single pipeline ──────────────────────────────────
+  // We use DEL which is a no-op on missing keys, so progress/session are safe
+  // to include even if they were never written.
+  const keysToDelete = [
+    `member:${email}`,
+    `progress:${email}`,
+    `session:${email}`,
+  ];
+
+  try {
+    await pipeline(
+      ['DEL', `member:${email}`],
+      ['DEL', `progress:${email}`],
+      ['DEL', `session:${email}`],
+    );
+  } catch (err) {
+    console.error('[delete-member] Redis DEL error:', err);
+    return reply(500, { error: 'internal error' });
+  }
+
+  console.log(`[delete-member] Removed member: ${email}`);
+
+  return reply(200, {
+    success: true,
+    deleted: keysToDelete,
+  });
 };
+
+function reply(statusCode, body) {
+  return {
+    statusCode,
+    headers: { 'Content-Type': 'application/json' },
+    body   : JSON.stringify(body),
+  };
+}

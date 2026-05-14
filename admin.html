@@ -1726,12 +1726,13 @@ async function loadData() {
   }
 }
 
-async function deleteMember(memberId) {
+async function deleteMember(email) {
+  if (!email) { showToast('Cannot delete — member has no email on record'); return false; }
   try {
     const response = await fetch('/.netlify/functions/delete-member', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ memberId }),
+      body: JSON.stringify({ email }),
       credentials: 'include'
     });
     if (!response.ok) {
@@ -1754,12 +1755,12 @@ async function deleteMember(memberId) {
   }
 }
 
-async function sendEncouragementEmail(memberId, subject, message) {
+async function sendEncouragementEmail(email, subject, message) {
   try {
     const response = await fetch('/.netlify/functions/send-email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ memberId, subject, message }),
+      body: JSON.stringify({ email, subject, message }),
       credentials: 'include'
     });
     // Bug fix: without response.ok check, a 404/500 HTML body crashes .json()
@@ -2162,7 +2163,7 @@ function confirmDelete(idx) {
   if (!m) return;
   
   if (confirm(`Remove ${m.name} from the system? This action cannot be undone.`)) {
-    deleteMember(m.id);
+    deleteMember(m.email);
   }
 }
 
@@ -2223,7 +2224,7 @@ The To Christ 4 Christ Team</textarea>
     sendBtn.textContent = 'Sending...';
     statusDiv.style.display = 'none';
     
-    const success = await sendEncouragementEmail(currentEmailTarget.id, subject, message);
+    const success = await sendEncouragementEmail(currentEmailTarget.email, subject, message);
     
     if (success) {
       statusDiv.textContent = '✓ Email sent successfully!';

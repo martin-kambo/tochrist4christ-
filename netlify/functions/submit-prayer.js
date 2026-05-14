@@ -33,7 +33,7 @@ exports.handler = async (event, context) => {
   try { body = JSON.parse(event.body || '{}'); }
   catch { return { statusCode: 400, body: JSON.stringify({ success: false, error: 'Bad request' }) }; }
 
-  const { name, text, category, anonymous } = body;
+  const { name, text, category, anonymous, submitterEmail } = body;
 
   if (!name || !name.trim())
     return { statusCode: 400, body: JSON.stringify({ success: false, error: 'Name is required' }) };
@@ -55,7 +55,10 @@ exports.handler = async (event, context) => {
     text:      escapeHtml(text.trim()),
     prayCount: 0,
     answered:  false,
+    answeredTestimony: '',
+    answeredAt: null,
     anonymous: !!anonymous,
+    submitterEmail: submitterEmail || null,
     timestamp: Date.now(),
     isoDate:   new Date().toISOString(),
     ipHash:    crypto.createHash('sha256')
