@@ -519,6 +519,115 @@
     padding-top: 1.25rem;
   }
 
+  /* ── Answered testimony display ── */
+  .testimony-block {
+    margin-top: 0.75rem;
+    padding: 0.65rem 0.9rem;
+    background: rgba(201,168,76,0.07);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 2px 2px 0;
+  }
+  .testimony-block .testimony-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.55rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.3rem;
+  }
+  .testimony-block p {
+    font-family: 'Crimson Text', serif;
+    font-size: 0.95rem;
+    color: var(--text-body);
+    font-style: italic;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* ── "God Answered" button on owned cards ── */
+  .answer-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: transparent;
+    border: 1px solid var(--gold);
+    border-radius: 20px;
+    padding: 0.28rem 0.7rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--gold);
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 0.6rem;
+  }
+  .answer-btn:hover { background: var(--gold); color: var(--brown); }
+
+  /* ── Testimony modal ── */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 500;
+    background: rgba(27,58,46,0.88);
+    display: flex; align-items: center; justify-content: center;
+    padding: 1.5rem;
+  }
+  .modal-box {
+    background: var(--cream);
+    border-radius: 4px;
+    padding: 2rem;
+    max-width: 480px;
+    width: 100%;
+    border: 1px solid var(--ivory-dark);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .modal-box h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: var(--green-deep);
+    margin-bottom: 0.4rem;
+  }
+  .modal-box .modal-sub {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.03em;
+    color: var(--text-muted);
+    margin-bottom: 1.1rem;
+    line-height: 1.5;
+  }
+  .modal-box textarea {
+    width: 100%;
+    border: 1px solid var(--ivory-dark);
+    border-radius: 2px;
+    padding: 0.7rem 1rem;
+    font-family: 'Crimson Text', serif;
+    font-size: 1rem;
+    color: var(--text-body);
+    background: var(--ivory);
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .modal-box textarea:focus { border-color: var(--gold); }
+  .modal-actions { display: flex; gap: 0.75rem; margin-top: 1rem; }
+  .btn-cancel {
+    flex: 1;
+    background: transparent;
+    border: 1px solid var(--ivory-dark);
+    border-radius: 2px;
+    padding: 0.85rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-cancel:hover { border-color: var(--green-deep); color: var(--green-deep); }
+  .btn-submit-prayer { flex: 2; }
+
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(16px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -606,6 +715,11 @@
       </div>
 
       <div class="pr-field">
+        <label for="pr-email">Your Email <span style="opacity:0.45;font-size:0.55rem;text-transform:none;letter-spacing:0;">(optional — lets you mark it answered later)</span></label>
+        <input id="pr-email" type="email" maxlength="100" placeholder="your@email.com">
+      </div>
+
+      <div class="pr-field">
         <label for="pr-category">Category</label>
         <select id="pr-category">
           <option value="general">General Prayer</option>
@@ -647,6 +761,23 @@
     </div>
   </div>
 
+</div>
+
+<div id="testimony-modal" class="modal-overlay" style="display:none" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <h3>🙏 God Answered!</h3>
+    <p class="modal-sub">Share how God answered this prayer — your testimony will encourage the whole community.</p>
+    <div class="pr-field" style="margin-bottom:0.4rem">
+      <textarea id="testimony-text" rows="5" maxlength="500"
+        placeholder="e.g. I prayed for healing and God restored my health completely..."></textarea>
+      <p class="char-count"><span id="testimony-char">0</span> / 500</p>
+    </div>
+    <div id="testimony-feedback" class="submit-feedback"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" id="testimony-cancel-btn">Cancel</button>
+      <button class="btn-submit-prayer" id="testimony-submit-btn">Share Testimony ✝</button>
+    </div>
+  </div>
 </div>
 
 <footer>
@@ -702,6 +833,19 @@ function addPrayedId(id) {
   if (!ids.includes(id)) { ids.push(id); localStorage.setItem('tc4c_prayed', JSON.stringify(ids)); }
 }
 
+// Track prayers submitted from this browser (for "God Answered" button)
+function getMyPrayers() {
+  try { return JSON.parse(localStorage.getItem('tc4c_my_prayers') || '[]'); } catch { return []; }
+}
+function addMyPrayer(id, email) {
+  if (!email) return; // no email = can't claim ownership
+  const list = getMyPrayers();
+  if (!list.find(m => m.id === id)) {
+    list.push({ id, email });
+    localStorage.setItem('tc4c_my_prayers', JSON.stringify(list));
+  }
+}
+
 // ── Load all prayers from server ────────────────────────────
 async function loadPrayers() {
   if (isLoading) return;
@@ -747,17 +891,36 @@ function renderPrayers() {
   }
 
   const prayedIds = getPrayedIds();
+  const myPrayers = getMyPrayers();
   list.innerHTML = '';
 
   prayers.forEach(prayer => {
     const hasPrayed = prayedIds.includes(prayer.id);
+    const myRecord  = myPrayers.find(m => m.id === prayer.id);
+    const isMine    = !!myRecord && !prayer.answered;
+
+    const testimonyHTML = prayer.answered && prayer.answeredTestimony
+      ? `<div class="testimony-block">
+           <p class="testimony-label">✝ Testimony</p>
+           <p>${escapeHtml(prayer.answeredTestimony)}</p>
+         </div>`
+      : '';
+
+    const answerBtnHTML = isMine
+      ? `<button class="answer-btn" data-id="${escapeHtml(prayer.id)}" data-email="${escapeHtml(myRecord.email)}">
+           ✓ God Answered — Share Testimony
+         </button>`
+      : '';
+
     const card = document.createElement('div');
     card.className = 'prayer-card';
     card.innerHTML = `
       ${prayer.answered ? '<span class="answered-badge">✓ Answered</span>' : ''}
       <p class="prayer-category">${escapeHtml(categoryLabel(prayer.category))}</p>
       <p class="prayer-text">"${escapeHtml(prayer.text)}"</p>
-      <div class="prayer-meta">
+      ${testimonyHTML}
+      ${answerBtnHTML}
+      <div class="prayer-meta" style="margin-top:0.75rem">
         <div>
           <p class="prayer-who">— <span>${escapeHtml(prayer.name)}</span></p>
           <p class="prayer-age">${timeAgo(prayer.timestamp)}</p>
@@ -771,6 +934,13 @@ function renderPrayers() {
 
     card.querySelector('.pray-btn')
       .addEventListener('click', function() { prayFor(prayer.id, this); });
+
+    const answerBtn = card.querySelector('.answer-btn');
+    if (answerBtn) {
+      answerBtn.addEventListener('click', function() {
+        openTestimonyModal(this.dataset.id, this.dataset.email);
+      });
+    }
 
     list.appendChild(card);
   });
@@ -825,6 +995,7 @@ function showFeedback(type, msg) {
 // ── Submit new prayer — saves to server via submit-prayer.js ─
 async function submitPrayer() {
   const name     = document.getElementById('pr-name').value.trim();
+  const email    = (document.getElementById('pr-email').value || '').trim().toLowerCase();
   const text     = document.getElementById('pr-text').value.trim();
   const category = document.getElementById('pr-category').value;
   const anon     = document.getElementById('pr-anon').checked;
@@ -844,7 +1015,7 @@ async function submitPrayer() {
     const res = await fetch('/.netlify/functions/submit-prayer', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ name, text, category, anonymous: anon }),
+      body:    JSON.stringify({ name, text, category, anonymous: anon, submitterEmail: email || null }),
     });
 
     modEl.classList.remove('show');
@@ -863,8 +1034,12 @@ async function submitPrayer() {
       return;
     }
 
+    // Store prayer ID + email locally so submitter can claim "God Answered" later
+    if (data.id && email) addMyPrayer(data.id, email);
+
     // Reset form
     document.getElementById('pr-name').value     = '';
+    document.getElementById('pr-email').value    = '';
     document.getElementById('pr-text').value     = '';
     document.getElementById('pr-category').value = 'general';
     document.getElementById('pr-anon').checked   = false;
@@ -872,13 +1047,84 @@ async function submitPrayer() {
     btn.disabled = false; btn.textContent = '🙏 Submit Prayer Request';
 
     showFeedback('success', '✝ Your prayer has been added to the wall. The community is standing with you.');
-    await loadPrayers(); // Reload from server so new prayer appears
+    await loadPrayers();
 
   } catch (err) {
     console.error('submitPrayer error:', err);
     modEl.classList.remove('show');
     showFeedback('error', 'Network error. Please check your connection and try again.');
     btn.disabled = false; btn.textContent = '🙏 Submit Prayer Request';
+  }
+}
+
+// ── Testimony modal ─────────────────────────────────────────
+let _testimonyPrayerId  = null;
+let _testimonyUserEmail = null;
+
+function openTestimonyModal(prayerId, userEmail) {
+  _testimonyPrayerId  = prayerId;
+  _testimonyUserEmail = userEmail;
+  document.getElementById('testimony-text').value = '';
+  document.getElementById('testimony-char').textContent = '0';
+  const fb = document.getElementById('testimony-feedback');
+  fb.style.display = 'none'; fb.className = 'submit-feedback';
+  document.getElementById('testimony-modal').style.display = 'flex';
+  document.getElementById('testimony-text').focus();
+}
+
+function closeTestimonyModal() {
+  document.getElementById('testimony-modal').style.display = 'none';
+  _testimonyPrayerId  = null;
+  _testimonyUserEmail = null;
+}
+
+async function submitTestimony() {
+  const testimony = document.getElementById('testimony-text').value.trim();
+  const btn       = document.getElementById('testimony-submit-btn');
+  const fb        = document.getElementById('testimony-feedback');
+
+  fb.style.display = 'none';
+
+  if (!testimony || testimony.length < 10) {
+    fb.className = 'submit-feedback error';
+    fb.textContent = 'Please write at least 10 characters.';
+    fb.style.display = 'block';
+    return;
+  }
+
+  btn.disabled    = true;
+  btn.textContent = 'Saving...';
+
+  try {
+    const res = await fetch('/.netlify/functions/answer-prayer', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({
+        prayerId:  _testimonyPrayerId,
+        testimony,
+        userEmail: _testimonyUserEmail,
+      }),
+    });
+
+    const data = await res.json().catch(() => ({}));
+
+    if (!res.ok || !data.success) {
+      fb.className = 'submit-feedback error';
+      fb.textContent = data.error || 'Could not save testimony. Please try again.';
+      fb.style.display = 'block';
+      btn.disabled = false; btn.textContent = 'Share Testimony ✝';
+      return;
+    }
+
+    closeTestimonyModal();
+    await loadPrayers(); // Refresh so testimony appears immediately
+
+  } catch (err) {
+    console.error('submitTestimony error:', err);
+    fb.className = 'submit-feedback error';
+    fb.textContent = 'Network error. Please try again.';
+    fb.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Share Testimony ✝';
   }
 }
 
@@ -895,6 +1141,21 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', function() { setFilter(this.dataset.filter, this); });
   });
+
+  // Testimony modal wiring
+  document.getElementById('testimony-cancel-btn')
+    .addEventListener('click', closeTestimonyModal);
+  document.getElementById('testimony-submit-btn')
+    .addEventListener('click', submitTestimony);
+  document.getElementById('testimony-text')
+    .addEventListener('input', function() {
+      document.getElementById('testimony-char').textContent = this.value.length;
+    });
+  // Close modal on backdrop click
+  document.getElementById('testimony-modal')
+    .addEventListener('click', function(e) {
+      if (e.target === this) closeTestimonyModal();
+    });
 
   // Auto-refresh every 60 seconds so the wall feels alive
   setInterval(loadPrayers, 60000);

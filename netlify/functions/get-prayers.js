@@ -34,7 +34,7 @@ exports.handler = async (event) => {
 
     const valid = prayers
       .filter(Boolean)
-      .map(({ ipHash, prayedIps, ...rest }) => rest)
+      .map(({ ipHash, prayedIps, submitterEmail, ...rest }) => rest)
       .sort((a, b) => b.timestamp - a.timestamp);
 
     return {
