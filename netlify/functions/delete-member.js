@@ -23,7 +23,7 @@
  *   session:<email>     written by verify-magic-link (if present)
  */
 
-const { pipeline } = require('./_redis');
+const { pipeline } = require('./redis');
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'DELETE') {
@@ -59,7 +59,7 @@ exports.handler = async (event) => {
   // ── Check the member exists before deleting ────────────────────────────────
   let existsResult;
   try {
-    [[existsResult]] = await pipeline(['EXISTS', `member:${email}`]);
+    [existsResult] = await pipeline(['EXISTS', `member:${email}`]);
   } catch (err) {
     console.error('[delete-member] Redis EXISTS error:', err);
     return reply(500, { error: 'internal error' });
