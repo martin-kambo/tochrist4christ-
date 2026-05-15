@@ -61,33 +61,54 @@ exports.handler = async (event) => {
   try { body = JSON.parse(event.body || '{}'); }
   catch { return { statusCode: 400, body: JSON.stringify({ success: false, error: 'Bad request' }) }; }
 
+  // admin.html sends { email, subject, message }
+  // Legacy callers may send { memberId, subject, message } — handle both
   const { memberId, subject, message } = body;
-  if (!memberId || !subject || !message) {
+  let recipientEmail = (body.email || '').trim().toLowerCase();
+
+  if (!subject || !message) {
     return {
       statusCode: 400,
-      body: JSON.stringify({ success: false, error: 'memberId, subject, and message are required' }),
+      body: JSON.stringify({ success: false, error: 'subject and message are required' }),
     };
   }
 
-  // Look up member from Blobs
-  let member;
-  try {
-    const storeOpts = { name: 'members' };
-    if (process.env.NETLIFY_SITE_ID && process.env.NETLIFY_BLOBS_TOKEN) { storeOpts.siteID = process.env.NETLIFY_SITE_ID; storeOpts.token = process.env.NETLIFY_BLOBS_TOKEN; }
-    const store = getStore(storeOpts);
-    member = await store.get(memberId, { type: 'json' });
-  } catch (err) {
-    console.error('Failed to fetch member for email:', err);
-    return {
-      statusCode: 404,
-      body: JSON.stringify({ success: false, error: 'Member not found' }),
-    };
+  // If email not supplied directly, look it up from Blobs via memberId
+  if (!recipientEmail) {
+    if (!memberId) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ success: false, error: 'email or memberId is required' }),
+      };
+    }
+    try {
+      const storeOpts = { name: 'members' };
+      if (process.env.NETLIFY_SITE_ID && process.env.NETLIFY_BLOBS_TOKEN) {
+        storeOpts.siteID = process.env.NETLIFY_SITE_ID;
+        storeOpts.token  = process.env.NETLIFY_BLOBS_TOKEN;
+      }
+      const store  = getStore(storeOpts);
+      const member = await store.get(memberId, { type: 'json' });
+      if (!member || !member.email) {
+        return {
+          statusCode: 404,
+          body: JSON.stringify({ success: false, error: 'Member has no email address on record' }),
+        };
+      }
+      recipientEmail = member.email.trim().toLowerCase();
+    } catch (err) {
+      console.error('Failed to fetch member for email:', err);
+      return {
+        statusCode: 404,
+        body: JSON.stringify({ success: false, error: 'Member not found' }),
+      };
+    }
   }
 
-  if (!member || !member.email) {
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipientEmail)) {
     return {
-      statusCode: 404,
-      body: JSON.stringify({ success: false, error: 'Member has no email address on record' }),
+      statusCode: 400,
+      body: JSON.stringify({ success: false, error: 'Invalid recipient email address' }),
     };
   }
 
@@ -139,7 +160,7 @@ exports.handler = async (event) => {
       },
       body: JSON.stringify({
         from:    'To Christ 4 Christ <hello@tochristforchrist.org>',
-        to:      [member.email],
+        to:      [recipientEmail],
         subject: subject,
         html,
         reply_to: 'hello@tochristforchrist.org',
