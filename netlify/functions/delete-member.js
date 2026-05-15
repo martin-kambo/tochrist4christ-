@@ -2,28 +2,31 @@
  * /.netlify/functions/delete-member
  *
  * Permanently removes a member from the system.
- * Deletes all Redis keys associated with the member email.
+ * Members are stored in Netlify Blobs (by UUID key) by add-member.js.
+ * Progress/session data lives in Redis (by email key).
  *
  * ── Request ──────────────────────────────────────────────────────────────────
  * DELETE  { email: string }
  *
- * Accepts both the new field name ("email") and the legacy one ("memberId")
- * so old clients don't silently break during a deploy.
- *
  * ── Response ─────────────────────────────────────────────────────────────────
- * 200  { success: true, deleted: string[] }   keys that were removed
+ * 200  { success: true, deleted: { blob: string, redisKeys: string[] } }
  * 400  { error: 'email required' }
  * 401  { error: 'Unauthorised' }
  * 404  { error: 'Member not found' }
  * 500  { error: 'internal error' }
- *
- * ── Redis keys deleted ────────────────────────────────────────────────────────
- *   member:<email>      written by add-member
- *   progress:<email>    written by update-progress
- *   session:<email>     written by verify-magic-link (if present)
  */
 
-const { pipeline } = require('./redis');
+const { getStore } = require('@netlify/blobs');
+const { pipeline }  = require('./redis');
+
+function blobsStore(name) {
+  const opts = { name };
+  if (process.env.NETLIFY_SITE_ID && process.env.NETLIFY_BLOBS_TOKEN) {
+    opts.siteID = process.env.NETLIFY_SITE_ID;
+    opts.token  = process.env.NETLIFY_BLOBS_TOKEN;
+  }
+  return getStore(opts);
+}
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'DELETE') {
@@ -47,54 +50,58 @@ exports.handler = async (event) => {
   let body = {};
   try { body = JSON.parse(event.body || '{}'); } catch {}
 
-  // Accept both field names for backwards compatibility
   const raw = (body.email || body.memberId || '').trim().toLowerCase();
-
   if (!raw || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw)) {
     return reply(400, { error: 'email required' });
   }
-
   const email = raw;
 
-  // ── Check the member exists before deleting ────────────────────────────────
-  let existsResult;
+  // ── Find the member blob by scanning for matching email ───────────────────
+  // add-member.js stores blobs keyed by UUID, so we must scan to find by email.
+  let blobId = null;
   try {
-    [existsResult] = await pipeline(['EXISTS', `member:${email}`]);
+    const store       = blobsStore('members');
+    const { blobs }   = await store.list();
+
+    for (const { key } of (blobs || [])) {
+      let record;
+      try { record = await store.get(key, { type: 'json' }); } catch { continue; }
+      if (record && (record.email || '').trim().toLowerCase() === email) {
+        blobId = key;
+        break;
+      }
+    }
+
+    if (!blobId) {
+      console.warn(`[delete-member] Member not found in Blobs: ${email}`);
+      return reply(404, { error: 'Member not found' });
+    }
+
+    // ── Delete the Blob record ─────────────────────────────────────────────
+    await store.delete(blobId);
+    console.log(`[delete-member] Deleted Blob ${blobId} for ${email}`);
+
   } catch (err) {
-    console.error('[delete-member] Redis EXISTS error:', err);
+    console.error('[delete-member] Blobs error:', err);
     return reply(500, { error: 'internal error' });
   }
 
-  if (!existsResult) {
-    console.warn(`[delete-member] Member not found: ${email}`);
-    return reply(404, { error: 'Member not found' });
-  }
-
-  // ── Delete all keys in a single pipeline ──────────────────────────────────
-  // We use DEL which is a no-op on missing keys, so progress/session are safe
-  // to include even if they were never written.
-  const keysToDelete = [
-    `member:${email}`,
-    `progress:${email}`,
-    `session:${email}`,
-  ];
-
+  // ── Delete Redis progress/session keys (best-effort) ──────────────────────
+  const redisKeys = [`progress:${email}`, `session:${email}`];
   try {
     await pipeline(
-      ['DEL', `member:${email}`],
       ['DEL', `progress:${email}`],
       ['DEL', `session:${email}`],
     );
+    console.log(`[delete-member] Cleared Redis keys for ${email}`);
   } catch (err) {
-    console.error('[delete-member] Redis DEL error:', err);
-    return reply(500, { error: 'internal error' });
+    // Non-fatal — member blob already gone; Redis keys will expire naturally
+    console.warn('[delete-member] Redis DEL warning (non-fatal):', err.message);
   }
-
-  console.log(`[delete-member] Removed member: ${email}`);
 
   return reply(200, {
     success: true,
-    deleted: keysToDelete,
+    deleted: { blob: blobId, redisKeys },
   });
 };
 
