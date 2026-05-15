@@ -1,7 +1,7 @@
 // netlify/functions/magic-login.js
 //
-// Validates a one-time magic token from the URL query string, sets a
-// session cookie via verify-auth, then redirects to the course.
+// Validates a one-time magic token from the URL query string, creates a
+// JWT session cookie, and redirects to the course.
 //
 // Two token sources are handled transparently:
 //   source:'welcome' — 7-day tokens minted by send-welcome-email.js
@@ -10,8 +10,11 @@
 // The token's own `exp` field (Unix ms) is always the source of truth for
 // expiry; `source` is logged for analytics only.
 //
+// Session cookie format: JWT (header.payload.signature) with HS256
+// This MUST match the format expected by verify-member-auth.js
+//
 // Required env vars:
-//   SESSION_SECRET       — HMAC key for session cookie signing
+//   SESSION_SECRET       — HMAC key for JWT signing
 //   NETLIFY_SITE_ID      — for Netlify Blobs access
 //   NETLIFY_BLOBS_TOKEN  — for Netlify Blobs access
 
@@ -31,26 +34,40 @@ function getTokenStore() {
 }
 
 // ---------------------------------------------------------------------------
-// Session cookie (HttpOnly, Secure, SameSite=Strict)
-// Signs a simple payload: "email|expiry" with HMAC-SHA256
+// Create JWT session token (HS256)
+// Format: header.payload.signature
+// This MUST match the format verify-member-auth.js expects!
 // ---------------------------------------------------------------------------
-function buildSessionCookie({ email, firstName, lastName, faithStage }) {
-  const secret  = process.env.SESSION_SECRET;
+function createJWT({ email, firstName, lastName, faithStage }) {
+  const secret = process.env.SESSION_SECRET;
   if (!secret) throw new Error('SESSION_SECRET not set');
 
-  const exp     = Date.now() + 30 * 24 * 60 * 60 * 1000; // 30 days
-  const payload = JSON.stringify({ email, firstName, lastName, faithStage, exp });
-  const sig     = crypto.createHmac('sha256', secret).update(payload).digest('hex');
-  const value   = Buffer.from(payload).toString('base64') + '.' + sig;
+  const now = Math.floor(Date.now() / 1000);
+  const exp = now + (30 * 24 * 60 * 60); // 30 days
 
-  return [
-    `member_session=${value}`,
-    'HttpOnly',
-    'Secure',
-    'SameSite=Strict',
-    'Path=/',
-    `Max-Age=${30 * 24 * 60 * 60}`,
-  ].join('; ');
+  const header = {
+    alg: 'HS256',
+    typ: 'JWT',
+  };
+
+  const payload = {
+    email,
+    firstName:  firstName  || '',
+    lastName:   lastName   || '',
+    faithStage: faithStage || 'just_starting',
+    iat: now,
+    exp,
+  };
+
+  const headerB64 = Buffer.from(JSON.stringify(header)).toString('base64url');
+  const payloadB64 = Buffer.from(JSON.stringify(payload)).toString('base64url');
+
+  const signature = crypto
+    .createHmac('sha256', secret)
+    .update(`${headerB64}.${payloadB64}`)
+    .digest('base64url');
+
+  return `${headerB64}.${payloadB64}.${signature}`;
 }
 
 // ---------------------------------------------------------------------------
@@ -92,6 +109,7 @@ function errorPage(title, message) {
 exports.handler = async (event) => {
   const token = (event.queryStringParameters || {}).token;
 
+  // Validate token format: 64 hex characters
   if (!token || !/^[0-9a-f]{64}$/.test(token)) {
     return {
       statusCode: 400,
@@ -100,7 +118,7 @@ exports.handler = async (event) => {
     };
   }
 
-  // Retrieve token data
+  // Retrieve token data from Blobs
   const store = getTokenStore();
   let tokenData;
   try {
@@ -138,7 +156,7 @@ exports.handler = async (event) => {
     };
   }
 
-  // Log source for analytics (non-blocking)
+  // Log source for analytics
   console.log(`magic-login: source=${tokenData.source || 'unknown'} email=${tokenData.email}`);
 
   // Consume token (one-time use)
@@ -146,20 +164,20 @@ exports.handler = async (event) => {
     await store.delete(token);
   } catch (err) {
     console.error('Failed to delete consumed token:', err);
-    // Continue — session cookie is still valid
+    // Continue — session JWT is still valid
   }
 
-  // Build session cookie
-  let sessionCookie;
+  // Create JWT session
+  let sessionJWT;
   try {
-    sessionCookie = buildSessionCookie({
+    sessionJWT = createJWT({
       email:      tokenData.email,
-      firstName:  tokenData.firstName  || '',
-      lastName:   tokenData.lastName   || '',
-      faithStage: tokenData.faithStage || 'just_starting',
+      firstName:  tokenData.firstName,
+      lastName:   tokenData.lastName,
+      faithStage: tokenData.faithStage,
     });
   } catch (err) {
-    console.error('Failed to build session cookie:', err);
+    console.error('Failed to create JWT:', err);
     return {
       statusCode: 500,
       headers: { 'Content-Type': 'text/html' },
@@ -167,12 +185,20 @@ exports.handler = async (event) => {
     };
   }
 
-  // Redirect to course
+  // Redirect to course with session cookie
+  // Format: header.payload.signature (JWT format)
   return {
     statusCode: 302,
     headers: {
-      'Set-Cookie': sessionCookie,
-      'Location':   'https://tochristforchrist.org/course.html',
+      'Set-Cookie': [
+        `member_session=${sessionJWT}`,
+        'HttpOnly',
+        'Secure',
+        'SameSite=Strict',
+        'Path=/',
+        `Max-Age=${30 * 24 * 60 * 60}`,
+      ].join('; '),
+      'Location': 'https://tochristforchrist.org/course.html',
     },
     body: '',
   };

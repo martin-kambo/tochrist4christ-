@@ -9,6 +9,7 @@ const crypto = require('crypto');
 function parseCookies(h = '') {
   return Object.fromEntries(h.split(';').map(c => { const [k,...v]=c.trim().split('='); return [k,v.join('=')]; }));
 }
+
 function verifySession(event) {
   const SECRET = process.env.SESSION_SECRET;
   if (!SECRET) return false;
@@ -27,22 +28,53 @@ function verifySession(event) {
 }
 
 exports.handler = async (event) => {
-  if (event.httpMethod !== 'DELETE') return { statusCode: 405, body: 'Method Not Allowed' };
-  if (!verifySession(event)) return { statusCode: 401, body: JSON.stringify({ success: false, error: 'Unauthorized' }) };
+  if (event.httpMethod !== 'DELETE') {
+    return { statusCode: 405, body: 'Method Not Allowed' };
+  }
+
+  if (!verifySession(event)) {
+    return {
+      statusCode: 401,
+      body: JSON.stringify({ success: false, error: 'Unauthorized' }),
+    };
+  }
 
   let body;
-  try { body = JSON.parse(event.body || '{}'); }
-  catch { return { statusCode: 400, body: JSON.stringify({ success: false, error: 'Bad request' }) }; }
+  try {
+    body = JSON.parse(event.body || '{}');
+  } catch {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ success: false, error: 'Bad request' }),
+    };
+  }
 
   const { prayerId } = body;
-  if (!prayerId) return { statusCode: 400, body: JSON.stringify({ success: false, error: 'prayerId required' }) };
+  if (!prayerId) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ success: false, error: 'prayerId required' }),
+    };
+  }
 
   try {
-    const store = getStore('prayers');
+    const store = getStore({
+      name:   'prayers',
+      siteID: process.env.NETLIFY_SITE_ID,
+      token:  process.env.NETLIFY_BLOBS_TOKEN,  // ✅ FIXED: Was NETLIFY_AUTH_TOKEN
+    });
+
     await store.delete(prayerId);
-    return { statusCode: 200, body: JSON.stringify({ success: true }) };
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ success: true }),
+    };
   } catch (err) {
-    console.error('delete-prayer error:', err);
-    return { statusCode: 500, body: JSON.stringify({ success: false, error: 'Could not delete prayer' }) };
+    console.error('delete-prayer error:', err.message || err);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ success: false, error: err.message || 'Could not delete prayer' }),
+    };
   }
 };
