@@ -46,7 +46,7 @@ const TOTAL_LESSONS = 48;
 const FAITH_STAGE_ACCESS = {
   just_starting: 1,
   feeling_stuck: 1,
-  returned     : 1,
+  returning    : 1,
   growing      : 3,
 };
 

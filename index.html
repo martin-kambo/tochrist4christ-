@@ -1486,7 +1486,7 @@ async function handleSubmit(e) {
   try {
     const emailRes = await fetch('/.netlify/functions/send-welcome-email', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ to_email: email, to_name: firstName, firstName, lastName }),
+      body: JSON.stringify({ to_email: email, to_name: firstName, firstName, lastName, faithStage }),
     });
     if (!emailRes.ok) console.error(`send-welcome-email failed [${emailRes.status}]`);
   } catch (err) { console.error('Welcome email error:', err); }

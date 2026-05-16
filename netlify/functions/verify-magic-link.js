@@ -176,7 +176,7 @@ exports.handler = async (event) => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       success: true,
-      source: record.source, // 'login' | 'signup' — lets the frontend decide where to redirect
+      source: record.source, // 'login' | 'welcome' — 'login' for returning members, 'welcome' for new signups
       member: {
         email:     memberEmail,
         firstName,
