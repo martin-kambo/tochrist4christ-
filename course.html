@@ -974,6 +974,28 @@
     } catch {}
   }
 
+  // ── 0. Check ?auth= query param (set by magic-login.js on redirect) ────────
+  // magic-login.js passes a base64url-encoded JSON session object so the page
+  // can authenticate instantly without a round-trip, then stores it in
+  // localStorage for the dashboard. The URL is cleaned up afterward.
+  try {
+    const params    = new URLSearchParams(window.location.search);
+    const authParam = params.get('auth');
+    if (authParam) {
+      // Decode base64url → JSON
+      const json    = atob(authParam.replace(/-/g, '+').replace(/_/g, '/'));
+      const session = JSON.parse(json);
+      // Validate: must have an email and must not be expired
+      if (session && session.email && session.expiresAt && Date.now() < new Date(session.expiresAt).getTime()) {
+        // Strip ?auth= from the URL (no reload)
+        const cleanUrl = window.location.pathname + window.location.hash;
+        window.history.replaceState(null, '', cleanUrl);
+        revealCourse(session);
+        return;
+      }
+    }
+  } catch { /* malformed param — fall through to cookie checks */ }
+
   // ── 1. Check member session (magic-link cookie) ──────────────────────────
   try {
     const memberRes  = await fetch('/.netlify/functions/verify-member-auth', { credentials: 'include' });
