@@ -964,13 +964,31 @@
     }
 
     // Member: persist name + faith stage for the dashboard
+    const faithStage = user.faithStage || 'just_starting';
     try {
       const existing = JSON.parse(localStorage.getItem('tc4c_user') || '{}');
       localStorage.setItem('tc4c_user', JSON.stringify({
         ...existing,
         firstName:  user.firstName  || existing.firstName  || '',
-        faithStage: user.faithStage || existing.faithStage || 'just_starting',
+        faithStage,
       }));
+
+      // Also write faithStage into tcc_course_progress so isLevelAccessible()
+      // uses the correct value. Without this, new users always default to
+      // 'just_starting' (Level 1 only) regardless of what they selected at signup.
+      const rawProg = localStorage.getItem('tcc_course_progress');
+      const prog    = rawProg ? JSON.parse(rawProg)
+                              : { faith_stage: faithStage, completed: [], dismissed_unlocks: [] };
+      prog.faith_stage = faithStage;
+      localStorage.setItem('tcc_course_progress', JSON.stringify(prog));
+
+      // If progress is already loaded into the global (cookie-auth path where the
+      // fetch completes after loadProgress() runs), patch it and re-render.
+      if (typeof progress !== 'undefined' && progress) {
+        progress.faith_stage = faithStage;
+        if (typeof updateTabs    === 'function') updateTabs();
+        if (typeof renderSidebar === 'function') renderSidebar();
+      }
     } catch {}
   }
 
@@ -983,7 +1001,9 @@
     const authParam = params.get('auth');
     if (authParam) {
       // Decode base64url → JSON
-      const json    = atob(authParam.replace(/-/g, '+').replace(/_/g, '/'));
+      // base64url → base64: swap chars, then restore padding (atob requires it)
+      const b64     = authParam.replace(/-/g, '+').replace(/_/g, '/');
+      const json    = atob(b64.padEnd(b64.length + (4 - b64.length % 4) % 4, '='));
       const session = JSON.parse(json);
       // Validate: must have an email and must not be expired
       if (session && session.email && session.expiresAt && Date.now() < new Date(session.expiresAt).getTime()) {

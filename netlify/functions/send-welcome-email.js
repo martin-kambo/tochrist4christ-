@@ -98,7 +98,7 @@ exports.handler = async (event) => {
     return { statusCode: 400, body: JSON.stringify({ success: false, error: 'Bad request' }) };
   }
 
-  const { to_email, firstName, lastName, faithStage = 'seeker' } = body;
+  const { to_email, firstName, lastName, faithStage = 'just_starting' } = body;
 
   if (!to_email || !firstName) {
     return {

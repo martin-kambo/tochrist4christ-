@@ -22,8 +22,8 @@
  *
  *   Faith-stage initial grant (day-1 access regardless of lesson count):
  *     just_starting → 1   New to faith; begin at Foundation
- *     feeling_stuck → 2   Knows the basics; Foundation + The Word unlocked
- *     returning     → 1   Returning believer; restart from Foundation
+ *     feeling_stuck → 1   Been a Christian but feeling stuck; begin at Foundation
+ *     returned      → 1   Returning believer; restart from Foundation
  *     growing       → 3   Seasoned; all three modules open immediately
  *
  *   Progress-based unlock (earned by completing lessons):
@@ -45,8 +45,8 @@ const TOTAL_LESSONS = 48;
 
 const FAITH_STAGE_ACCESS = {
   just_starting: 1,
-  feeling_stuck: 2,
-  returning    : 1,
+  feeling_stuck: 1,
+  returned     : 1,
   growing      : 3,
 };
 
