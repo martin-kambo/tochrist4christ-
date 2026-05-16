@@ -129,7 +129,7 @@ exports.handler = async (event) => {
   } catch (err) {
     console.error('Failed to create magic token:', err);
     // Fall back to the plain course link so the email still sends
-    magicLink = 'https://tochristforchrist.org/#course';
+    magicLink = 'https://tochristforchrist.org/course.html';
   }
 
   // ---------------------------------------------------------------------------
