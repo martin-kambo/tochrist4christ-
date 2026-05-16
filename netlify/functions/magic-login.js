@@ -185,8 +185,19 @@ exports.handler = async (event) => {
     };
   }
 
-  // Redirect to course with session cookie
-  // Format: header.payload.signature (JWT format)
+  // Redirect to course with session cookie AND session data query param
+  // httpOnly cookie is for API requests (secure against XSS)
+  // Session data in URL is for client-side auth checks (localStorage)
+  const sessionData = {
+    email: tokenData.email,
+    firstName: tokenData.firstName,
+    lastName: tokenData.lastName,
+    faithStage: tokenData.faithStage,
+    expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+  };
+  
+  const sessionDataParam = Buffer.from(JSON.stringify(sessionData)).toString('base64url');
+
   return {
     statusCode: 302,
     headers: {
@@ -198,7 +209,7 @@ exports.handler = async (event) => {
         'Path=/',
         `Max-Age=${30 * 24 * 60 * 60}`,
       ].join('; '),
-      'Location': 'https://tochristforchrist.org/course.html',
+      'Location': `https://tochristforchrist.org/course.html?auth=${sessionDataParam}`,
     },
     body: '',
   };

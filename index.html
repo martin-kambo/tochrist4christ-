@@ -1280,11 +1280,11 @@ section::after, .pillars::after, .signup::after {
           <div class="form-grid">
             <div class="form-row">
               <label for="fname">First Name</label>
-              <input type="text" id="fname" name="firstName" placeholder="Martin" required autocomplete="given-name">
+              <input type="text" id="fname" name="firstName" placeholder="Marto" required autocomplete="given-name">
             </div>
             <div class="form-row">
               <label for="lname">Last Name</label>
-              <input type="text" id="lname" name="lastName" placeholder="Kimani" autocomplete="family-name">
+              <input type="text" id="lname" name="lastName" placeholder="Kim" autocomplete="family-name">
             </div>
           </div>
           <div class="form-row">
@@ -1365,6 +1365,29 @@ section::after, .pillars::after, .signup::after {
 
 <!-- ══ SCRIPTS ════════════════════════════════════════════════ -->
 <script>
+// ── Auth parameter handler (from magic-login redirect) ────
+// If redirected with ?auth=<base64url>, decode it and store in localStorage
+(function handleAuthParam() {
+  const params = new URLSearchParams(window.location.search);
+  const authParam = params.get('auth');
+  if (authParam) {
+    try {
+      // Decode base64url to JSON
+      const decoded = atob(authParam.replace(/-/g, '+').replace(/_/g, '/'));
+      const sessionData = JSON.parse(decoded);
+      localStorage.setItem('tc4c_session', JSON.stringify(sessionData));
+      // Remove auth param from URL (clean history)
+      window.history.replaceState({}, document.title, window.location.pathname);
+      // If we're on the course page, reload to show authenticated state
+      if (window.location.pathname.includes('course')) {
+        window.location.reload();
+      }
+    } catch (err) {
+      console.error('Failed to parse auth parameter:', err);
+    }
+  }
+})();
+
 // ── Navbar scroll ──────────────────────────────────────────
 const navbar = document.getElementById('navbar');
 window.addEventListener('scroll', () => {
