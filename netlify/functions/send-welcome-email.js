@@ -279,7 +279,7 @@ exports.handler = async (event) => {
   // Send via Resend
   // ---------------------------------------------------------------------------
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${RESEND_API_KEY}`,
