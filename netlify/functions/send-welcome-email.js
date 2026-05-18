@@ -25,6 +25,11 @@ const crypto    = require('crypto');
 const { getStore } = require('@netlify/blobs');
 
 // ---------------------------------------------------------------------------
+// Email validation regex
+// ---------------------------------------------------------------------------
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// ---------------------------------------------------------------------------
 // Blobs: store helpers
 // ---------------------------------------------------------------------------
 function getTokenStore() {
@@ -63,13 +68,22 @@ async function saveMember({ email, firstName, lastName, faithStage }) {
 
 // ---------------------------------------------------------------------------
 // Generate and persist a one-time magic token
+// ✅ FIXED: Email is now lowercased for consistency with saveMember()
 // ---------------------------------------------------------------------------
 async function createMagicToken({ email, firstName, lastName, faithStage }) {
   const token = crypto.randomBytes(32).toString('hex'); // 64-char hex string
   const exp   = Date.now() + 7 * 24 * 60 * 60 * 1000; // 7 days from now
 
   const store = getTokenStore();
-  await store.setJSON(token, { email, firstName, lastName, faithStage, exp, source: 'welcome' });
+  // ✅ FIXED: Lowercase email here to match saveMember() behavior
+  await store.setJSON(token, { 
+    email: email.toLowerCase(), 
+    firstName, 
+    lastName, 
+    faithStage, 
+    exp, 
+    source: 'welcome' 
+  });
 
   return token;
 }
@@ -100,10 +114,18 @@ exports.handler = async (event) => {
 
   const { to_email, firstName, lastName, faithStage = 'just_starting' } = body;
 
-  if (!to_email || !firstName) {
+  // ✅ FIXED: Added email validation before processing
+  if (!to_email || !EMAIL_REGEX.test(to_email)) {
     return {
       statusCode: 400,
-      body: JSON.stringify({ success: false, error: 'to_email and firstName are required' }),
+      body: JSON.stringify({ success: false, error: 'Valid email address is required' }),
+    };
+  }
+
+  if (!firstName) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ success: false, error: 'firstName is required' }),
     };
   }
 

@@ -123,7 +123,8 @@ exports.handler = async (event) => {
   let tokenData;
   try {
     tokenData = await store.get(token, { type: 'json' });
-  } catch {
+  } catch (err) {
+    console.error('magic-login: Blobs token lookup failed:', err.message);
     tokenData = null;
   }
 
@@ -198,17 +199,14 @@ exports.handler = async (event) => {
   
   const sessionDataParam = Buffer.from(JSON.stringify(sessionData)).toString('base64url');
 
+  // ✅ FIXED: Set-Cookie header is now a single properly formatted string
+  // All cookie attributes (HttpOnly, Secure, SameSite, etc.) are in ONE header value
+  const cookieValue = `member_session=${sessionJWT}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=${30 * 24 * 60 * 60}`;
+
   return {
     statusCode: 302,
     headers: {
-      'Set-Cookie': [
-        `member_session=${sessionJWT}`,
-        'HttpOnly',
-        'Secure',
-        'SameSite=Strict',
-        'Path=/',
-        `Max-Age=${30 * 24 * 60 * 60}`,
-      ].join('; '),
+      'Set-Cookie': cookieValue,
       'Location': `https://tochristforchrist.org/course.html?auth=${sessionDataParam}`,
     },
     body: '',
