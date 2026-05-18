@@ -114,7 +114,7 @@ exports.handler = async (event) => {
 
   const { to_email, firstName, lastName, faithStage = 'just_starting' } = body;
 
-  // ✅ FIXED: Added email validation before processing
+  // ✅ IMPROVED: Email validation and normalization
   if (!to_email || !EMAIL_REGEX.test(to_email)) {
     return {
       statusCode: 400,
@@ -129,13 +129,15 @@ exports.handler = async (event) => {
     };
   }
 
+  // Normalize email (lowercase)
+  const normalizedEmail = to_email.toLowerCase().trim();
   const fullName = `${firstName} ${lastName || ''}`.trim();
 
   // ---------------------------------------------------------------------------
   // Persist member profile
   // ---------------------------------------------------------------------------
   try {
-    await saveMember({ email: to_email, firstName, lastName, faithStage });
+    await saveMember({ email: normalizedEmail, firstName, lastName, faithStage });
   } catch (err) {
     // Non-fatal — log and continue so the email still sends
     console.error('Failed to persist member profile:', err);
@@ -146,7 +148,7 @@ exports.handler = async (event) => {
   // ---------------------------------------------------------------------------
   let magicLink;
   try {
-    const token = await createMagicToken({ email: to_email, firstName, lastName, faithStage });
+    const token = await createMagicToken({ email: normalizedEmail, firstName, lastName, faithStage });
     magicLink = `https://tochristforchrist.org/.netlify/functions/magic-login?token=${token}`;
   } catch (err) {
     console.error('Failed to create magic token:', err);
@@ -270,7 +272,7 @@ exports.handler = async (event) => {
       },
       body: JSON.stringify({
         from:    'To Christ 4 Christ <hello@tochristforchrist.org>',
-        to:      [to_email],
+        to:      [normalizedEmail],
         subject: `Welcome, ${firstName} — Your discipleship journey begins today ✝`,
         html,
       }),

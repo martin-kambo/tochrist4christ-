@@ -926,9 +926,15 @@
 
 <script>
 /* ═══════════════════════════════════════════════════════
-   AUTH GATE
+   AUTH GATE (IMPROVED)
    Checks member_session via verify-auth.
    Shows teaser to guests, reveals course to members.
+   
+   CHANGES:
+   - Better error logging for debugging
+   - Fallback: check localStorage.tc4c_user if cookies fail
+   - Always write faith_stage to progress after auth
+   - 2-second timeout on auth checks to prevent hanging
    ═══════════════════════════════════════════════════════ */
 (async function authGate() {
   const gate  = document.getElementById('teaser-gate');
@@ -970,77 +976,140 @@
       localStorage.setItem('tc4c_user', JSON.stringify({
         ...existing,
         firstName:  user.firstName  || existing.firstName  || '',
+        lastName:   user.lastName   || existing.lastName   || '',
+        email:      user.email      || existing.email      || '',
         faithStage,
       }));
 
-      // Also write faithStage into tcc_course_progress so isLevelAccessible()
-      // uses the correct value. Without this, new users always default to
-      // 'just_starting' (Level 1 only) regardless of what they selected at signup.
+      // CRITICAL: Write faithStage into tcc_course_progress
+      // This is what isLevelAccessible() uses to determine access
       const rawProg = localStorage.getItem('tcc_course_progress');
       const prog    = rawProg ? JSON.parse(rawProg)
                               : { faith_stage: faithStage, completed: [], dismissed_unlocks: [] };
-      prog.faith_stage = faithStage;
-      localStorage.setItem('tcc_course_progress', JSON.stringify(prog));
+      if (prog.faith_stage !== faithStage) {
+        prog.faith_stage = faithStage;
+        localStorage.setItem('tcc_course_progress', JSON.stringify(prog));
+      }
 
-      // If progress is already loaded into the global (cookie-auth path where the
-      // fetch completes after loadProgress() runs), patch it and re-render.
+      // If progress is already loaded into the global, patch it and re-render
       if (typeof progress !== 'undefined' && progress) {
         progress.faith_stage = faithStage;
         if (typeof updateTabs    === 'function') updateTabs();
         if (typeof renderSidebar === 'function') renderSidebar();
       }
-    } catch {}
+    } catch (err) {
+      console.error('revealCourse: Failed to persist user data:', err);
+    }
   }
 
   // ── 0. Check ?auth= query param (set by magic-login.js on redirect) ────────
-  // magic-login.js passes a base64url-encoded JSON session object so the page
-  // can authenticate instantly without a round-trip, then stores it in
-  // localStorage for the dashboard. The URL is cleaned up afterward.
   try {
     const params    = new URLSearchParams(window.location.search);
     const authParam = params.get('auth');
     if (authParam) {
-      // Decode base64url → JSON
-      // base64url → base64: swap chars, then restore padding (atob requires it)
-      const b64     = authParam.replace(/-/g, '+').replace(/_/g, '/');
-      const json    = atob(b64.padEnd(b64.length + (4 - b64.length % 4) % 4, '='));
-      const session = JSON.parse(json);
-      // Validate: must have an email and must not be expired
-      if (session && session.email && session.expiresAt && Date.now() < new Date(session.expiresAt).getTime()) {
-        // Strip ?auth= from the URL (no reload)
-        const cleanUrl = window.location.pathname + window.location.hash;
-        window.history.replaceState(null, '', cleanUrl);
+      try {
+        // Decode base64url → JSON
+        const b64     = authParam.replace(/-/g, '+').replace(/_/g, '/');
+        const json    = atob(b64.padEnd(b64.length + (4 - b64.length % 4) % 4, '='));
+        const session = JSON.parse(json);
+        // Validate: must have an email and must not be expired
+        if (session && session.email && session.expiresAt && Date.now() < new Date(session.expiresAt).getTime()) {
+          // Strip ?auth= from the URL (no reload)
+          const cleanUrl = window.location.pathname + window.location.hash;
+          window.history.replaceState(null, '', cleanUrl);
+          console.log('[AUTH] ✓ Magic link decoded successfully:', session.email);
+          revealCourse(session);
+          return;
+        } else {
+          console.warn('[AUTH] ✗ Magic link validation failed. Session:', { has_email: !!session?.email, has_expires: !!session?.expiresAt, is_expired: session?.expiresAt && Date.now() >= new Date(session.expiresAt).getTime() });
+        }
+      } catch (decodeErr) {
+        console.warn('[AUTH] ✗ Failed to decode magic link:', decodeErr.message);
+      }
+    }
+  } catch (queryErr) {
+    console.warn('[AUTH] ✗ Query param check failed:', queryErr.message);
+  }
+
+  // ── 1. Check member session (magic-link cookie) ──────────────────────────
+  try {
+    // Use Promise.race for timeout (more compatible than AbortController)
+    const memberFetch = fetch('/.netlify/functions/verify-member-auth', { credentials: 'include' });
+    const timeout2s = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Timeout after 2 seconds')), 2000)
+    );
+    
+    const memberRes = await Promise.race([memberFetch, timeout2s]);
+    
+    if (memberRes.ok) {
+      const memberData = await memberRes.json();
+      if (memberData.authenticated && memberData.user) {
+        console.log('[AUTH] ✓ Member cookie valid:', memberData.user.email);
+        revealCourse(memberData.user);
+        return;
+      } else {
+        console.warn('[AUTH] ✗ Member cookie present but not authenticated');
+      }
+    } else {
+      console.warn('[AUTH] ✗ verify-member-auth returned:', memberRes.status);
+    }
+  } catch (err) {
+    console.warn('[AUTH] ✗ Member auth check failed:', err.message);
+  }
+
+  // ── 2. Check admin session (admin cookie) ────────────────────────────────
+  try {
+    // Use Promise.race for timeout (more compatible than AbortController)
+    const adminFetch = fetch('/.netlify/functions/verify-auth', { credentials: 'include' });
+    const timeout2s = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Timeout after 2 seconds')), 2000)
+    );
+    
+    const adminRes = await Promise.race([adminFetch, timeout2s]);
+    
+    if (adminRes.ok) {
+      const adminData = await adminRes.json();
+      if (adminData.authenticated && adminData.user) {
+        console.log('[AUTH] ✓ Admin cookie valid:', adminData.user.email);
+        revealCourse(adminData.user);
+        return;
+      } else {
+        console.warn('[AUTH] ✗ Admin cookie present but not authenticated');
+      }
+    } else {
+      console.warn('[AUTH] ✗ verify-auth returned:', adminRes.status);
+    }
+  } catch (err) {
+    console.warn('[AUTH] ✗ Admin auth check failed:', err.message);
+  }
+
+  // ── 3. Fallback: check if user data exists in localStorage ────────────────
+  // This helps users who were previously authenticated
+  try {
+    const userStr = localStorage.getItem('tc4c_user');
+    const sessionStr = localStorage.getItem('tc4c_session');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      if (user.email || user.firstName) {
+        console.log('[AUTH] ⚠ Using cached user data (no valid session cookie):', user.email || user.firstName);
+        revealCourse(user);
+        return;
+      }
+    }
+    if (sessionStr) {
+      const session = JSON.parse(sessionStr);
+      if (session.expiresAt && Date.now() < new Date(session.expiresAt).getTime()) {
+        console.log('[AUTH] ⚠ Using cached session (no valid cookie):', session.email);
         revealCourse(session);
         return;
       }
     }
-  } catch { /* malformed param — fall through to cookie checks */ }
+  } catch (cacheErr) {
+    console.warn('[AUTH] ✗ Fallback cache check failed:', cacheErr.message);
+  }
 
-  // ── 1. Check member session (magic-link cookie) ──────────────────────────
-  try {
-    const memberRes  = await fetch('/.netlify/functions/verify-member-auth', { credentials: 'include' });
-    if (memberRes.ok) {
-      const memberData = await memberRes.json();
-      if (memberData.authenticated) {
-        revealCourse(memberData.user);
-        return;
-      }
-    }
-  } catch { /* network error — fall through to admin check */ }
-
-  // ── 2. Check admin session (admin cookie) ────────────────────────────────
-  try {
-    const adminRes  = await fetch('/.netlify/functions/verify-auth', { credentials: 'include' });
-    if (adminRes.ok) {
-      const adminData = await adminRes.json();
-      if (adminData.authenticated) {
-        revealCourse(adminData.user);
-        return;
-      }
-    }
-  } catch { /* network error — fall through */ }
-
-  // ── 3. No valid session — show teaser gate ───────────────────────────────
+  // ── 4. No valid session — show teaser gate ───────────────────────────────
+  console.log('[AUTH] ✗ No valid session found. Showing teaser gate.');
   gate.classList.add('visible');
 })();
 

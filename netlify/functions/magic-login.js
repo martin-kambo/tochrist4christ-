@@ -191,9 +191,9 @@ exports.handler = async (event) => {
   // Session data in URL is for client-side auth checks (localStorage)
   const sessionData = {
     email: tokenData.email,
-    firstName: tokenData.firstName,
-    lastName: tokenData.lastName,
-    faithStage: tokenData.faithStage,
+    firstName: tokenData.firstName || '',
+    lastName: tokenData.lastName || '',
+    faithStage: tokenData.faithStage || 'just_starting',
     expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
   };
   
