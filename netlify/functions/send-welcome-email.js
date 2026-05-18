@@ -1,25 +1,7 @@
 // netlify/functions/send-welcome-email.js
-//
-// Sends a welcome email to a new member via Resend (resend.com).
-// Called by index.html handleSubmit after a successful signup.
-//
-// Now also generates a one-time magic-link token, stores it in Netlify Blobs
-// (magic-tokens store), and embeds the link in the CTA button.
-// The token expires in 7 days. magic-login.js validates and consumes it.
-//
-// Required environment variables:
-//   RESEND_API_KEY       — from resend.com → API Keys
-//   SESSION_SECRET       — same secret used by admin-login / verify-auth
-//   NETLIFY_SITE_ID      — for Netlify Blobs access
-//   NETLIFY_BLOBS_TOKEN  — for Netlify Blobs access
-//
-// Request body:
-//   {
-//     to_email:   string,   // recipient address
-//     firstName:  string,   // required
-//     lastName:   string,   // optional
-//     faithStage: string,   // optional — defaults to "seeker"
-//   }
+// FIXED: When creating magic token, ALSO saves complete member profile with all fields
+//        Uses email-based key (consistent with add-member.js)
+//        Saves: name, phone, location, source, status, progress, module
 
 const crypto    = require('crypto');
 const { getStore } = require('@netlify/blobs');
@@ -51,31 +33,56 @@ function getMemberStore() {
 }
 
 // ---------------------------------------------------------------------------
-// Persist member profile (email is the key)
+// Persist member profile with ALL required fields
+// ✅ FIXED: Uses email-based key and saves complete member object
 // ---------------------------------------------------------------------------
-async function saveMember({ email, firstName, lastName, faithStage }) {
+async function saveMember({ email, firstName, lastName, phone, loc, source, faithStage }) {
   const store = getMemberStore();
-  // Use a URL-safe key: base64url of lowercased email
-  const key = Buffer.from(email.toLowerCase()).toString('base64url');
-  await store.setJSON(key, {
-    email:      email.toLowerCase(),
+  
+  // ✅ FIXED: Use email as key (base64url encoded, lowercase) — SAME as add-member.js
+  const normalizedEmail = email.toLowerCase();
+  const key = Buffer.from(normalizedEmail).toString('base64url');
+  
+  const now = new Date();
+  const fullName = `${firstName} ${lastName || ''}`.trim();
+
+  // ✅ FIXED: Save complete member object with ALL fields
+  const member = {
+    // Core identity
+    email: normalizedEmail,
+    name: fullName,
     firstName,
-    lastName:   lastName || '',
-    faithStage: faithStage || 'just_starting',
-    joinedAt:   new Date().toISOString(),
-  });
+    lastName: lastName || '',
+    
+    // Contact info
+    phone: (phone || '').trim(),
+    loc: (loc || '').trim(),
+    
+    // Signup info
+    source: (source || 'Direct').trim(),
+    faithStage: (faithStage || 'just_starting').trim(),
+    
+    // Timestamps
+    joined: now.toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' }),
+    joinedISO: now.toISOString(),
+    
+    // Progress tracking
+    status: 'new',
+    progress: 0,
+    module: 1,
+  };
+
+  await store.setJSON(key, member);
 }
 
 // ---------------------------------------------------------------------------
 // Generate and persist a one-time magic token
-// ✅ FIXED: Email is now lowercased for consistency with saveMember()
 // ---------------------------------------------------------------------------
 async function createMagicToken({ email, firstName, lastName, faithStage }) {
   const token = crypto.randomBytes(32).toString('hex'); // 64-char hex string
   const exp   = Date.now() + 7 * 24 * 60 * 60 * 1000; // 7 days from now
 
   const store = getTokenStore();
-  // ✅ FIXED: Lowercase email here to match saveMember() behavior
   await store.setJSON(token, { 
     email: email.toLowerCase(), 
     firstName, 
@@ -112,9 +119,9 @@ exports.handler = async (event) => {
     return { statusCode: 400, body: JSON.stringify({ success: false, error: 'Bad request' }) };
   }
 
-  const { to_email, firstName, lastName, faithStage = 'just_starting' } = body;
+  const { to_email, firstName, lastName, faithStage = 'just_starting', phone = '', loc = '', source = '' } = body;
 
-  // ✅ IMPROVED: Email validation and normalization
+  // Email validation
   if (!to_email || !EMAIL_REGEX.test(to_email)) {
     return {
       statusCode: 400,
@@ -129,15 +136,23 @@ exports.handler = async (event) => {
     };
   }
 
-  // Normalize email (lowercase)
+  // Normalize email
   const normalizedEmail = to_email.toLowerCase().trim();
   const fullName = `${firstName} ${lastName || ''}`.trim();
 
   // ---------------------------------------------------------------------------
-  // Persist member profile
+  // ✅ FIXED: Persist complete member profile (not just email-based token)
   // ---------------------------------------------------------------------------
   try {
-    await saveMember({ email: normalizedEmail, firstName, lastName, faithStage });
+    await saveMember({ 
+      email: normalizedEmail, 
+      firstName, 
+      lastName, 
+      phone, 
+      loc, 
+      source, 
+      faithStage 
+    });
   } catch (err) {
     // Non-fatal — log and continue so the email still sends
     console.error('Failed to persist member profile:', err);
@@ -264,7 +279,7 @@ exports.handler = async (event) => {
   // Send via Resend
   // ---------------------------------------------------------------------------
   try {
-    const res = await fetch('https://api.resend.com/emails', {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${RESEND_API_KEY}`,

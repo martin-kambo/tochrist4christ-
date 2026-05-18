@@ -1,7 +1,8 @@
 // netlify/functions/add-member.js
+// FIXED: Uses email-based key (consistent with send-welcome-email.js)
+//        Saves all required fields (status, progress, phone, location, source)
 
 const { getStore } = require('@netlify/blobs');
-const crypto = require('crypto');
 
 function blobsStore(name) {
   const opts = { name };
@@ -21,7 +22,7 @@ exports.handler = async (event) => {
   try { body = JSON.parse(event.body || '{}'); }
   catch { return { statusCode: 400, body: JSON.stringify({ success: false, error: 'Bad request' }) }; }
 
-  const { name, email, phone, loc, source } = body;
+  const { name, email, phone, loc, source, faithStage } = body;
 
   if (!name || !name.trim()) {
     return {
@@ -31,28 +32,56 @@ exports.handler = async (event) => {
     };
   }
 
-  const id = crypto.randomUUID();
+  if (!email || !email.trim()) {
+    return {
+      statusCode: 400,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ success: false, error: 'Email is required' }),
+    };
+  }
+
+  // ✅ FIXED: Use email as key (base64url encoded, lowercase) — SAME as send-welcome-email.js
+  const normalizedEmail = email.toLowerCase().trim();
+  const key = Buffer.from(normalizedEmail).toString('base64url');
+
+  // Parse name into firstName and lastName
+  const nameParts = name.trim().split(/\s+/);
+  const firstName = nameParts[0] || '';
+  const lastName = nameParts.slice(1).join(' ') || '';
+
+  const now = new Date();
   const member = {
-    id,
-    name:      name.trim(),
-    email:     (email || '').trim(),
-    phone:     (phone || '').trim(),
-    loc:       (loc || '').trim(),
-    source:    (source || 'Direct').trim(),
-    joined:    new Date().toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' }),
-    joinedISO: new Date().toISOString(),
-    status:    'new',
-    progress:  0,
-    module:    1,
+    // ✅ Core identity
+    email: normalizedEmail,
+    name: name.trim(),
+    firstName,
+    lastName,
+    
+    // ✅ Contact info
+    phone: (phone || '').trim(),
+    loc: (loc || '').trim(),
+    
+    // ✅ Signup info
+    source: (source || 'Direct').trim(),
+    faithStage: (faithStage || 'just_starting').trim(),
+    
+    // ✅ Timestamps (consistent with send-welcome-email.js)
+    joined: now.toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' }),
+    joinedISO: now.toISOString(),
+    
+    // ✅ Progress tracking
+    status: 'new',
+    progress: 0,
+    module: 1,
   };
 
   try {
     const store = blobsStore('members');
-    await store.set(id, JSON.stringify(member));
+    await store.setJSON(key, member);
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ success: true, id }),
+      body: JSON.stringify({ success: true, email: normalizedEmail }),
     };
   } catch (err) {
     console.error('add-member error:', err.message, err.stack);
