@@ -1,5 +1,24 @@
 // netlify/functions/daily-content.js
+//
+// V2 PHASE 1 SECURITY CHANGE — see TC4C_TECHNICAL_FINDINGS.md (C3) and
+// TC4C_V2_PHASE1_ARCHITECTURE.md:
+//   The public devotional content behavior is UNCHANGED — anyone may still
+//   read today's (or any date's) meditation without logging in, exactly as
+//   before.
+//   What changed: previously, passing `?email=<anyone>` returned that
+//   person's private engagement state for the date, INCLUDING their raw
+//   journal text (`journalContent`), with no proof the caller was that
+//   person. That query parameter is no longer trusted for identity at all.
+//   Engagement data (including journal text) is now only ever returned for
+//   the caller's OWN verified member_session — never for an arbitrary
+//   supplied email. An anonymous or unauthenticated caller simply receives
+//   the default/empty engagement state, same as a brand-new user would
+//   have seen before.
+//
+//   No stored data or Blobs key format changes in this file.
+
 import { getStore } from '@netlify/blobs';
+import { getSessionUser } from './shared/member-auth.js';
 
 // Fallback meditations (used if no admin content exists)
 const FALLBACK_MEDITATIONS = [
@@ -93,6 +112,14 @@ const FALLBACK_MEDITATIONS = [
   }
 ];
 
+const DEFAULT_ENGAGEMENT = {
+  reflected: false,
+  prayed: false,
+  journaled: false,
+  memorized: false,
+  completedAt: null
+};
+
 export default async (req, context) => {
   const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -107,11 +134,10 @@ export default async (req, context) => {
   try {
     const url = new URL(req.url);
     const date = url.searchParams.get('date') || new Date().toISOString().split('T')[0];
-    const userEmail = url.searchParams.get('email');
 
     // Get store
     const store = getStore('daily-content');
-    
+
     // Try to get admin-configured meditation for this date
     let meditation = null;
     try {
@@ -131,31 +157,31 @@ export default async (req, context) => {
       meditation.date = date;
     }
 
-    // If user is logged in, get their engagement data for today
-    let engagement = null;
-    if (userEmail) {
+    // ── V2 PHASE 1: engagement data is only ever the CALLER'S OWN, derived
+    // from their verified member_session — a query-string email is no
+    // longer accepted as identity. Unauthenticated callers get the
+    // default/empty state (never another member's journal text).
+    let engagement = DEFAULT_ENGAGEMENT;
+    const cookieHeader = req.headers.get('cookie') || '';
+    const session = getSessionUser({ headers: { cookie: cookieHeader } });
+
+    if (session) {
       const userStore = getStore('daily-engagement');
       try {
-        const userData = await userStore.get(userEmail);
+        const userData = await userStore.get(session.email);
         if (userData) {
           const parsed = JSON.parse(userData);
-          engagement = parsed.activities?.[date] || null;
+          engagement = parsed.activities?.[date] || DEFAULT_ENGAGEMENT;
         }
       } catch (e) {
-        // No engagement yet
+        // No engagement yet for this member
       }
     }
 
     return new Response(JSON.stringify({
       success: true,
       meditation,
-      engagement: engagement || {
-        reflected: false,
-        prayed: false,
-        journaled: false,
-        memorized: false,
-        completedAt: null
-      },
+      engagement,
       date
     }), { headers });
   } catch (error) {

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — To Christ 4 Christ</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1a2744;
+    --navy-light: #243459;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --cream: #faf8f3;
+    --cream-dark: #f0ebe0;
+    --text: #2c2c2c;
+    --text-muted: #6b6b6b;
+    --border: #ddd5c4;
+    --green: #2e7d52;
+    --green-light: #e8f5ee;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: 'Nunito', sans-serif; background: var(--cream);
+    color: var(--text); min-height: 100vh; display: flex; flex-direction: column;
+  }
+
+  /* ── Header / nav (shared shape with wellbeing.html) ── */
+  header.tc-header { background: var(--navy); padding: 0 1.25rem; }
+  .tc-header-inner {
+    max-width: 900px; margin: 0 auto; display: flex; align-items: center;
+    justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; padding: 0.9rem 0;
+  }
+  .tc-logo { font-family: 'Crimson Pro', serif; font-size: 1.1rem; font-weight: 600; color: var(--gold-light); text-decoration: none; }
+  .tc-logo span { color: rgba(255,255,255,0.4); font-size: 0.7rem; margin-left: 6px; font-family: 'Nunito'; font-weight: 400; }
+  nav.tc-nav { display: flex; gap: 1.1rem; flex-wrap: wrap; }
+  nav.tc-nav a {
+    color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.85rem;
+    font-weight: 600; padding: 0.3rem 0; border-bottom: 2px solid transparent;
+  }
+  nav.tc-nav a.active { color: var(--gold-light); border-bottom-color: var(--gold); }
+  nav.tc-nav a:hover { color: var(--gold-light); }
+
+  main { flex: 1; max-width: 900px; margin: 0 auto; padding: 2rem 1.25rem 3.5rem; width: 100%; }
+
+  /* ── Loading / signed-out states ── */
+  .state-card {
+    max-width: 480px; margin: 3rem auto; background: white; border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 2.25rem 1.75rem; text-align: center;
+  }
+  .state-card h2 { font-family: 'Crimson Pro', serif; margin: 0 0 0.5rem; font-size: 1.4rem; }
+  .state-card p { color: var(--text-muted); margin: 0 0 1.25rem; line-height: 1.55; }
+  .btn {
+    display: inline-block; background: var(--gold); color: var(--navy); font-weight: 800;
+    text-decoration: none; padding: 12px 28px; border-radius: var(--radius); font-size: 0.9rem;
+    border: none; cursor: pointer; font-family: 'Nunito', sans-serif;
+  }
+  .btn:hover { background: var(--gold-light); }
+  .btn-secondary { background: transparent; color: var(--navy); border: 1px solid var(--border); font-weight: 700; }
+  .btn-secondary:hover { background: var(--cream-dark); }
+
+  #app { display: none; }
+
+  /* ── Welcome ── */
+  .welcome h1 { font-family: 'Crimson Pro', serif; font-size: 1.9rem; margin: 0 0 0.25rem; }
+  .welcome p { color: var(--text-muted); margin: 0 0 1.75rem; }
+
+  /* ── Cards ── */
+  .card {
+    background: white; border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 1.5rem; margin-bottom: 1.25rem;
+  }
+  .card-label {
+    text-transform: uppercase; letter-spacing: 0.04em; font-size: 0.72rem;
+    font-weight: 800; color: var(--text-muted); margin-bottom: 0.6rem; display: block;
+  }
+  .card h3 { font-family: 'Crimson Pro', serif; margin: 0 0 0.4rem; font-size: 1.25rem; }
+  .card p.desc { color: var(--text-muted); margin: 0 0 1rem; line-height: 1.5; font-size: 0.94rem; }
+  .card-note {
+    font-size: 0.78rem; color: var(--text-muted); margin-top: 0.9rem; padding-top: 0.75rem;
+    border-top: 1px dashed var(--border); line-height: 1.5;
+  }
+
+  /* ── Discipleship progress ── */
+  .progress-row { display: flex; align-items: center; gap: 1rem; margin: 0.75rem 0 1.1rem; flex-wrap: wrap; }
+  .progress-stat { text-align: center; }
+  .progress-stat .n { font-family: 'Crimson Pro', serif; font-size: 1.6rem; color: var(--navy); font-weight: 600; display: block; }
+  .progress-stat .l { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.03em; }
+  .bar-track { flex: 1; min-width: 140px; height: 10px; background: var(--cream-dark); border-radius: 6px; overflow: hidden; }
+  .bar-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-light)); border-radius: 6px; }
+  .next-lesson { font-size: 0.88rem; color: var(--text); margin-bottom: 1rem; }
+  .next-lesson strong { color: var(--navy); }
+
+  /* ── Wellbeing card ── */
+  .checkin-prompt { font-family: 'Crimson Pro', serif; font-size: 1.25rem; margin: 0 0 0.35rem; }
+  .last-checkin { font-size: 0.82rem; color: var(--text-muted); margin: 0.5rem 0 1rem; }
+
+  /* ── Placeholder (mentorship) ── */
+  .card.placeholder { background: var(--cream-dark); border-style: dashed; }
+  .card.placeholder h3 { color: var(--text-muted); }
+
+  .grid-two { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+  @media (max-width: 620px) { .grid-two { grid-template-columns: 1fr; } }
+
+  footer.tc-footer { text-align: center; padding: 1.5rem; font-size: 0.78rem; color: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<header class="tc-header">
+  <div class="tc-header-inner">
+    <a class="tc-logo" href="dashboard.html">To Christ 4 Christ <span>V2</span></a>
+    <nav class="tc-nav">
+      <a href="dashboard.html" class="active">Dashboard</a>
+      <a href="course.html">Discipleship</a>
+      <a href="wellbeing.html">Wellbeing</a>
+      <a href="prayer-wall.html">Prayer &amp; Community</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- Signed-out state -->
+  <div id="signed-out" class="state-card" style="display:none;">
+    <h2>Sign in to see your dashboard</h2>
+    <p>Your dashboard shows your discipleship progress and a private space for wellbeing check-ins. Sign in with the email link on the course page to continue.</p>
+    <a class="btn" href="course.html">Go to sign-in</a>
+  </div>
+
+  <!-- Loading state -->
+  <div id="loading" class="state-card">
+    <h2>Loading your dashboard…</h2>
+    <p>One moment.</p>
+  </div>
+
+  <!-- Signed-in app -->
+  <div id="app">
+    <div class="welcome">
+      <h1 id="welcome-heading">Welcome</h1>
+      <p>Here's where things stand today.</p>
+    </div>
+
+    <div class="card">
+      <span class="card-label">Discipleship</span>
+      <h3 id="module-name">Foundation</h3>
+      <div class="progress-row">
+        <div class="progress-stat">
+          <span class="n" id="lessons-completed">0</span>
+          <span class="l">of 48 lessons</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" id="progress-bar" style="width:0%"></div></div>
+        <div class="progress-stat">
+          <span class="n" id="progress-pct">0%</span>
+          <span class="l">complete</span>
+        </div>
+        <div class="progress-stat" id="streak-stat" style="display:none;">
+          <span class="n" id="streak-days">0</span>
+          <span class="l">day streak</span>
+        </div>
+      </div>
+      <p class="next-lesson" id="next-lesson-line" style="display:none;">Next up: <strong id="next-lesson-title"></strong></p>
+      <a class="btn" href="course.html">Continue Discipleship</a>
+      <p class="card-note">Synced automatically as you complete lessons while signed in.</p>
+    </div>
+
+    <div class="grid-two">
+      <div class="card">
+        <span class="card-label">Wellbeing</span>
+        <p class="checkin-prompt">How are you doing today?</p>
+        <p class="last-checkin" id="last-checkin-line">You haven't checked in yet.</p>
+        <a class="btn" href="wellbeing.html">Check in</a>
+      </div>
+
+      <div class="card">
+        <span class="card-label">Daily</span>
+        <h3>Daily reflection</h3>
+        <p class="desc">A focused daily habit space (reflection, prayer, memory verses) is part of what we're building next. For now, keep growing through your course lessons and today's wellbeing check-in.</p>
+      </div>
+    </div>
+
+    <div class="grid-two">
+      <div class="card" id="mentorship-card">
+        <span class="card-label">Mentorship</span>
+        <h3 id="mentorship-title">Mentorship</h3>
+        <p class="desc" id="mentorship-desc">Checking your mentorship status…</p>
+        <a class="btn btn-secondary" id="mentorship-link" href="mentor.html" style="display:none;"></a>
+      </div>
+
+      <div class="card">
+        <span class="card-label">Community</span>
+        <h3>Prayer wall</h3>
+        <p class="desc">Share a prayer request, pray for others, and see answered prayers from the TC4C community.</p>
+        <a class="btn btn-secondary" href="prayer-wall.html">Open Prayer &amp; Community</a>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="tc-footer">To Christ 4 Christ</footer>
+
+<script>
+(function () {
+  var LEVEL_NAMES = { 1: 'Foundation', 2: 'Growth', 3: 'Ministry' };
+  var TOTAL_LESSONS = 48;
+
+  function el(id) { return document.getElementById(id); }
+
+  function greetingWord() {
+    var h = new Date().getHours();
+    if (h < 12) return 'Good morning';
+    if (h < 18) return 'Good afternoon';
+    return 'Good evening';
+  }
+
+  async function fetchMember() {
+    var res = await fetch('/.netlify/functions/member-me', { credentials: 'include' });
+    if (res.status === 401) return null;
+    if (!res.ok) throw new Error('member-me failed: ' + res.status);
+    var data = await res.json();
+    return data.member;
+  }
+
+  async function fetchProgress() {
+    try {
+      var res = await fetch('/.netlify/functions/get-progress', { credentials: 'include' });
+      if (!res.ok) return null;
+      return await res.json();
+    } catch (e) { return null; }
+  }
+
+  // V2 PHASE 3 — mentorship status. Never invents a status: if the call
+  // fails, the card says so instead of guessing "ordinary member".
+  async function fetchMentorStatus() {
+    try {
+      var res = await fetch('/.netlify/functions/mentor-status', { credentials: 'include' });
+      if (!res.ok) return null;
+      var data = await res.json();
+      return data.status || null;
+    } catch (e) { return null; }
+  }
+
+  function renderMentorship(status) {
+    var title = el('mentorship-title');
+    var desc = el('mentorship-desc');
+    var link = el('mentorship-link');
+    link.style.display = 'none';
+
+    if (status === 'member') {
+      title.textContent = 'Status: Not yet a mentor';
+      desc.textContent = 'TC4C is building a space where members walk alongside one another as they grow. If you feel called to serve as a mentor, you can apply. Mentor matching and a mentor portal are not available yet.';
+      link.textContent = 'Apply to become a mentor';
+    } else if (status === 'mentor_pending') {
+      title.textContent = 'Application: Under review';
+      desc.textContent = 'Thank you for applying. An administrator will review your application. You are not a mentor yet.';
+      link.textContent = 'View application';
+    } else if (status === 'mentor') {
+      title.textContent = 'Status: Approved Mentor';
+      desc.textContent = 'Your mentor application has been approved. You can view and edit your basic mentor profile. Mentee matching and the mentor portal are not available yet.';
+      link.textContent = 'View Mentor Profile';
+    } else if (status === 'mentor_suspended') {
+      title.textContent = 'Status: Mentor role suspended';
+      desc.textContent = 'Your mentor role is currently suspended. Please contact an administrator if you have questions.';
+      link.textContent = 'View details';
+    } else {
+      title.textContent = 'Mentorship';
+      desc.textContent = 'Your mentorship status is unavailable right now. Please try again later.';
+      return;
+    }
+    link.style.display = 'inline-block';
+  }
+
+  async function fetchLatestCheckIn() {
+    try {
+      var res = await fetch('/.netlify/functions/get-wellbeing-checkins?limit=1', { credentials: 'include' });
+      if (!res.ok) return null;
+      var data = await res.json();
+      return (data.entries && data.entries[0]) || null;
+    } catch (e) { return null; }
+  }
+
+  function renderWelcome(member) {
+    var name = member.firstName ? member.firstName : 'friend';
+    el('welcome-heading').textContent = greetingWord() + ', ' + name;
+  }
+
+  function renderProgress(progress) {
+    if (!progress) return; // keep zero-state defaults already in the markup
+    var lessonsCompleted = progress.lessonsCompleted || 0;
+    var pct = Math.round((lessonsCompleted / TOTAL_LESSONS) * 100);
+    var moduleNum = progress.currentModule || 1;
+
+    el('module-name').textContent = LEVEL_NAMES[moduleNum] || 'Foundation';
+    el('lessons-completed').textContent = lessonsCompleted;
+    el('progress-pct').textContent = pct + '%';
+    el('progress-bar').style.width = pct + '%';
+
+    if (progress.nextLessonTitle) {
+      el('next-lesson-title').textContent = progress.nextLessonTitle;
+      el('next-lesson-line').style.display = 'block';
+    }
+
+    // V2 PHASE 2 — streak comes straight from get-progress.js's real,
+    // date-based calculation. Only shown once a member has at least
+    // started a streak, so a brand-new zero-state doesn't show "0 day
+    // streak" as if that were a meaningful stat.
+    if (typeof progress.streak === 'number' && progress.streak > 0) {
+      el('streak-days').textContent = progress.streak;
+      el('streak-stat').style.display = '';
+    }
+  }
+
+  function renderLastCheckIn(entry) {
+    if (!entry) return;
+    var date = new Date(entry.createdAt);
+    var formatted = date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+    el('last-checkin-line').textContent = 'Last check-in: ' + formatted;
+  }
+
+  async function init() {
+    var member;
+    try {
+      member = await fetchMember();
+    } catch (e) {
+      console.error('Dashboard: could not verify session', e);
+      member = null;
+    }
+
+    el('loading').style.display = 'none';
+
+    if (!member) {
+      el('signed-out').style.display = 'block';
+      return;
+    }
+
+    el('app').style.display = 'block';
+    renderWelcome(member);
+
+    var results = await Promise.all([fetchProgress(), fetchLatestCheckIn(), fetchMentorStatus()]);
+    renderProgress(results[0]);
+    renderLastCheckIn(results[1]);
+    renderMentorship(results[2]);
+  }
+
+  init();
+})();
+</script>
+
+</body>
+</html>

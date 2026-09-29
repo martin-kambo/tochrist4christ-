@@ -10,5 +10,17 @@
 /admin.html
   Cache-Control: no-store
 
+/dashboard.html
+  Cache-Control: no-store
+
+/wellbeing.html
+  Cache-Control: no-store
+
+/mentor.html
+  Cache-Control: no-store
+
+/admin/mentor-applications.html
+  Cache-Control: no-store
+
 /.netlify/functions/*
   Cache-Control: no-store

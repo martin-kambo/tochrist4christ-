@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wellbeing — To Christ 4 Christ</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1a2744; --navy-light: #243459; --gold: #c9a84c; --gold-light: #e8c97a;
+    --cream: #faf8f3; --cream-dark: #f0ebe0; --text: #2c2c2c; --text-muted: #6b6b6b;
+    --border: #ddd5c4; --green: #2e7d52; --green-light: #e8f5ee; --radius: 10px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: 'Nunito', sans-serif; background: var(--cream);
+    color: var(--text); min-height: 100vh; display: flex; flex-direction: column;
+  }
+
+  header.tc-header { background: var(--navy); padding: 0 1.25rem; }
+  .tc-header-inner {
+    max-width: 720px; margin: 0 auto; display: flex; align-items: center;
+    justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; padding: 0.9rem 0;
+  }
+  .tc-logo { font-family: 'Crimson Pro', serif; font-size: 1.1rem; font-weight: 600; color: var(--gold-light); text-decoration: none; }
+  .tc-logo span { color: rgba(255,255,255,0.4); font-size: 0.7rem; margin-left: 6px; font-family: 'Nunito'; font-weight: 400; }
+  nav.tc-nav { display: flex; gap: 1.1rem; flex-wrap: wrap; }
+  nav.tc-nav a {
+    color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.85rem;
+    font-weight: 600; padding: 0.3rem 0; border-bottom: 2px solid transparent;
+  }
+  nav.tc-nav a.active { color: var(--gold-light); border-bottom-color: var(--gold); }
+  nav.tc-nav a:hover { color: var(--gold-light); }
+
+  main { flex: 1; max-width: 720px; margin: 0 auto; padding: 2rem 1.25rem 3.5rem; width: 100%; }
+
+  .state-card {
+    max-width: 480px; margin: 3rem auto; background: white; border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 2.25rem 1.75rem; text-align: center;
+  }
+  .state-card h2 { font-family: 'Crimson Pro', serif; margin: 0 0 0.5rem; font-size: 1.4rem; }
+  .state-card p { color: var(--text-muted); margin: 0 0 1.25rem; line-height: 1.55; }
+
+  .btn {
+    display: inline-block; background: var(--gold); color: var(--navy); font-weight: 800;
+    text-decoration: none; padding: 12px 28px; border-radius: var(--radius); font-size: 0.9rem;
+    border: none; cursor: pointer; font-family: 'Nunito', sans-serif;
+  }
+  .btn:hover { background: var(--gold-light); }
+  .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  #app { display: none; }
+
+  h1.page-title { font-family: 'Crimson Pro', serif; font-size: 1.8rem; margin: 0 0 0.35rem; }
+  p.page-sub { color: var(--text-muted); margin: 0 0 1.5rem; }
+
+  .boundary-note {
+    background: var(--green-light); border: 1px solid rgba(46,125,82,0.25); border-radius: var(--radius);
+    padding: 1rem 1.1rem; font-size: 0.86rem; line-height: 1.6; color: var(--text); margin-bottom: 1.75rem;
+  }
+  .boundary-note strong { color: var(--green); }
+  .boundary-note a { color: var(--navy); font-weight: 700; }
+
+  .card { background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.5rem; }
+
+  fieldset { border: none; padding: 0; margin: 0 0 1.5rem; }
+  legend { font-family: 'Crimson Pro', serif; font-size: 1.05rem; margin-bottom: 0.7rem; padding: 0; }
+  .sub-hint { font-size: 0.8rem; color: var(--text-muted); margin: -0.4rem 0 0.7rem; }
+
+  .choice-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .choice-row input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
+  .choice-row label {
+    border: 1px solid var(--border); border-radius: 999px; padding: 0.5rem 1rem;
+    font-size: 0.85rem; cursor: pointer; font-weight: 700; color: var(--text-muted);
+    transition: all 0.15s ease;
+  }
+  .choice-row input[type="radio"]:checked + label {
+    background: var(--navy); border-color: var(--navy); color: var(--gold-light);
+  }
+
+  select#primaryConcern {
+    width: 100%; padding: 0.7rem 0.8rem; border: 1px solid var(--border); border-radius: var(--radius);
+    font-family: 'Nunito', sans-serif; font-size: 0.92rem; background: white; color: var(--text);
+  }
+
+  .support-option { display: block; border: 1px solid var(--border); border-radius: var(--radius); padding: 0.85rem 1rem; margin-bottom: 0.6rem; cursor: pointer; }
+  .support-option input { margin-right: 0.6rem; }
+  .support-option .opt-note { display: block; font-size: 0.78rem; color: var(--text-muted); margin-top: 0.3rem; margin-left: 1.6rem; }
+  .support-option:has(input:checked) { border-color: var(--gold); background: #fdf9ee; }
+
+  textarea#reflection {
+    width: 100%; min-height: 110px; padding: 0.8rem; border: 1px solid var(--border);
+    border-radius: var(--radius); font-family: 'Nunito', sans-serif; font-size: 0.92rem; resize: vertical;
+  }
+  .char-count { font-size: 0.75rem; color: var(--text-muted); text-align: right; margin-top: 0.3rem; }
+
+  .form-msg { font-size: 0.85rem; margin-top: 0.75rem; }
+  .form-msg.error { color: #a33; }
+  .form-msg.success { color: var(--green); }
+
+  .history-title { font-family: 'Crimson Pro', serif; font-size: 1.2rem; margin: 0 0 0.9rem; }
+  .history-item { border-bottom: 1px solid var(--cream-dark); padding: 0.8rem 0; }
+  .history-item:last-child { border-bottom: none; }
+  .history-item .h-top { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.3rem; }
+  .history-item .h-state { font-weight: 800; color: var(--navy); text-transform: capitalize; }
+  .history-item .h-reflection { font-size: 0.88rem; line-height: 1.5; margin: 0.2rem 0 0; }
+  .empty-history { color: var(--text-muted); font-size: 0.88rem; }
+
+  footer.tc-footer { text-align: center; padding: 1.5rem; font-size: 0.78rem; color: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<header class="tc-header">
+  <div class="tc-header-inner">
+    <a class="tc-logo" href="dashboard.html">To Christ 4 Christ <span>V2</span></a>
+    <nav class="tc-nav">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="course.html">Discipleship</a>
+      <a href="wellbeing.html" class="active">Wellbeing</a>
+      <a href="prayer-wall.html">Prayer &amp; Community</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <div id="signed-out" class="state-card" style="display:none;">
+    <h2>Sign in to check in</h2>
+    <p>Wellbeing check-ins are private to you. Sign in with the email link on the course page to continue.</p>
+    <a class="btn" href="course.html">Go to sign-in</a>
+  </div>
+
+  <div id="loading" class="state-card">
+    <h2>Loading…</h2>
+  </div>
+
+  <div id="app">
+    <h1 class="page-title">How are you doing?</h1>
+    <p class="page-sub">This is a quiet space for honest reflection. What you share here is private to you.</p>
+
+    <div class="boundary-note">
+      <strong>Before you begin:</strong> this check-in offers reflection and a caring space — it is not a diagnosis, and it isn't a substitute for professional mental health care. Faith and prayer are a real source of strength, but they don't replace the help of a doctor, counselor, or other professional when you need one. If you'd like to talk to someone right now, <a href="tel:+254722178177">Befrienders Kenya</a> (+254 722 178 177) offers a free, confidential listening line, and Kenya's national helpline (<a href="tel:1190">1190</a>) is also available. <em>(Please verify these numbers are current before relying on them.)</em>
+    </div>
+
+    <div class="card">
+      <form id="checkin-form">
+        <fieldset>
+          <legend>How are you feeling today?</legend>
+          <div class="choice-row" id="emotional-state-row">
+            <input type="radio" name="emotionalState" value="struggling" id="es-struggling"><label for="es-struggling">Struggling</label>
+            <input type="radio" name="emotionalState" value="not_great" id="es-notgreat"><label for="es-notgreat">Not great</label>
+            <input type="radio" name="emotionalState" value="okay" id="es-okay"><label for="es-okay">Okay</label>
+            <input type="radio" name="emotionalState" value="good" id="es-good"><label for="es-good">Good</label>
+            <input type="radio" name="emotionalState" value="doing_well" id="es-doingwell"><label for="es-doingwell">Doing well</label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>What's mainly on your mind?</legend>
+          <select id="primaryConcern" name="primaryConcern">
+            <option value="" disabled selected>Choose one…</option>
+            <option value="faith">Faith</option>
+            <option value="family">Family</option>
+            <option value="relationships">Relationships</option>
+            <option value="work">Work</option>
+            <option value="school">School</option>
+            <option value="finances">Finances</option>
+            <option value="loneliness">Loneliness</option>
+            <option value="stress">Stress</option>
+            <option value="grief">Grief</option>
+            <option value="purpose">Purpose</option>
+            <option value="other">Other</option>
+            <option value="prefer_not_to_say">Prefer not to say</option>
+          </select>
+        </fieldset>
+
+        <fieldset>
+          <legend>What's been on your mind? <span style="font-weight:400; color:var(--text-muted); font-size:0.8rem;">(optional)</span></legend>
+          <p class="sub-hint">Share only what you're comfortable sharing.</p>
+          <textarea id="reflection" name="reflection" maxlength="1000" placeholder="Write as much or as little as you'd like…"></textarea>
+          <div class="char-count"><span id="char-count">0</span>/1000</div>
+        </fieldset>
+
+        <fieldset>
+          <legend>What would help right now?</legend>
+          <label class="support-option">
+            <input type="radio" name="supportPreference" value="keep_private" checked>
+            I want to keep this private.
+          </label>
+          <label class="support-option">
+            <input type="radio" name="supportPreference" value="encouragement">
+            I'd like encouragement.
+          </label>
+          <label class="support-option">
+            <input type="radio" name="supportPreference" value="talk_to_someone">
+            I'd like to talk to someone.
+            <span class="opt-note">TC4C doesn't yet have live mentor matching — this simply records that you'd value that kind of support in the future. If you need to talk to someone today, please use the resources above.</span>
+          </label>
+          <label class="support-option">
+            <input type="radio" name="supportPreference" value="resources">
+            I'd like information/resources.
+          </label>
+        </fieldset>
+
+        <button type="submit" class="btn" id="submit-btn">Save check-in</button>
+        <div class="form-msg" id="form-msg"></div>
+      </form>
+    </div>
+
+    <div class="card">
+      <h3 class="history-title">Your recent check-ins</h3>
+      <div id="history-list"><p class="empty-history">Loading…</p></div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="tc-footer">To Christ 4 Christ — your check-ins are private to you.</footer>
+
+<script>
+(function () {
+  var EMOTIONAL_LABELS = {
+    struggling: 'Struggling', not_great: 'Not great', okay: 'Okay', good: 'Good', doing_well: 'Doing well'
+  };
+
+  function el(id) { return document.getElementById(id); }
+
+  async function fetchMember() {
+    var res = await fetch('/.netlify/functions/member-me', { credentials: 'include' });
+    if (res.status === 401) return null;
+    if (!res.ok) throw new Error('member-me failed: ' + res.status);
+    var data = await res.json();
+    return data.member;
+  }
+
+  async function fetchHistory() {
+    var res = await fetch('/.netlify/functions/get-wellbeing-checkins?limit=10', { credentials: 'include' });
+    if (!res.ok) return [];
+    var data = await res.json();
+    return data.entries || [];
+  }
+
+  function renderHistory(entries) {
+    var container = el('history-list');
+    if (!entries.length) {
+      container.innerHTML = '<p class="empty-history">You haven\'t checked in yet. Your first check-in will appear here.</p>';
+      return;
+    }
+    container.innerHTML = entries.map(function (e) {
+      var date = new Date(e.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+      var reflection = e.reflection ? '<p class="h-reflection">' + e.reflection + '</p>' : '';
+      return '<div class="history-item">' +
+        '<div class="h-top"><span class="h-state">' + (EMOTIONAL_LABELS[e.emotionalState] || e.emotionalState) + '</span><span>' + date + '</span></div>' +
+        reflection +
+        '</div>';
+    }).join('');
+  }
+
+  function showMsg(text, isError) {
+    var msg = el('form-msg');
+    msg.textContent = text;
+    msg.className = 'form-msg ' + (isError ? 'error' : 'success');
+  }
+
+  async function refreshHistory() {
+    var entries = await fetchHistory().catch(function () { return []; });
+    renderHistory(entries);
+  }
+
+  function wireForm() {
+    el('reflection').addEventListener('input', function () {
+      el('char-count').textContent = this.value.length;
+    });
+
+    el('checkin-form').addEventListener('submit', async function (evt) {
+      evt.preventDefault();
+      var form = evt.target;
+      var emotionalState = form.querySelector('input[name="emotionalState"]:checked');
+      var supportPreference = form.querySelector('input[name="supportPreference"]:checked');
+      var primaryConcern = el('primaryConcern').value;
+      var reflection = el('reflection').value;
+
+      if (!emotionalState) { showMsg('Please choose how you\'re feeling today.', true); return; }
+      if (!primaryConcern) { showMsg('Please choose what\'s mainly on your mind.', true); return; }
+
+      var submitBtn = el('submit-btn');
+      submitBtn.disabled = true;
+      showMsg('Saving…', false);
+
+      try {
+        var res = await fetch('/.netlify/functions/submit-wellbeing-checkin', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            emotionalState: emotionalState.value,
+            primaryConcern: primaryConcern,
+            reflection: reflection,
+            supportPreference: supportPreference ? supportPreference.value : 'keep_private',
+          }),
+        });
+
+        if (res.status === 401) {
+          showMsg('Your session has expired. Please sign in again.', true);
+          return;
+        }
+        if (!res.ok) {
+          var errBody = await res.json().catch(function () { return {}; });
+          showMsg(errBody.error || 'Something went wrong. Please try again.', true);
+          return;
+        }
+
+        form.reset();
+        el('char-count').textContent = '0';
+        showMsg('Check-in saved. Thank you for sharing honestly.', false);
+        await refreshHistory();
+      } catch (e) {
+        console.error('Wellbeing submit error', e);
+        showMsg('Something went wrong. Please try again.', true);
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+  }
+
+  async function init() {
+    var member;
+    try {
+      member = await fetchMember();
+    } catch (e) {
+      console.error('Wellbeing: could not verify session', e);
+      member = null;
+    }
+
+    el('loading').style.display = 'none';
+
+    if (!member) {
+      el('signed-out').style.display = 'block';
+      return;
+    }
+
+    el('app').style.display = 'block';
+    wireForm();
+    await refreshHistory();
+  }
+
+  init();
+})();
+</script>
+
+</body>
+</html>

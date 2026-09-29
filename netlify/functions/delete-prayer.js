@@ -1,4 +1,5 @@
 // netlify/functions/delete-prayer.js
+// FIXED: Consistent store initialization pattern with proper environment variable handling
 //
 // Permanently deletes a prayer request from Netlify Blobs.
 // Protected — requires valid admin session cookie.
@@ -25,6 +26,16 @@ function verifySession(event) {
     const data = JSON.parse(Buffer.from(payload, 'base64url').toString());
     return data.exp && data.exp > Date.now();
   } catch { return false; }
+}
+
+// ── HELPER: Consistent store initialization (safe & reliable) ──
+function getBlobsStore() {
+  const storeOptions = {};
+  if (process.env.NETLIFY_SITE_ID && process.env.NETLIFY_BLOBS_TOKEN) {
+    storeOptions.siteID = process.env.NETLIFY_SITE_ID;
+    storeOptions.token  = process.env.NETLIFY_BLOBS_TOKEN;
+  }
+  return getStore({ name: 'prayers', ...storeOptions });
 }
 
 exports.handler = async (event) => {
@@ -58,12 +69,8 @@ exports.handler = async (event) => {
   }
 
   try {
-    const store = getStore({
-      name:   'prayers',
-      siteID: process.env.NETLIFY_SITE_ID,
-      token:  process.env.NETLIFY_BLOBS_TOKEN,  // ✅ FIXED: Was NETLIFY_AUTH_TOKEN
-    });
-
+    // ✅ FIXED: Use consistent helper function for store initialization
+    const store = getBlobsStore();
     await store.delete(prayerId);
 
     return {

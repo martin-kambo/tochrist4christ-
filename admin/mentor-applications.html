@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mentor applications — TC4C Admin</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root { --navy:#1a2744; --gold:#c9a84c; --gold-light:#e8c97a; --cream:#faf8f3; --cream-dark:#f0ebe0; --text:#2c2c2c; --muted:#6b6b6b; --border:#ddd5c4; --green:#2e7d52; --red:#a33; --radius:10px; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: 'Nunito', system-ui, sans-serif; background:var(--cream); color:var(--text); }
+  header { background:var(--navy); color:var(--gold-light); padding:0.9rem 1.25rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; }
+  header a { color:rgba(255,255,255,0.75); text-decoration:none; font-size:0.85rem; font-weight:600; }
+  main { max-width:860px; margin:0 auto; padding:1.5rem 1.25rem 3rem; }
+  h1 { font-size:1.5rem; margin:0 0 0.25rem; }
+  .sub { color:var(--muted); font-size:0.88rem; margin:0 0 1.25rem; line-height:1.5; }
+  .toolbar { display:flex; gap:0.75rem; align-items:center; margin-bottom:1rem; flex-wrap:wrap; }
+  select, button, input[type=text] { font-family:inherit; font-size:0.88rem; }
+  select { padding:0.5rem; border:1px solid var(--border); border-radius:8px; }
+  .card { background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:1.1rem 1.25rem; margin-bottom:1rem; }
+  .card h3 { margin:0 0 0.2rem; font-size:1.05rem; }
+  .meta { font-size:0.78rem; color:var(--muted); margin-bottom:0.6rem; }
+  .field { margin:0.5rem 0; font-size:0.9rem; line-height:1.5; }
+  .field b { display:block; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--muted); }
+  .pill { display:inline-block; font-size:0.72rem; font-weight:800; padding:2px 9px; border-radius:999px; background:var(--cream-dark); margin-right:4px; }
+  .pill.pending { background:#fdf0c9; } .pill.approved { background:#dff1e6; } .pill.rejected, .pill.suspended { background:#f1dcdc; }
+  .actions { display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.8rem; align-items:center; }
+  .actions input { flex:1; min-width:160px; padding:0.45rem 0.6rem; border:1px solid var(--border); border-radius:8px; }
+  button { padding:0.5rem 1rem; border-radius:8px; border:none; cursor:pointer; font-weight:800; }
+  .approve { background:var(--green); color:#fff; } .reject { background:var(--cream-dark); color:var(--text); border:1px solid var(--border); } .suspend { background:var(--red); color:#fff; }
+  button:disabled { opacity:0.5; cursor:not-allowed; }
+  .notice { padding:1rem 1.25rem; border-radius:var(--radius); background:#fff; border:1px solid var(--border); }
+  .error { color:var(--red); } .empty { color:var(--muted); padding:1rem 0; }
+</style>
+</head>
+<body>
+<header>
+  <strong>TC4C Admin — Mentor applications</strong>
+  <a href="/admin.html">← Admin dashboard</a>
+</header>
+<main>
+  <h1>Mentor applications</h1>
+  <p class="sub">Review, approve, reject, or suspend. Every action is verified on the server against your admin session — hiding or showing buttons here is only a convenience. Applications contain only what applicants chose to write; this page never shows wellbeing or other private member data.</p>
+
+  <div id="denied" class="notice" style="display:none;">
+    You aren't signed in as an administrator. Please sign in from the <a href="/admin.html">admin dashboard</a>, then return here.
+  </div>
+
+  <div id="panel" style="display:none;">
+    <div class="toolbar">
+      <label for="filter">Show:</label>
+      <select id="filter">
+        <option value="pending">Pending</option>
+        <option value="approved">Approved</option>
+        <option value="rejected">Rejected</option>
+        <option value="suspended">Suspended</option>
+        <option value="all">All</option>
+      </select>
+      <span id="status-msg" class="sub" style="margin:0;"></span>
+    </div>
+    <div id="list"></div>
+  </div>
+</main>
+
+<script>
+(function () {
+  var AREA_LABELS = { discipleship:'Discipleship', prayer:'Prayer', life_challenges:'Life challenges', young_adults:'Young adults', marriage_family:'Marriage & family', men:'Men', women:'Women', other:'Other' };
+
+  function el(id) { return document.getElementById(id); }
+  // Server stores HTML-escaped text; decode for display via textContent
+  // only (a textarea's innerHTML never executes markup).
+  function decode(s) { var t = document.createElement('textarea'); t.innerHTML = s || ''; return t.value; }
+  function text(tag, str, cls) { var n = document.createElement(tag); n.textContent = str; if (cls) n.className = cls; return n; }
+
+  function field(label, value) {
+    var d = document.createElement('div'); d.className = 'field';
+    d.appendChild(text('b', label));
+    d.appendChild(document.createTextNode(value || '—'));
+    return d;
+  }
+
+  async function post(email, action, note) {
+    var res = await fetch('/.netlify/functions/admin-mentor-application-action', {
+      method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, action: action, note: note || undefined })
+    });
+    var body = null; try { body = await res.json(); } catch (e) {}
+    return { ok: res.ok, status: res.status, body: body };
+  }
+
+  function card(app) {
+    var c = document.createElement('div'); c.className = 'card';
+    c.appendChild(text('h3', app.email));
+    var meta = document.createElement('div'); meta.className = 'meta';
+    meta.appendChild(text('span', app.status, 'pill ' + app.status));
+    meta.appendChild(document.createTextNode('Submitted ' + new Date(app.submittedAt).toLocaleString() + (app.reviewedAt ? ' · Reviewed ' + new Date(app.reviewedAt).toLocaleString() : '')));
+    c.appendChild(meta);
+    c.appendChild(field('Why they want to serve', decode(app.motivation)));
+    c.appendChild(field('Areas', (app.areasOfInterest || []).map(function (a) { return AREA_LABELS[a] || a; }).join(', ')));
+    c.appendChild(field('Availability', decode(app.availability)));
+    c.appendChild(field('Experience', decode(app.experience)));
+    if (app.reviewNote) c.appendChild(field('Review note', decode(app.reviewNote)));
+
+    var actions = document.createElement('div'); actions.className = 'actions';
+    var note = document.createElement('input'); note.type = 'text'; note.maxLength = 500; note.placeholder = 'Optional note';
+    var msg = text('span', '', 'sub'); msg.style.margin = '0';
+
+    function button(label, cls, action, confirmText) {
+      var b = text('button', label, cls);
+      b.addEventListener('click', async function () {
+        if (!confirm(confirmText)) return;
+        b.disabled = true; msg.textContent = 'Saving…'; msg.className = 'sub';
+        try {
+          var r = await post(app.email, action, note.value);
+          if (r.status === 401) { showDenied(); return; }
+          if (r.ok) { await load(); return; }
+          msg.textContent = (r.body && r.body.error) || 'Action failed.'; msg.className = 'sub error';
+        } catch (e) { msg.textContent = 'Action failed.'; msg.className = 'sub error'; }
+        b.disabled = false;
+      });
+      return b;
+    }
+
+    if (app.status === 'pending') {
+      actions.appendChild(note);
+      actions.appendChild(button('Approve', 'approve', 'approve', 'Approve ' + app.email + ' as a mentor?'));
+      actions.appendChild(button('Reject', 'reject', 'reject', 'Reject this application from ' + app.email + '?'));
+      actions.appendChild(msg);
+    } else if (app.status === 'approved') {
+      actions.appendChild(note);
+      actions.appendChild(button('Suspend mentor', 'suspend', 'suspend', 'Suspend ' + app.email + '? They will lose mentor access immediately.'));
+      actions.appendChild(msg);
+    }
+    if (actions.childNodes.length) c.appendChild(actions);
+    return c;
+  }
+
+  function showDenied() { el('panel').style.display = 'none'; el('denied').style.display = 'block'; }
+
+  async function load() {
+    var list = el('list'); var status = el('filter').value;
+    el('status-msg').textContent = 'Loading…';
+    var res;
+    try { res = await fetch('/.netlify/functions/admin-mentor-applications?status=' + encodeURIComponent(status), { credentials: 'include' }); }
+    catch (e) { el('status-msg').textContent = ''; list.innerHTML = ''; list.appendChild(text('p', 'Could not reach the server. Nothing has been changed.', 'error')); el('panel').style.display = 'block'; return; }
+
+    if (res.status === 401) { showDenied(); return; }
+    el('denied').style.display = 'none'; el('panel').style.display = 'block';
+    list.innerHTML = '';
+    if (!res.ok) { el('status-msg').textContent = ''; list.appendChild(text('p', 'Applications could not be loaded right now (this is an error, not an empty list). Please try again.', 'error')); return; }
+
+    var data = await res.json();
+    el('status-msg').textContent = data.applications.length + ' shown';
+    if (!data.applications.length) { list.appendChild(text('p', 'No applications with this status.', 'empty')); return; }
+    data.applications
+      .sort(function (a, b) { return a.submittedAt < b.submittedAt ? 1 : -1; })
+      .forEach(function (a) { list.appendChild(card(a)); });
+  }
+
+  el('filter').addEventListener('change', load);
+  load();
+})();
+</script>
+</body>
+</html>

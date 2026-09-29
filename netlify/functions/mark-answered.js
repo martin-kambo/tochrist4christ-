@@ -1,4 +1,5 @@
 // netlify/functions/mark-answered.js
+// FIXED: Consistent store initialization pattern with proper environment variable handling
 //
 // Marks a prayer request as answered.
 // Protected — requires valid admin session cookie.
@@ -9,6 +10,7 @@ const crypto = require('crypto');
 function parseCookies(h = '') {
   return Object.fromEntries(h.split(';').map(c => { const [k,...v]=c.trim().split('='); return [k,v.join('=')]; }));
 }
+
 function verifySession(event) {
   const SECRET = process.env.SESSION_SECRET;
   if (!SECRET) return false;
@@ -26,6 +28,16 @@ function verifySession(event) {
   } catch { return false; }
 }
 
+// ── HELPER: Consistent store initialization (safe & reliable) ──
+function getBlobsStore() {
+  const storeOptions = {};
+  if (process.env.NETLIFY_SITE_ID && process.env.NETLIFY_BLOBS_TOKEN) {
+    storeOptions.siteID = process.env.NETLIFY_SITE_ID;
+    storeOptions.token  = process.env.NETLIFY_BLOBS_TOKEN;
+  }
+  return getStore({ name: 'prayers', ...storeOptions });
+}
+
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') return { statusCode: 405, body: 'Method Not Allowed' };
   if (!verifySession(event)) return { statusCode: 401, body: JSON.stringify({ success: false, error: 'Unauthorized' }) };
@@ -38,7 +50,8 @@ exports.handler = async (event) => {
   if (!prayerId) return { statusCode: 400, body: JSON.stringify({ success: false, error: 'prayerId required' }) };
 
   try {
-    const store  = getStore('prayers');
+    // ✅ FIXED: Use consistent helper function for store initialization
+    const store = getBlobsStore();
     const prayer = await store.get(prayerId, { type: 'json' });
     if (!prayer) return { statusCode: 404, body: JSON.stringify({ success: false, error: 'Prayer not found' }) };
 
@@ -48,7 +61,7 @@ exports.handler = async (event) => {
 
     return { statusCode: 200, body: JSON.stringify({ success: true }) };
   } catch (err) {
-    console.error('mark-answered error:', err);
+    console.error('mark-answered error:', err.message, err.stack);
     return { statusCode: 500, body: JSON.stringify({ success: false, error: 'Could not update prayer' }) };
   }
 };

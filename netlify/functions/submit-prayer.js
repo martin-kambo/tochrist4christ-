@@ -1,4 +1,5 @@
 // netlify/functions/submit-prayer.js
+// FIXED: Consistent store initialization pattern across all prayer functions
 
 const { getStore } = require('@netlify/blobs');
 const crypto = require('crypto');
@@ -23,6 +24,16 @@ function escapeHtml(str) {
 }
 
 const VALID_CATEGORIES = ['general','healing','guidance','family','provision','salvation','gratitude'];
+
+// ── HELPER: Consistent store initialization (safe & reliable) ──
+function getBlobsStore() {
+  const storeOptions = {};
+  if (process.env.NETLIFY_SITE_ID && process.env.NETLIFY_BLOBS_TOKEN) {
+    storeOptions.siteID = process.env.NETLIFY_SITE_ID;
+    storeOptions.token  = process.env.NETLIFY_BLOBS_TOKEN;
+  }
+  return getStore({ name: 'prayers', ...storeOptions });
+}
 
 exports.handler = async (event, context) => {
   if (event.httpMethod !== 'POST') {
@@ -67,15 +78,8 @@ exports.handler = async (event, context) => {
   };
 
   try {
-    // Pass siteID and token explicitly — required on some Netlify tiers
-    // where the context is not automatically injected into getStore()
-    const storeOptions = {};
-    if (process.env.NETLIFY_SITE_ID && process.env.NETLIFY_BLOBS_TOKEN) {
-      storeOptions.siteID = process.env.NETLIFY_SITE_ID;
-      storeOptions.token  = process.env.NETLIFY_BLOBS_TOKEN;
-    }
-
-    const store = getStore({ name: 'prayers', ...storeOptions });
+    // ✅ FIXED: Use consistent helper function for store initialization
+    const store = getBlobsStore();
     await store.set(id, JSON.stringify(prayer));
 
     return {

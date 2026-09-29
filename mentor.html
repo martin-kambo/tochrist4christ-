@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mentorship — To Christ 4 Christ</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1a2744; --navy-light: #243459; --gold: #c9a84c; --gold-light: #e8c97a;
+    --cream: #faf8f3; --cream-dark: #f0ebe0; --text: #2c2c2c; --text-muted: #6b6b6b;
+    --border: #ddd5c4; --green: #2e7d52; --green-light: #e8f5ee; --radius: 10px;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Nunito', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+
+  header.tc-header { background: var(--navy); padding: 0 1.25rem; }
+  .tc-header-inner { max-width: 720px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; padding: 0.9rem 0; }
+  .tc-logo { font-family: 'Crimson Pro', serif; font-size: 1.1rem; font-weight: 600; color: var(--gold-light); text-decoration: none; }
+  .tc-logo span { color: rgba(255,255,255,0.4); font-size: 0.7rem; margin-left: 6px; font-family: 'Nunito'; font-weight: 400; }
+  nav.tc-nav { display: flex; gap: 1.1rem; flex-wrap: wrap; }
+  nav.tc-nav a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.85rem; font-weight: 600; padding: 0.3rem 0; border-bottom: 2px solid transparent; }
+  nav.tc-nav a.active { color: var(--gold-light); border-bottom-color: var(--gold); }
+  nav.tc-nav a:hover { color: var(--gold-light); }
+
+  main { flex: 1; max-width: 720px; margin: 0 auto; padding: 2rem 1.25rem 3.5rem; width: 100%; }
+  .state-card { max-width: 480px; margin: 3rem auto; background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 2.25rem 1.75rem; text-align: center; }
+  .state-card h2 { font-family: 'Crimson Pro', serif; margin: 0 0 0.5rem; font-size: 1.4rem; }
+  .state-card p { color: var(--text-muted); margin: 0 0 1.25rem; line-height: 1.55; }
+  .btn { display: inline-block; background: var(--gold); color: var(--navy); font-weight: 800; text-decoration: none; padding: 12px 28px; border-radius: var(--radius); font-size: 0.9rem; border: none; cursor: pointer; font-family: 'Nunito', sans-serif; }
+  .btn:hover { background: var(--gold-light); }
+  .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  .hidden { display: none; }
+  h1.page-title { font-family: 'Crimson Pro', serif; font-size: 1.8rem; margin: 0 0 0.35rem; }
+  p.page-sub { color: var(--text-muted); margin: 0 0 1.5rem; line-height: 1.55; }
+
+  .status-banner { border-radius: var(--radius); padding: 0.9rem 1.1rem; margin-bottom: 1.5rem; font-size: 0.9rem; line-height: 1.55; }
+  .status-banner strong { display: block; font-family: 'Crimson Pro', serif; font-size: 1.15rem; margin-bottom: 0.15rem; }
+  .status-pending { background: #fdf6e3; border: 1px solid var(--gold); }
+  .status-approved { background: var(--green-light); border: 1px solid rgba(46,125,82,0.3); }
+  .status-suspended { background: var(--cream-dark); border: 1px solid var(--border); }
+
+  .boundary-note { background: var(--cream-dark); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.1rem; font-size: 0.84rem; line-height: 1.6; margin-bottom: 1.5rem; }
+  .card { background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.5rem; }
+  fieldset { border: none; padding: 0; margin: 0 0 1.4rem; }
+  legend, label.field-label { font-family: 'Crimson Pro', serif; font-size: 1.05rem; margin-bottom: 0.5rem; padding: 0; display: block; }
+  .sub-hint { font-size: 0.8rem; color: var(--text-muted); margin: 0 0 0.6rem; }
+  input[type="text"], textarea { width: 100%; padding: 0.7rem 0.8rem; border: 1px solid var(--border); border-radius: var(--radius); font-family: 'Nunito', sans-serif; font-size: 0.92rem; }
+  textarea { min-height: 100px; resize: vertical; }
+  .areas { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .areas label { border: 1px solid var(--border); border-radius: 999px; padding: 0.4rem 0.9rem; font-size: 0.84rem; cursor: pointer; font-weight: 700; color: var(--text-muted); }
+  .areas input { margin-right: 0.35rem; }
+  .areas label:has(input:checked) { background: var(--navy); border-color: var(--navy); color: var(--gold-light); }
+  .form-msg { font-size: 0.85rem; margin-top: 0.75rem; }
+  .form-msg.error { color: #a33; }
+  .form-msg.success { color: var(--green); }
+  footer.tc-footer { text-align: center; padding: 1.5rem; font-size: 0.78rem; color: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<header class="tc-header">
+  <div class="tc-header-inner">
+    <a class="tc-logo" href="dashboard.html">To Christ 4 Christ <span>V2</span></a>
+    <nav class="tc-nav">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="course.html">Discipleship</a>
+      <a href="wellbeing.html">Wellbeing</a>
+      <a href="mentor.html" class="active">Mentorship</a>
+      <a href="prayer-wall.html">Prayer &amp; Community</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <div id="loading" class="state-card"><h2>Loading…</h2></div>
+
+  <div id="signed-out" class="state-card hidden">
+    <h2>Sign in to continue</h2>
+    <p>Mentorship applications are tied to your member account. Sign in with the email link on the course page to continue.</p>
+    <a class="btn" href="course.html">Go to sign-in</a>
+  </div>
+
+  <div id="error-state" class="state-card hidden">
+    <h2>Mentorship is unavailable right now</h2>
+    <p>We couldn't load your mentorship status. Nothing has been changed. Please try again in a little while.</p>
+  </div>
+
+  <div id="app" class="hidden">
+    <h1 class="page-title">Mentorship</h1>
+    <p class="page-sub">TC4C is building a space where members walk alongside one another as they grow in Christ.</p>
+
+    <div id="banner"></div>
+
+    <!-- ── Application form (member / pending) ── -->
+    <section id="application-section" class="hidden">
+      <div class="boundary-note">
+        <strong>Please note:</strong> mentors at TC4C are fellow believers offering encouragement, prayer, and companionship. Being a mentor does not make someone a counsellor, therapist, or pastor, and TC4C mentorship is not a substitute for professional mental-health care. This application is not a counselling form — please don't share medical or mental-health history, or private information about other people. Applications are reviewed by TC4C administrators. Mentor matching and a mentor portal are not available yet.
+      </div>
+      <div class="card">
+        <form id="application-form">
+          <fieldset>
+            <label class="field-label" for="motivation">Why would you like to serve as a mentor? <span style="color:var(--text-muted);font-size:0.8rem;">(required)</span></label>
+            <textarea id="motivation" maxlength="800"></textarea>
+          </fieldset>
+          <fieldset>
+            <legend>Areas you'd be glad to walk with people in <span style="color:var(--text-muted);font-size:0.8rem;">(up to 5)</span></legend>
+            <div class="areas" id="application-areas"></div>
+          </fieldset>
+          <fieldset>
+            <label class="field-label" for="availability">Availability <span style="color:var(--text-muted);font-size:0.8rem;">(optional)</span></label>
+            <input type="text" id="availability" maxlength="800">
+          </fieldset>
+          <fieldset>
+            <label class="field-label" for="experience">Relevant experience <span style="color:var(--text-muted);font-size:0.8rem;">(optional)</span></label>
+            <textarea id="experience" maxlength="800"></textarea>
+          </fieldset>
+          <button type="submit" class="btn" id="application-submit">Submit application</button>
+          <div class="form-msg" id="application-msg"></div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ── Mentor profile (approved mentor only) ── -->
+    <section id="profile-section" class="hidden">
+      <div class="card">
+        <form id="profile-form">
+          <fieldset>
+            <label class="field-label" for="displayName">Display name</label>
+            <input type="text" id="displayName" maxlength="100">
+          </fieldset>
+          <fieldset>
+            <label class="field-label" for="bio">About you</label>
+            <textarea id="bio" maxlength="800"></textarea>
+          </fieldset>
+          <fieldset>
+            <legend>Mentorship areas <span style="color:var(--text-muted);font-size:0.8rem;">(up to 5)</span></legend>
+            <div class="areas" id="profile-areas"></div>
+          </fieldset>
+          <fieldset>
+            <label class="field-label" for="profile-availability">Availability</label>
+            <input type="text" id="profile-availability" maxlength="800">
+          </fieldset>
+          <button type="submit" class="btn" id="profile-submit">Save profile</button>
+          <div class="form-msg" id="profile-msg"></div>
+        </form>
+      </div>
+    </section>
+  </div>
+
+</main>
+
+<footer class="tc-footer">To Christ 4 Christ</footer>
+
+<script>
+(function () {
+  var AREAS = [
+    ['discipleship', 'Discipleship'], ['prayer', 'Prayer'], ['life_challenges', 'Life challenges'],
+    ['young_adults', 'Young adults'], ['marriage_family', 'Marriage & family'], ['men', 'Men'],
+    ['women', 'Women'], ['other', 'Other']
+  ];
+  var MAX_AREAS = 5;
+
+  function el(id) { return document.getElementById(id); }
+  function show(id) { el(id).classList.remove('hidden'); }
+  function hide(id) { el(id).classList.add('hidden'); }
+
+  // The server HTML-escapes text before storing it. Setting that escaped text
+  // straight into a form field would show literal "&lt;" and double-escape on
+  // re-save, so decode it first. A <textarea>'s innerHTML never executes
+  // markup, so this is safe; the result is only ever used via .value /
+  // .textContent, never innerHTML.
+  function decode(str) {
+    var t = document.createElement('textarea');
+    t.innerHTML = str || '';
+    return t.value;
+  }
+
+  function renderAreas(containerId, selected) {
+    var box = el(containerId);
+    box.innerHTML = '';
+    AREAS.forEach(function (a) {
+      var label = document.createElement('label');
+      var input = document.createElement('input');
+      input.type = 'checkbox';
+      input.value = a[0];
+      input.checked = (selected || []).indexOf(a[0]) !== -1;
+      input.addEventListener('change', function () {
+        if (box.querySelectorAll('input:checked').length > MAX_AREAS) { input.checked = false; }
+      });
+      label.appendChild(input);
+      label.appendChild(document.createTextNode(a[1]));
+      box.appendChild(label);
+    });
+  }
+  function selectedAreas(containerId) {
+    return Array.prototype.map.call(el(containerId).querySelectorAll('input:checked'), function (i) { return i.value; });
+  }
+
+  function setBanner(kind, title, text) {
+    var b = el('banner');
+    b.className = 'status-banner status-' + kind;
+    b.innerHTML = '';
+    var s = document.createElement('strong'); s.textContent = title;
+    b.appendChild(s);
+    b.appendChild(document.createTextNode(text));
+  }
+  function msg(id, text, isError) {
+    var m = el(id); m.textContent = text; m.className = 'form-msg ' + (isError ? 'error' : 'success');
+  }
+
+  async function api(path, options) {
+    var res = await fetch('/.netlify/functions/' + path, Object.assign({ credentials: 'include' }, options || {}));
+    var body = null;
+    try { body = await res.json(); } catch (e) { /* no body */ }
+    return { status: res.status, ok: res.ok, body: body };
+  }
+
+  function fillApplication(app) {
+    el('motivation').value = decode(app && app.motivation);
+    el('availability').value = decode(app && app.availability);
+    el('experience').value = decode(app && app.experience);
+    renderAreas('application-areas', app && app.areasOfInterest);
+  }
+
+  async function loadProfile() {
+    var r = await api('mentor-profile');
+    if (r.ok) {
+      var p = r.body && r.body.profile;
+      el('displayName').value = decode(p && p.displayName);
+      el('bio').value = decode(p && p.bio);
+      el('profile-availability').value = decode(p && p.availability);
+      renderAreas('profile-areas', p && p.mentorshipAreas);
+    } else {
+      renderAreas('profile-areas', []);
+      msg('profile-msg', 'Your profile could not be loaded right now. Please try again later.', true);
+    }
+  }
+
+  function wireForms() {
+    el('application-form').addEventListener('submit', async function (evt) {
+      evt.preventDefault();
+      var btn = el('application-submit');
+      if (!el('motivation').value.trim()) { msg('application-msg', 'Please tell us why you would like to serve as a mentor.', true); return; }
+      btn.disabled = true; msg('application-msg', 'Saving…', false);
+      try {
+        var r = await api('apply-for-mentor', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            motivation: el('motivation').value,
+            areasOfInterest: selectedAreas('application-areas'),
+            availability: el('availability').value,
+            experience: el('experience').value
+          })
+        });
+        if (r.ok) { await init(); return; }
+        msg('application-msg', (r.body && r.body.error) || 'Something went wrong. Please try again.', true);
+      } catch (e) {
+        msg('application-msg', 'Something went wrong. Please try again.', true);
+      } finally { btn.disabled = false; }
+    });
+
+    el('profile-form').addEventListener('submit', async function (evt) {
+      evt.preventDefault();
+      var btn = el('profile-submit');
+      btn.disabled = true; msg('profile-msg', 'Saving…', false);
+      try {
+        var r = await api('mentor-profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            displayName: el('displayName').value,
+            bio: el('bio').value,
+            mentorshipAreas: selectedAreas('profile-areas'),
+            availability: el('profile-availability').value
+          })
+        });
+        msg('profile-msg', r.ok ? 'Profile saved.' : ((r.body && r.body.error) || 'Something went wrong. Please try again.'), !r.ok);
+      } catch (e) {
+        msg('profile-msg', 'Something went wrong. Please try again.', true);
+      } finally { btn.disabled = false; }
+    });
+  }
+
+  var wired = false;
+  async function init() {
+    ['loading', 'signed-out', 'error-state', 'app', 'application-section', 'profile-section'].forEach(hide);
+    show('loading');
+
+    var status;
+    try { status = await api('mentor-status'); } catch (e) { status = null; }
+    hide('loading');
+
+    if (status && status.status === 401) { show('signed-out'); return; }
+    if (!status || !status.ok || !status.body || !status.body.status) { show('error-state'); return; }
+
+    if (!wired) { wireForms(); wired = true; }
+    show('app');
+    var st = status.body.status;
+
+    if (st === 'member') {
+      setBanner('suspended', 'Not yet a mentor', 'You can apply below.');
+      fillApplication(null);
+      show('application-section');
+    } else if (st === 'mentor_pending') {
+      setBanner('pending', 'Application pending', 'Your application is under review by a TC4C administrator. You are not a mentor yet. You can update your application below while it is pending.');
+      fillApplication(status.body.application);
+      el('application-submit').textContent = 'Update application';
+      show('application-section');
+    } else if (st === 'mentor') {
+      setBanner('approved', 'Approved mentor', 'Your application has been approved. Below is your basic mentor profile. Mentee matching and the mentor portal are not available yet.');
+      show('profile-section');
+      await loadProfile();
+    } else if (st === 'mentor_suspended') {
+      setBanner('suspended', 'Mentor role suspended', 'Your mentor role is currently suspended, so mentor features are unavailable. Please contact a TC4C administrator if you have questions.');
+    } else {
+      show('error-state');
+    }
+  }
+
+  init();
+})();
+</script>
+
+</body>
+</html>

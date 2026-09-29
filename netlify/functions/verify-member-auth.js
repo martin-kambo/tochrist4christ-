@@ -6,32 +6,15 @@
 //
 // Required environment variables:
 //   SESSION_SECRET  — same secret used by magic-login.js to sign the JWT
+//
+// V2 PHASE 1: the cookie-parsing and JWT-verification logic that used to be
+// duplicated inline here now lives in shared/member-auth.js, so every
+// private endpoint added in this phase (member-me, get-progress,
+// wellbeing, etc.) verifies the session the exact same way this file
+// always has. The response shape and behavior of this endpoint are
+// unchanged.
 
-const crypto = require('crypto');
-
-// ── Minimal HS256 JWT verifier (no external deps) ────────────────────────────
-function verifyJWT(token, secret) {
-  const parts = token.split('.');
-  if (parts.length !== 3) throw new Error('Malformed JWT');
-
-  const [header, payload, sig] = parts;
-
-  // Verify signature
-  const expected = crypto
-    .createHmac('sha256', secret)
-    .update(`${header}.${payload}`)
-    .digest('base64url');
-
-  // Constant-time comparison to prevent timing attacks
-  const sigBuf  = Buffer.from(sig,      'base64url');
-  const expBuf  = Buffer.from(expected, 'base64url');
-  if (sigBuf.length !== expBuf.length ||
-      !crypto.timingSafeEqual(sigBuf, expBuf)) {
-    throw new Error('Invalid signature');
-  }
-
-  return JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
-}
+const { parseCookies, verifyMemberJWT } = require('./shared/member-auth');
 
 // ── Handler ───────────────────────────────────────────────────────────────────
 exports.handler = async (event) => {
@@ -55,11 +38,7 @@ exports.handler = async (event) => {
 
   // ── Parse cookies ─────────────────────────────────────────────────────────
   const cookieHeader = event.headers.cookie || event.headers.Cookie || '';
-  const cookies = {};
-  cookieHeader.split(';').forEach(c => {
-    const [k, ...v] = c.trim().split('=');
-    if (k) cookies[decodeURIComponent(k.trim())] = decodeURIComponent(v.join('=').trim());
-  });
+  const cookies = parseCookies(cookieHeader);
 
   const token = cookies['member_session'];
   if (!token) {
@@ -72,7 +51,7 @@ exports.handler = async (event) => {
 
   // ── Verify ────────────────────────────────────────────────────────────────
   try {
-    const payload = verifyJWT(token, SESSION_SECRET);
+    const payload = verifyMemberJWT(token, SESSION_SECRET);
 
     // Check expiry
     if (payload.exp && Math.floor(Date.now() / 1000) > payload.exp) {
